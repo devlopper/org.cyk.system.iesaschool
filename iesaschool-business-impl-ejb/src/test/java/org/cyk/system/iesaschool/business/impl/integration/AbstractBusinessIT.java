@@ -6,6 +6,9 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
 
+import org.cyk.system.company.business.impl.CompanyBusinessLayer;
+import org.cyk.system.iesaschool.business.impl.IesaBusinessLayer;
+import org.cyk.system.iesaschool.business.impl.IesaBusinessTestHelper;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.AbstractFakedDataProducer;
@@ -17,14 +20,13 @@ import org.cyk.system.root.business.impl.RootTestHelper;
 import org.cyk.system.root.business.impl.validation.DefaultValidator;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.business.impl.validation.ValidatorMap;
-import org.cyk.system.iesaschool.business.impl.IesaBusinessLayer;
-import org.cyk.system.iesaschool.business.impl.IesaBusinessTestHelper;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
-import org.cyk.utility.test.Transaction;
-import org.cyk.utility.test.integration.AbstractIntegrationTestJpaBased;
+import org.cyk.system.root.persistence.impl.PersistenceIntegrationTestHelper;
 import org.cyk.utility.common.test.DefaultTestEnvironmentAdapter;
 import org.cyk.utility.test.ArchiveBuilder;
+import org.cyk.utility.test.Transaction;
+import org.cyk.utility.test.integration.AbstractIntegrationTestJpaBased;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
@@ -115,8 +117,12 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     public static Archive<?> createRootDeployment() {
         return  
                 new ArchiveBuilder().create().getArchive().
-                    addClasses(BusinessIntegrationTestHelper.classes()).
-                    addPackages(Boolean.FALSE, BusinessIntegrationTestHelper.packages()).
+                addClasses(BusinessIntegrationTestHelper.classes()).
+                addClasses(PersistenceIntegrationTestHelper.classes()).
+                addClasses(RootBusinessLayer.class,RootTestHelper.class,CompanyBusinessLayer.class).
+                addPackages(Boolean.FALSE, BusinessIntegrationTestHelper.packages()).
+                    addPackages(Boolean.TRUE,"org.cyk.system.company").
+                    addPackages(Boolean.TRUE,"org.cyk.system.school"). 
                     addPackages(Boolean.TRUE,"org.cyk.system.iesaschool") 
                 ;
     } 

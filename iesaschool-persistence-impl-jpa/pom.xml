@@ -17,8 +17,8 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>org.cyk.system.root.persistence</groupId>
-			<artifactId>root-persistence-impl-jpa</artifactId>
+			<groupId>org.cyk.system.school.persistence</groupId>
+			<artifactId>school-persistence-impl-jpa</artifactId>
 			<version>0.0.1</version>
 		</dependency>
 		

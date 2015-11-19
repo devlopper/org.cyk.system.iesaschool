@@ -7,7 +7,7 @@
   <container qualifier="glassfish-embedded" default="true">
     <configuration>
       <property name="resourcesXml">
-      	src/test/resources-glassfish-embedded/glassfish-resources-memory.xml
+      	src/test/resources-glassfish-embedded/glassfish-resources-live.xml
       </property>
     </configuration>
   </container>

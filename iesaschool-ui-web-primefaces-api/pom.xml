@@ -32,8 +32,8 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>org.cyk.system.root.ui.web.jsf.primefaces</groupId>
-			<artifactId>root-web-primefaces-api</artifactId>
+			<groupId>org.cyk.system.school.ui.web.jsf.primefaces</groupId>
+			<artifactId>school-ui-web-primefaces-api</artifactId>
 			<version>0.0.1</version>
 		</dependency>
 	</dependencies>		

@@ -16,8 +16,8 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>org.cyk.system.root</groupId>
-			<artifactId>root-model</artifactId>
+			<groupId>org.cyk.system.school</groupId>
+			<artifactId>school-model</artifactId>
 			<version>0.0.1</version>
 		</dependency>
 	</dependencies>	

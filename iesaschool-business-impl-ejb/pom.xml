@@ -40,8 +40,8 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>org.cyk.system.root.business</groupId>
-			<artifactId>root-business-impl-ejb</artifactId>
+			<groupId>org.cyk.system.school.business</groupId>
+			<artifactId>school-business-impl-ejb</artifactId>
 			<version>0.0.1</version>
 			<type>ejb</type>
 		</dependency>

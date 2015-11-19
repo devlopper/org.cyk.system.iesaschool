@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE resources PUBLIC
-    "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN"
-    "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
+<!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
 <resources>
-
-    <jdbc-connection-pool datasource-classname="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" res-type="javax.sql.DataSource" name="ArquillianHsqlPool">
+	
+	<!-- MySQL -->    
+    <jdbc-connection-pool datasource-classname="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" res-type="javax.sql.DataSource" name="cyk_iesaschool_pool">
       <property name="servername" value="localhost"></property>
-      <property name="databasename" value="cyk_${systemId}_db"></property>
+      <property name="databasename" value="cyk_iesaschool_db"></property>
       <property name="user" value="root"></property>
       <property name="password" value="root"></property>
       <property name="URL" value="jdbc:mysql://localhost:3306/cyk_iesaschool_db"></property>
     </jdbc-connection-pool>
+    <jdbc-resource pool-name="cyk_iesaschool_pool" jndi-name="java:app/jdbc/cyk_iesaschool_pool" />
     
-    <jdbc-resource pool-name="ArquillianHsqlPool" jndi-name="jdbc/arquillian" />
-    	
-    <mail-resource host="smtp.gmail.com" jndi-name="mail/cyk_root" from="kycdev@gmail.com" user="kycdev@gmail.com">
+    <!--mail-resource host="smtp.gmail.com" jndi-name="java:app/mail/cyk_root"  from="kycdev@gmail.com" user="kycdev@gmail.com">
       <property name="mail.smtp.socketFactory.port" value="465"></property>
       <property name="mail.smtp.port" value="465"></property>
       <property name="mail.smtp.socketFactory.fallback" value="false"></property>
       <property name="mail.smtp.auth" value="true"></property>
       <property name="mail.smtp.password" value="p@ssw0rd*"></property>
       <property name="mail.smtp.socketFactory.class" value="javax.net.ssl.SSLSocketFactory"></property>
-    </mail-resource>
+    </mail-resource-->
+    
     
 </resources>

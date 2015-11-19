@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE resources PUBLIC
+    "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN"
+    "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
+<resources>
+
+    <!--jdbc-connection-pool 
+    	name="ArquillianEmbeddedDerbyPool" 
+    	res-type="javax.sql.DataSource"
+        datasource-classname="org.apache.derby.jdbc.EmbeddedDataSource" 
+        is-isolation-level-guaranteed="false">
+        <property name="databaseName" value="target/databases/derby"/>
+        <property name="createDatabase" value="create"/>
+    </jdbc-connection-pool-->
+    
+    <jdbc-connection-pool is-isolation-level-guaranteed="false" name="ArquillianHsqlPool" driver-classname="org.hsqldb.jdbcDriver"
+   		res-type="java.sql.Driver">
+   		<!--
+   		<property name="serverName" value="localhost" />
+   		<property name="PortNumber" value="9001" />
+    	<property name="User" value="sa" />
+    	<property name="Password" value="" />
+    	-->
+    	<property name="URL" value="jdbc:hsqldb:mem:hsql" />
+        
+    </jdbc-connection-pool>
+   
+    <jdbc-resource 
+    	pool-name="ArquillianHsqlPool" 
+    	jndi-name="jdbc/arquillian" />
+    	
+    <mail-resource host="smtp.gmail.com" jndi-name="mail/cyk_root" from="kycdev@gmail.com" user="kycdev@gmail.com">
+      <property name="mail.smtp.socketFactory.port" value="465"></property>
+      <property name="mail.smtp.port" value="465"></property>
+      <property name="mail.smtp.socketFactory.fallback" value="false"></property>
+      <property name="mail.smtp.auth" value="true"></property>
+      <property name="mail.smtp.password" value="p@ssw0rd*"></property>
+      <property name="mail.smtp.socketFactory.class" value="javax.net.ssl.SSLSocketFactory"></property>
+    </mail-resource>
+    	
+
+
+</resources>

@@ -1,0 +1,9 @@
+/target
+
+/build
+/bin
+/.settings
+.project
+.classpath
+/Workspaces
+rebel.xml

@@ -3,6 +3,7 @@ package org.cyk.system.iesaschool.business.impl;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -11,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.company.business.api.structure.CompanyBusiness;
 import org.cyk.system.company.business.api.structure.OwnedCompanyBusiness;
 import org.cyk.system.company.business.impl.CompanyBusinessLayer;
 import org.cyk.system.company.business.impl.CompanyBusinessLayerAdapter;
@@ -21,13 +23,16 @@ import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessLayer;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.RootDataProducerHelper.RootDataProducerHelperListener;
+import org.cyk.system.root.business.impl.RootRandomDataProvider;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollection;
+import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.school.business.api.session.ClassroomSessionBusiness;
 import org.cyk.system.school.business.api.session.ClassroomSessionDivisionBusiness;
+import org.cyk.system.school.business.api.session.SchoolReportProducer;
 import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjectBusiness;
 import org.cyk.system.school.business.api.subject.SubjectEvaluationTypeBusiness;
 import org.cyk.system.school.business.impl.SchoolBusinessLayer;
@@ -59,10 +64,12 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	private static IesaBusinessLayer INSTANCE;
 	
 	@Inject private RootBusinessLayer rootBusinessLayer;
+	@Inject private RootRandomDataProvider rootRandomDataProvider;
 	@Inject private CompanyBusinessLayer companyBusinessLayer;
 	@Inject private SchoolBusinessLayer schoolBusinessLayer;
 	
 	@Inject private OwnedCompanyBusiness ownedCompanyBusiness;
+	@Inject private CompanyBusiness companyBusiness;
 	@Inject private SubjectEvaluationTypeBusiness subjectEvaluationTypeBusiness;
 	@Inject private ClassroomSessionBusiness classroomSessionBusiness;
 	@Inject private ClassroomSessionDivisionBusiness classroomSessionDivisionBusiness;
@@ -109,7 +116,6 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 				addContacts(company.getContactCollection(), new String[]{"RueJ7 1-II Plateux Vallon, Cocody"}, new String[]{"22417217","21014459"}
 				, new String[]{"05996283","49925138","06173731"}, new String[]{"08 BP 1828 Abidjan 08"}, new String[]{"iesa@aviso.ci"}, new String[]{"http://www.iesaci.com"});
 			}
-
 		});
 		
 		schoolBusinessLayer.setReportProducer(new ReportProducer());
@@ -128,6 +134,9 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	@SuppressWarnings("unchecked")
 	private void structure(){
+		SchoolReportProducer.DEFAULT_STUDENT_CLASSROOM_SESSION_DIVISION_REPORT_PARAMETERS.getEvaluationTypeCodes().addAll(Arrays.asList("Test1","Test2","Exam"));
+    	SchoolReportProducer.DEFAULT_STUDENT_CLASSROOM_SESSION_DIVISION_REPORT_PARAMETERS.setSumMarks(Boolean.TRUE);
+		
 		//Grades
 		IntervalCollection intervalCollection = createIntervalCollection("ICEV1",new String[][]{
 			{"A*", "Outstanding", "90", "100"},{"A", "Excellent", "80", "89.99"},{"B", "Very Good", "70", "79.99"},{"C", "Good", "60", "69.99"}
@@ -165,8 +174,10 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		School school = new School(ownedCompanyBusiness.findDefaultOwnedCompany(),commonNodeInformations);
     	create(school);
     	
-    	//school.getOwnedCompany().getCompany().setManager(rootRandomDataProvider.oneFromDatabase(Person.class));
-    	//companyBusiness.update(school.getOwnedCompany().getCompany());
+    	//debug(school.getOwnedCompany().getCompany());
+    	
+    	school.getOwnedCompany().getCompany().setManager(rootRandomDataProvider.oneFromDatabase(Person.class));
+    	companyBusiness.update(school.getOwnedCompany().getCompany());
     	
     	AcademicSession academicSession = new AcademicSession(school,commonNodeInformations,new Date());
     	academicSession.getPeriod().setFromDate(new Date());

@@ -3,7 +3,6 @@ package org.cyk.system.iesaschool.business.impl;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -134,9 +133,10 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	@SuppressWarnings("unchecked")
 	private void structure(){
-		SchoolReportProducer.DEFAULT_STUDENT_CLASSROOM_SESSION_DIVISION_REPORT_PARAMETERS.getEvaluationTypeCodes().addAll(Arrays.asList("Test1","Test2","Exam"));
-    	SchoolReportProducer.DEFAULT_STUDENT_CLASSROOM_SESSION_DIVISION_REPORT_PARAMETERS.setSumMarks(Boolean.TRUE);
-		
+    	evaluationTypeTest1 = createEnumeration(EvaluationType.class,"Test 1");
+    	evaluationTypeTest2 = createEnumeration(EvaluationType.class,"Test 2");
+    	evaluationTypeExam = createEnumeration(EvaluationType.class,"Exam");
+    	
 		//Grades
 		IntervalCollection intervalCollection = createIntervalCollection("ICEV1",new String[][]{
 			{"A*", "Outstanding", "90", "100"},{"A", "Excellent", "80", "89.99"},{"B", "Very Good", "70", "79.99"},{"C", "Good", "60", "69.99"}
@@ -158,8 +158,6 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		studentWorkMetricCollection.addItem("12","Listens and follows directions");
 		
 		studentWorkMetricCollection.setValueIntervalCollection(new IntervalCollection("BSWH_METRIC_IC"));
-		//studentWorkMetricCollection.getValueIntervalCollection().setLowestValue(new BigDecimal("1"));
-		//studentWorkMetricCollection.getValueIntervalCollection().setHighestValue(new BigDecimal("5"));
 		studentWorkMetricCollection.getValueIntervalCollection().addItem("1", "Has no regard for the observable traits", "1", "1");
 		studentWorkMetricCollection.getValueIntervalCollection().addItem("2", "Shows minimal regard for the observable traits", "2", "2");
 		studentWorkMetricCollection.getValueIntervalCollection().addItem("3", "Acceptable level of observable traits", "3", "3");
@@ -181,7 +179,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	
     	AcademicSession academicSession = new AcademicSession(school,commonNodeInformations,new Date());
     	academicSession.getPeriod().setFromDate(new Date());
-    	academicSession.getPeriod().setToDate(new Date());
+    	academicSession.getPeriod().setToDate(new Date(academicSession.getPeriod().getFromDate().getTime()+DateTimeConstants.MILLIS_PER_DAY*355));
     	academicSession = create(academicSession);
 		
 		// Subjects
@@ -218,10 +216,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	createSubject("Core mathematics",new ArrayList[]{subjectsG10G12});
     	createSubject("Advanced mathematics",new ArrayList[]{subjectsG10G12});
     	
-		//Evaluation Type
-		evaluationTypeTest1 = createEnumeration(EvaluationType.class,"Test 1");
-		evaluationTypeTest2 = createEnumeration(EvaluationType.class,"Test 2");
-		evaluationTypeExam = createEnumeration(EvaluationType.class,"Exam");
+		
 				
     	Collection<ClassroomSession> classroomSessions = new ArrayList<>(); 
     	Collection<ClassroomSessionDivision> classroomSessionDivisions = new ArrayList<>(); 
@@ -261,7 +256,9 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	classroomSessionDivisionSubjectBusiness.create(classroomSessionDivisionSubjects);
     	subjectEvaluationTypeBusiness.create(subjectEvaluationTypes);
     	
-    	
+    	for(AbstractIdentifiable identifiable : genericBusiness.use(EvaluationType.class).find().all())
+    		SchoolReportProducer.DEFAULT_STUDENT_CLASSROOM_SESSION_DIVISION_REPORT_PARAMETERS.getEvaluationTypeCodes().add(((EvaluationType)identifiable).getCode());
+    	SchoolReportProducer.DEFAULT_STUDENT_CLASSROOM_SESSION_DIVISION_REPORT_PARAMETERS.setSumMarks(Boolean.TRUE);
 	}
 	
 	private LevelTimeDivision createLevelTimeDivision(String levelName){

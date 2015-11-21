@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Student Classroom Session Division Report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="de4e9630-bfde-428f-bc68-96e9a465fd5d">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="22"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -206,20 +206,20 @@
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="93" splitType="Stretch">
+		<band height="113" splitType="Stretch">
 			<image hAlign="Center" isUsingCache="false" onErrorType="Blank">
 				<reportElement x="245" y="0" width="64" height="64" uuid="002be5f5-52d2-48f3-b556-b337746ea1b4"/>
 				<imageExpression><![CDATA[$F{academicSession}.getCompany().getImage()]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="0" y="62" width="555" height="23" forecolor="#003333" uuid="8821cbc7-e748-4afe-9035-5aa30102c585"/>
+				<reportElement x="0" y="62" width="555" height="42" forecolor="#003333" uuid="8821cbc7-e748-4afe-9035-5aa30102c585"/>
 				<textElement textAlignment="Center" markup="styled">
-					<font fontName="Times New Roman" size="18" isBold="true"/>
+					<font fontName="Tin Birdhouse" size="18" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{academicSession}.getCompany().getName()+"</font>"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["<font face='Tin Birdhouse'>" +$F{academicSession}.getCompany().getName()+"</font>"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="84" width="555" height="9" uuid="558cda08-1619-472c-a906-f38ed8ab7b5d"/>
+				<reportElement x="0" y="104" width="555" height="9" uuid="558cda08-1619-472c-a906-f38ed8ab7b5d"/>
 				<textElement textAlignment="Center" markup="styled">
 					<font fontName="Times New Roman" size="6"/>
 				</textElement>

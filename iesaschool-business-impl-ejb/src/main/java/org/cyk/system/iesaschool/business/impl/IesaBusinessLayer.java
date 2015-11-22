@@ -43,6 +43,8 @@ import org.cyk.system.school.model.session.ClassroomSession;
 import org.cyk.system.school.model.session.ClassroomSessionDivision;
 import org.cyk.system.school.model.session.CommonNodeInformations;
 import org.cyk.system.school.model.session.Level;
+import org.cyk.system.school.model.session.LevelGroup;
+import org.cyk.system.school.model.session.LevelGroupType;
 import org.cyk.system.school.model.session.LevelName;
 import org.cyk.system.school.model.session.LevelTimeDivision;
 import org.cyk.system.school.model.session.School;
@@ -74,7 +76,6 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	@Inject private ClassroomSessionDivisionBusiness classroomSessionDivisionBusiness;
 	@Inject private ClassroomSessionDivisionSubjectBusiness classroomSessionDivisionSubjectBusiness;
 	
-	
 	private EvaluationType evaluationTypeTest1,evaluationTypeTest2,evaluationTypeExam;
 	
 	private CommonNodeInformations commonNodeInformations;
@@ -82,6 +83,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	private ArrayList<Subject> subjectsG1G3 = new ArrayList<>(),subjectsG4G6 = new ArrayList<>()
 			,subjectsG7G9 = new ArrayList<>(),subjectsG10G12 = new ArrayList<>(); 
+	private LevelGroupType levelGroupType;
 	
 	@Override
 	protected void initialisation() {
@@ -126,6 +128,8 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 				super.set(object);
 				if(object instanceof LevelName){
 					((LevelName)object).setNodeInformations(commonNodeInformations);
+				}else if(object instanceof LevelGroup){
+					((LevelGroup)object).setType(levelGroupType);
 				}
 			}
 		});
@@ -133,6 +137,11 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	@SuppressWarnings("unchecked")
 	private void structure(){
+		levelGroupType = createEnumeration(LevelGroupType.class,"LevelGroupTypeDummy");
+		LevelGroup levelGroupPrimary = createEnumeration(LevelGroup.class,"Primary");
+		LevelGroup levelGroupSecondary = createEnumeration(LevelGroup.class, "Secondary");
+		//LevelGroup levelGroupPrimary = new LevelGroup(null, null, "PRIMARY", "Primary");
+		
     	evaluationTypeTest1 = createEnumeration(EvaluationType.class,"Test 1");
     	evaluationTypeTest2 = createEnumeration(EvaluationType.class,"Test 2");
     	evaluationTypeExam = createEnumeration(EvaluationType.class,"Exam");
@@ -224,32 +233,32 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	Collection<SubjectEvaluationType> subjectEvaluationTypes = new ArrayList<>(); 
     	
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 1") , subjectsG1G3);    	
+    			, createLevelTimeDivision("Grade 1",levelGroupPrimary) , subjectsG1G3);    	
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 2") , subjectsG1G3);
+    			, createLevelTimeDivision("Grade 2",levelGroupPrimary) , subjectsG1G3);
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 3") , subjectsG1G3);
+    			, createLevelTimeDivision("Grade 3",levelGroupPrimary) , subjectsG1G3);
     	
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 4") , subjectsG4G6);
+    			, createLevelTimeDivision("Grade 4",levelGroupPrimary) , subjectsG4G6);
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 5") , subjectsG4G6);
+    			, createLevelTimeDivision("Grade 5",levelGroupPrimary) , subjectsG4G6);
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 6") , subjectsG4G6);
+    			, createLevelTimeDivision("Grade 6",levelGroupPrimary) , subjectsG4G6);
     	
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 7") , subjectsG7G9);
+    			, createLevelTimeDivision("Grade 7",levelGroupSecondary) , subjectsG7G9);
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 8") , subjectsG7G9);
+    			, createLevelTimeDivision("Grade 8",levelGroupSecondary) , subjectsG7G9);
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 9") , subjectsG7G9);
+    			, createLevelTimeDivision("Grade 9",levelGroupSecondary) , subjectsG7G9);
     	
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 10") , subjectsG10G12);
+    			, createLevelTimeDivision("Grade 10",levelGroupSecondary) , subjectsG10G12);
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 11") , subjectsG10G12);
+    			, createLevelTimeDivision("Grade 11",levelGroupSecondary) , subjectsG10G12);
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 12") , subjectsG10G12);
+    			, createLevelTimeDivision("Grade 12",levelGroupSecondary) , subjectsG10G12);
     	
     	classroomSessionBusiness.create(classroomSessions);
     	classroomSessionDivisionBusiness.create(classroomSessionDivisions);
@@ -261,8 +270,8 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	SchoolReportProducer.DEFAULT_STUDENT_CLASSROOM_SESSION_DIVISION_REPORT_PARAMETERS.setSumMarks(Boolean.TRUE);
 	}
 	
-	private LevelTimeDivision createLevelTimeDivision(String levelName){
-		return create(new LevelTimeDivision(create(new Level(createEnumeration(LevelName.class,levelName)))
+	private LevelTimeDivision createLevelTimeDivision(String levelName,LevelGroup levelGroup){
+		return create(new LevelTimeDivision(create(new Level(levelGroup,createEnumeration(LevelName.class,levelName)))
 				, getEnumeration(TimeDivisionType.class,TimeDivisionType.YEAR)));
 	}
 	

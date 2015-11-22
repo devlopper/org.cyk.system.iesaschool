@@ -6,7 +6,6 @@ import org.cyk.system.root.model.file.report.LabelValueCollectionReport;
 import org.cyk.system.root.model.userinterface.style.FontName;
 import org.cyk.system.root.model.userinterface.style.Style;
 import org.cyk.system.school.business.impl.AbstractSchoolReportProducer;
-import org.cyk.system.school.business.impl.SchoolBusinessLayer;
 import org.cyk.system.school.model.session.AcademicSession;
 import org.cyk.system.school.model.session.StudentClassroomSessionDivision;
 import org.cyk.system.school.model.session.StudentClassroomSessionDivisionReport;
@@ -40,15 +39,16 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		
 		AcademicSession as = studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getAcademicSession();
 		r.getAcademicSession().setFromDateToDate(timeBusiness.findYear(as.getPeriod().getFromDate())+"/"+timeBusiness.findYear(as.getPeriod().getToDate())+" ACADEMIC SESSION");
-		int index = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionBusiness().findIndex(studentClassroomSessionDivision.getClassroomSessionDivision());
+	
 		String name = null;
-		if(index==1)
+		if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==0)
 			name = "FIRST";
-		else if(index==2)
+		else if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==1)
 			name = "SECOND";
-		else if(index==3)
+		else if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==2)
 			name = "THIRD";
-		r.setName(name+" TERM REPORT CARD");
+		r.setName(name+" "+studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getLevelTimeDivision().getLevel().getGroup().getName().toUpperCase()
+				+" TERM REPORT CARD");
 		
 		
 		r.getSubjectsTableColumnNames().add("No.");
@@ -66,7 +66,7 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		r.getSubjectsTableColumnNames().add("TEACHER");
 		
 		r.setInformationLabelValueCollection(labelValueCollection("school.report.studentclassroomsessiondivision.block.informations"));
-		if(SchoolBusinessLayer.getInstance().getClassroomSessionDivisionBusiness().findIndex(studentClassroomSessionDivision.getClassroomSessionDivision())==3){
+		if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==3){
 			labelValue("school.report.studentclassroomsessiondivision.block.informations.annualaverage", "To Compute");
 			labelValue("school.report.studentclassroomsessiondivision.block.informations.annualgrade", "To Compute");
 			labelValue("school.report.studentclassroomsessiondivision.block.informations.annualrank", "To Compute");

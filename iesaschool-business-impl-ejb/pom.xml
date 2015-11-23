@@ -45,6 +45,21 @@
 			<version>0.0.1</version>
 			<type>ejb</type>
 		</dependency>
+		<dependency>
+			<groupId>org.cyk.jasper.report.font</groupId>
+			<artifactId>jasper-report-font-tinbirdhouse</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cyk.jasper.report.font</groupId>
+			<artifactId>jasper-report-font-agencyfb</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cyk.jasper.report.font</groupId>
+			<artifactId>jasper-report-font-tindoghouse</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 	</dependencies>	
 
 </project>

@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 
 import lombok.Getter;
 
+import org.cyk.system.company.model.structure.Employee;
 import org.cyk.system.iesaschool.business.impl.IesaBusinessLayer;
 import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.actor.Teacher;
@@ -50,6 +51,7 @@ public class IesaWebManager extends AbstractPrimefacesManager implements Seriali
 	public SystemMenu systemMenu(AbstractUserSession userSession) {
 		SystemMenu systemMenu = new SystemMenu();
 		
+		systemMenu.getBusinesses().add(menuManager.crudMany(Employee.class, null));
 		systemMenu.getBusinesses().add(menuManager.crudMany(Teacher.class, null));
 		systemMenu.getBusinesses().add(menuManager.crudMany(Student.class, null));
 		systemMenu.getBusinesses().add(menuManager.crudMany(ClassroomSession.class, null));

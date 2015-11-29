@@ -32,14 +32,14 @@ public class EmployeeConsultPageAdapter extends AbstractActorConsultPage.Adapter
 				@Override
 				public Boolean build(Field field) {
 					return field.getName().equals(MainDetails.FIELD_REGISTRATION_CODE) || field.getName().equals(MainDetails.FIELD_FIRSTNAME)
-							|| field.getName().equals(MainDetails.FIELD_LASTNAMES);
+							|| field.getName().equals(MainDetails.FIELD_LASTNAMES) || field.getName().equals(MainDetails.FIELD_TITLE);
 				}
 			};
 		}else if(JobDetails.class.equals(detailsClass)) {
 			return (ControlSetAdapter<DETAILS>) new ControlSetAdapter<JobDetails>(){
 				@Override
 				public Boolean build(Field field) {
-					return field.getName().equals(JobDetails.FIELD_FUNCTION);
+					return field.getName().equals(JobDetails.FIELD_TITLE);
 				}
 			};
 		}

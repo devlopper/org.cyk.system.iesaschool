@@ -3,6 +3,7 @@ package org.cyk.system.iesaschool.business.impl.integration;
 import javax.inject.Inject;
 
 import org.cyk.system.school.business.impl.SchoolBusinessTestHelper;
+import org.cyk.system.school.business.impl.SchoolBusinessTestHelper.SchoolBusinessSimulationParameters;
 
 
 public class SimulateBusinessIT extends AbstractBusinessIT {
@@ -14,8 +15,13 @@ public class SimulateBusinessIT extends AbstractBusinessIT {
     @Override
     protected void businesses() {
     	installApplication();
+    	schoolBusinessTestHelper.setCoefficientApplied(Boolean.FALSE);
     	
-    	schoolBusinessTestHelper.simulate(3, 3, 1,1, Boolean.FALSE,Boolean.FALSE);
+    	SchoolBusinessSimulationParameters parameters = new SchoolBusinessSimulationParameters();
+
+    	parameters.setGeneratedClassroomSessionCountByLevel(12);
+    	parameters.getClassroomSessionDivisionIndexes().add(1);
+    	schoolBusinessTestHelper.simulate(parameters);
     }
     
 }

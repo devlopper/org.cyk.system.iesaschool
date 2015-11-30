@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Student Classroom Session Division Report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="de4e9630-bfde-428f-bc68-96e9a465fd5d">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="22"/>
+	<property name="ireport.y" value="224"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -859,9 +859,9 @@
 				</componentElement>
 			</frame>
 		</band>
-		<band height="106">
+		<band height="99">
 			<frame>
-				<reportElement x="0" y="0" width="277" height="95" uuid="2261a94c-5493-40ea-9f3a-b21167bb1ca1"/>
+				<reportElement x="0" y="0" width="277" height="93" uuid="2261a94c-5493-40ea-9f3a-b21167bb1ca1"/>
 				<textField>
 					<reportElement style="block header" x="0" y="0" width="277" height="13" uuid="440c6d7c-005f-4d50-a780-8931d3d68733"/>
 					<textElement markup="styled"/>

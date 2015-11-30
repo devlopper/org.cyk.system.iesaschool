@@ -9,6 +9,7 @@ import org.cyk.system.root.model.userinterface.style.FontName;
 import org.cyk.system.root.model.userinterface.style.Style;
 import org.cyk.system.school.business.impl.AbstractSchoolReportProducer;
 import org.cyk.system.school.model.session.AcademicSession;
+import org.cyk.system.school.model.session.ClassroomSessionDivision;
 import org.cyk.system.school.model.session.StudentClassroomSessionDivision;
 import org.cyk.system.school.model.session.StudentClassroomSessionDivisionReport;
 import org.cyk.utility.common.Constant;
@@ -68,6 +69,8 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		r.getSubjectsTableColumnNames().add("REMARKS");
 		r.getSubjectsTableColumnNames().add("TEACHER");
 		
+		r.setAverageScale(StringUtils.substringAfter(r.getAverageScale(), Constant.CHARACTER_SLASH.toString()));
+		
 		r.setInformationLabelValueCollection(labelValueCollection("school.report.studentclassroomsessiondivision.block.informations"));
 		if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==3){
 			labelValue("school.report.studentclassroomsessiondivision.block.informations.annualaverage", "To Compute");
@@ -75,9 +78,14 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 			labelValue("school.report.studentclassroomsessiondivision.block.informations.annualrank", "To Compute");
 			//labelValue("school.report.studentclassroomsessiondivision.block.informations.promotion", 
 			//		studentClassroomSessionDivision.get "To Compute");
-		}else{
 			labelValue("school.report.studentclassroomsessiondivision.block.informations.nextacademicsession", 
 					format(studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getAcademicSession().getNextStartingDate()));
+		}else{
+			ClassroomSessionDivision nextClassroomSessionDivision = studentClassroomSessionDivision.getClassroomSessionDivision();
+			labelValue("school.report.studentclassroomsessiondivision.block.informations.nextopening", 
+					format(nextClassroomSessionDivision.getPeriod().getFromDate()));
+			labelValue("school.report.studentclassroomsessiondivision.block.informations.nexttermexamination", 
+					format(nextClassroomSessionDivision.getPeriod().getToDate()));
 		}
 		
 		r.setBehaviorLabelValueCollection1(new LabelValueCollectionReport());

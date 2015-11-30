@@ -19,7 +19,7 @@ public class SimulateBusinessIT extends AbstractBusinessIT {
     	
     	SchoolBusinessSimulationParameters parameters = new SchoolBusinessSimulationParameters();
 
-    	parameters.setGeneratedClassroomSessionCountByLevel(12);
+    	parameters.setGeneratedClassroomSessionCountByLevel(null);
     	parameters.getClassroomSessionDivisionIndexes().add(1);
     	schoolBusinessTestHelper.simulate(parameters);
     }

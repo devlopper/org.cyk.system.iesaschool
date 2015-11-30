@@ -54,6 +54,7 @@ import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubject;
 import org.cyk.system.school.model.subject.EvaluationType;
 import org.cyk.system.school.model.subject.Subject;
 import org.cyk.system.school.model.subject.SubjectEvaluationType;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.joda.time.DateTimeConstants;
@@ -174,17 +175,15 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		
 		CommonNodeInformations commonNodeInformationsG1G3 = new CommonNodeInformations(createIntervalCollection("ICEV1",new String[][]{
 			{"A+", "Excellent", "90", "100"},{"A", "Very good", "80", "89.99"},{"B+", "Good", "70", "79.99"},{"B", "Fair", "60", "69.99"}
-			,{"C+", "Satisfactory", "55", "59.99"},{"C", "Barely satisfactory", "50", "54.99"},{"E", "Fail", "0", "49.99"}
-			}),studentWorkMetricCollection,reportFile,getEnumeration(TimeDivisionType.class, TimeDivisionType.DAY));
+			,{"C+", "Satisfactory", "55", "59.99"},{"C", "Barely satisfactory", "50", "54.99"},{"E", "Fail", "0", "49.99"}},Constant.CHARACTER_SLASH.toString())
+				,studentWorkMetricCollection,reportFile,getEnumeration(TimeDivisionType.class, TimeDivisionType.DAY));
 		
 		CommonNodeInformations commonNodeInformationsG4G6 = commonNodeInformationsG1G3;
 		
 		CommonNodeInformations commonNodeInformationsG7G9 = new CommonNodeInformations(createIntervalCollection("ICEV2",new String[][]{
-			{"A*", "Outstanding", "90", "100"}
-			//,{"A", "Excellent", "80", "89.99"},{"B", "Very Good", "70", "79.99"}
-			//,{"C", "Good", "60", "69.99"}
-			//,{"D", "Satisfactory", "50", "59.99"},{"E", "Fail", "0", "49.99"}
-			}),studentWorkMetricCollection,reportFile,getEnumeration(TimeDivisionType.class, TimeDivisionType.DAY));
+			{"A*", "Outstanding", "90", "100"},{"A", "Excellent", "80", "89.99"},{"B", "Very Good", "70", "79.99"},{"C", "Good", "60", "69.99"}
+			,{"D", "Satisfactory", "50", "59.99"},{"E", "Fail", "0", "49.99"}},Constant.CHARACTER_SLASH.toString()),studentWorkMetricCollection,reportFile
+				,getEnumeration(TimeDivisionType.class, TimeDivisionType.DAY));
 		
 		CommonNodeInformations commonNodeInformationsG10G12 = commonNodeInformationsG7G9;
 		
@@ -239,32 +238,32 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	Collection<SubjectEvaluationType> subjectEvaluationTypes = new ArrayList<>(); 
     	
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 1",levelGroupPrimary,commonNodeInformationsG1G3) , subjectsG1G3);    	
+    			, createLevelTimeDivision("Grade 1",levelGroupPrimary,commonNodeInformationsG1G3) , subjectsG1G3,new String[]{"A","B","C"});    	
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 2",levelGroupPrimary,commonNodeInformationsG1G3) , subjectsG1G3);
+    			, createLevelTimeDivision("Grade 2",levelGroupPrimary,commonNodeInformationsG1G3) , subjectsG1G3,new String[]{"A","B","C"});
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 3",levelGroupPrimary,commonNodeInformationsG1G3) , subjectsG1G3);
+    			, createLevelTimeDivision("Grade 3",levelGroupPrimary,commonNodeInformationsG1G3) , subjectsG1G3,new String[]{"A","B","C"});
     	
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 4",levelGroupPrimary,commonNodeInformationsG4G6) , subjectsG4G6);
+    			, createLevelTimeDivision("Grade 4",levelGroupPrimary,commonNodeInformationsG4G6) , subjectsG4G6,new String[]{"A","B","C"});
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 5",levelGroupPrimary,commonNodeInformationsG4G6) , subjectsG4G6);
+    			, createLevelTimeDivision("Grade 5",levelGroupPrimary,commonNodeInformationsG4G6) , subjectsG4G6,new String[]{"A","B","C"});
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 6",levelGroupPrimary,commonNodeInformationsG4G6) , subjectsG4G6);
+    			, createLevelTimeDivision("Grade 6",levelGroupPrimary,commonNodeInformationsG4G6) , subjectsG4G6,new String[]{"A","B","C"});
     	
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 7",levelGroupSecondary,commonNodeInformationsG7G9) , subjectsG7G9);
+    			, createLevelTimeDivision("Grade 7",levelGroupSecondary,commonNodeInformationsG7G9) , subjectsG7G9,new String[]{"A","B","C"});
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 8",levelGroupSecondary,commonNodeInformationsG7G9) , subjectsG7G9);
+    			, createLevelTimeDivision("Grade 8",levelGroupSecondary,commonNodeInformationsG7G9) , subjectsG7G9,new String[]{"A","B","C"});
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 9",levelGroupSecondary,commonNodeInformationsG7G9) , subjectsG7G9);
+    			, createLevelTimeDivision("Grade 9",levelGroupSecondary,commonNodeInformationsG7G9) , subjectsG7G9,new String[]{"A","B","C"});
     	
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 10",levelGroupSecondary,commonNodeInformationsG10G12) , subjectsG10G12);
+    			, createLevelTimeDivision("Grade 10",levelGroupSecondary,commonNodeInformationsG10G12) , subjectsG10G12,new String[]{"A","B","C"});
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 11",levelGroupSecondary,commonNodeInformationsG10G12) , subjectsG10G12);
+    			, createLevelTimeDivision("Grade 11",levelGroupSecondary,commonNodeInformationsG10G12) , subjectsG10G12,new String[]{"A","B","C"});
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 12",levelGroupSecondary,commonNodeInformationsG10G12) , subjectsG10G12);
+    			, createLevelTimeDivision("Grade 12",levelGroupSecondary,commonNodeInformationsG10G12) , subjectsG10G12,new String[]{"A","B","C"});
     	
     	classroomSessionBusiness.create(classroomSessions);
     	classroomSessionDivisionBusiness.create(classroomSessionDivisions);
@@ -330,11 +329,12 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 			classroomSessionInfos.getDivisions().add(createClassroomSessionDivision(classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,classroomSessionInfos.getClassroomSession(),subjects));
 		}
 	}
+	/*
 	private void grade(Collection<ClassroomSession> classroomSessions,Collection<ClassroomSessionDivision> classroomSessionDivisions
 			,Collection<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects,Collection<SubjectEvaluationType> subjectEvaluationTypes
 			,AcademicSession academicSession,LevelTimeDivision levelTimeDivision,Collection<Subject> subjects){
 		grade(classroomSessions, classroomSessionDivisions, classroomSessionDivisionSubjects, subjectEvaluationTypes, academicSession, levelTimeDivision, subjects,new String[]{""});
-	}
+	}*/
 	
 	private ClassroomSessionDivisionInfos createClassroomSessionDivision(Collection<ClassroomSessionDivision> classroomSessionDivisions
 			,Collection<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects,Collection<SubjectEvaluationType> subjectEvaluationTypes

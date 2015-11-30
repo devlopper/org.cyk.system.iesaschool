@@ -2,13 +2,16 @@ package org.cyk.system.iesaschool.business.impl;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.file.report.LabelValueCollectionReport;
+import org.cyk.system.root.model.file.report.LabelValueReport;
 import org.cyk.system.root.model.userinterface.style.FontName;
 import org.cyk.system.root.model.userinterface.style.Style;
 import org.cyk.system.school.business.impl.AbstractSchoolReportProducer;
 import org.cyk.system.school.model.session.AcademicSession;
 import org.cyk.system.school.model.session.StudentClassroomSessionDivision;
 import org.cyk.system.school.model.session.StudentClassroomSessionDivisionReport;
+import org.cyk.utility.common.Constant;
 
 public class ReportProducer extends AbstractSchoolReportProducer implements Serializable{
 	
@@ -88,6 +91,12 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 			r.getBehaviorLabelValueCollection2().getCollection().add(r.getBehaviorLabelValueCollection().getCollection().get(i));
 		
 		return r;
+	}
+	
+	@Override
+	protected void processGradingScaleLabelValueReport(LabelValueReport labelValueReport) {
+		super.processGradingScaleLabelValueReport(labelValueReport);
+		labelValueReport.setLabel(StringUtils.substringAfter(labelValueReport.getLabel(), Constant.CHARACTER_SLASH.toString()));
 	}
 	
 }

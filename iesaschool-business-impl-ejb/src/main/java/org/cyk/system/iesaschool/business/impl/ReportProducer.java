@@ -70,6 +70,7 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		r.getSubjectsTableColumnNames().add("TEACHER");
 		
 		r.setAverageScale(StringUtils.substringAfter(r.getAverageScale(), Constant.CHARACTER_SLASH.toString()));
+		r.getOverallResultlLabelValueCollection().getById("school.report.studentclassroomsessiondivision.block.overallresult.grade").setValue(r.getAverageScale());
 		
 		r.setInformationLabelValueCollection(labelValueCollection("school.report.studentclassroomsessiondivision.block.informations"));
 		if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==3){

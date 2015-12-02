@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.file.report.LabelValueCollectionReport;
-import org.cyk.system.root.model.file.report.LabelValueReport;
+import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.userinterface.style.FontName;
 import org.cyk.system.root.model.userinterface.style.Style;
 import org.cyk.system.school.business.impl.AbstractSchoolReportProducer;
@@ -69,8 +69,8 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		r.getSubjectsTableColumnNames().add("REMARKS");
 		r.getSubjectsTableColumnNames().add("TEACHER");
 		
-		r.setAverageScale(StringUtils.substringAfter(r.getAverageScale(), Constant.CHARACTER_SLASH.toString()));
-		r.getOverallResultlLabelValueCollection().getById("school.report.studentclassroomsessiondivision.block.overallresult.grade").setValue(r.getAverageScale());
+		//r.setAverageScale(StringUtils.substringAfter(r.getAverageScale(), Constant.CHARACTER_SLASH.toString()));
+		//r.getOverallResultlLabelValueCollection().getById(LABEL_VALUE_STUDENTCLASSROOMSESSIONDIVISION_BLOCK_OVERALLRESULT_GRADE_ID).setValue(r.getAverageScale());
 		
 		r.setInformationLabelValueCollection(labelValueCollection("school.report.studentclassroomsessiondivision.block.informations"));
 		if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==3){
@@ -103,9 +103,9 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 	}
 	
 	@Override
-	protected void processGradingScaleLabelValueReport(LabelValueReport labelValueReport) {
-		super.processGradingScaleLabelValueReport(labelValueReport);
-		labelValueReport.setLabel(StringUtils.substringAfter(labelValueReport.getLabel(), Constant.CHARACTER_SLASH.toString()));
+	protected String getGradeScaleCode(Interval interval) {
+		return StringUtils.substringAfter(interval.getCode(), Constant.CHARACTER_SLASH.toString());
 	}
+	
 	
 }

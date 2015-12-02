@@ -2,6 +2,7 @@ package org.cyk.system.iesaschool.business.impl.integration;
 
 import javax.inject.Inject;
 
+import org.cyk.system.iesaschool.business.impl.IesaBusinessLayer;
 import org.cyk.system.school.business.impl.SchoolBusinessTestHelper;
 import org.cyk.system.school.business.impl.SchoolBusinessTestHelper.SchoolBusinessSimulationParameters;
 
@@ -20,7 +21,11 @@ public class SimulateBusinessIT extends AbstractBusinessIT {
     	SchoolBusinessSimulationParameters parameters = new SchoolBusinessSimulationParameters();
 
     	parameters.setGeneratedClassroomSessionCountByLevel(null);
-    	parameters.getClassroomSessionDivisionIndexes().add(1);
+    	parameters.getClassroomSessionDivisionIndexes().add(0);
+    	schoolBusinessTestHelper.setCustomClassroomSessionDivisionSubjectEvaluationTypeInfos(new Object[][]{
+    		{IesaBusinessLayer.getInstance().getEvaluationTypeTest1(),"0.15","100"},{IesaBusinessLayer.getInstance().getEvaluationTypeTest2(),"0.15","100"}
+    		,{IesaBusinessLayer.getInstance().getEvaluationTypeExam(),"0.7","100"}
+    	});
     	schoolBusinessTestHelper.simulate(parameters);
     }
     

@@ -1,16 +1,11 @@
 package org.cyk.system.iesaschool.business.impl.integration;
 
-import javax.inject.Inject;
-import javax.transaction.UserTransaction;
-
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.utility.test.Transaction;
 
 public class ApplicationSetupBusinessIT extends AbstractBusinessIT {
 
     private static final long serialVersionUID = -6691092648665798471L;
 
-    @Inject private UserTransaction userTransaction;
     
     @Override
     protected void businesses() {

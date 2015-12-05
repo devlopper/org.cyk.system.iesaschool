@@ -153,7 +153,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 			@Override
 			public void _execute_() {
 				fakedDataProducer.produce(fakedDataProducerAdapter());
-				getEntityManager().flush();
+				//getEntityManager().flush();
 			}
     	}.run();
     }

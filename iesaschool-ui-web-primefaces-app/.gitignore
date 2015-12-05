@@ -7,4 +7,4 @@
 .classpath
 /Workspaces
 rebel.xml
-.bat
+/Glassfish_Production_Server_Setup.bat

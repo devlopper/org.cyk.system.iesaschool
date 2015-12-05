@@ -7,7 +7,7 @@ set DOMAIN_NAME=mydomain
 set WAR_NAME=%SYSTEMID%
 set WAR_PATH=%ARTIFACT_DIRECTORY%org\cyk\system\%SYSTEMID%\ui\web\jsf\primefaces\%SYSTEMID%-ui-web-primefaces-app\%VERSION%\%SYSTEMID%-ui-web-primefaces-app-%VERSION%.war
 
-cls
+cls 
 
 echo SYSTEM %SYSTEMID% WILL BE SETUP ON YOUR GLASSFISH SERVER AT LOCATION %GLASSFISH_DIRECTORY%
 

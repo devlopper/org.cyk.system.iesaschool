@@ -54,7 +54,6 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		r.setName(name+" "+studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getLevelTimeDivision().getLevel().getGroup().getName().toUpperCase()
 				+" TERM REPORT CARD");
 		
-		
 		r.getSubjectsTableColumnNames().add("No.");
 		r.getSubjectsTableColumnNames().add("SUBJECTS");
 		r.getSubjectsTableColumnNames().add("TEST 1 15%");
@@ -83,6 +82,8 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 					format(studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getAcademicSession().getNextStartingDate()));
 		}else{
 			ClassroomSessionDivision nextClassroomSessionDivision = studentClassroomSessionDivision.getClassroomSessionDivision();
+			labelValue("school.report.studentclassroomsessiondivision.block.informations.conferencerequested", 
+					studentClassroomSessionDivision.getResults().getConferenceRequested()?"YES":"NO");
 			labelValue("school.report.studentclassroomsessiondivision.block.informations.nextopening", 
 					format(nextClassroomSessionDivision.getPeriod().getFromDate()));
 			labelValue("school.report.studentclassroomsessiondivision.block.informations.nexttermexamination", 

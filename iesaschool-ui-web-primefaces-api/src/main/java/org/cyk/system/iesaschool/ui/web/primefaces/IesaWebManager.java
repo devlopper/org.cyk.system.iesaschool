@@ -20,7 +20,6 @@ import org.cyk.system.school.model.actor.Teacher;
 import org.cyk.system.school.model.session.ClassroomSession;
 import org.cyk.system.school.ui.web.primefaces.session.StudentClassroomSessionDivisionConsultPage;
 import org.cyk.ui.api.AbstractUserSession;
-import org.cyk.ui.api.command.UICommandable;
 import org.cyk.ui.api.command.menu.SystemMenu;
 import org.cyk.ui.web.api.security.shiro.WebEnvironmentAdapter;
 import org.cyk.ui.web.api.security.shiro.WebEnvironmentAdapter.SecuredUrlProvider;
@@ -65,18 +64,14 @@ public class IesaWebManager extends AbstractPrimefacesManager implements Seriali
 	public SystemMenu systemMenu(AbstractUserSession userSession) {
 		SystemMenu systemMenu = new SystemMenu();
 		
-		UICommandable commandable = null;
-		
 		systemMenu.getBusinesses().add(menuManager.crudMany(Company.class, null));
 		systemMenu.getBusinesses().add(menuManager.crudMany(Employee.class, null));
 		systemMenu.getBusinesses().add(menuManager.crudMany(Teacher.class, null));
 		systemMenu.getBusinesses().add(menuManager.crudMany(Student.class, null));
 		systemMenu.getBusinesses().add(menuManager.crudMany(ClassroomSession.class, null));
 		
-		systemMenu.getBusinesses().add(commandable = menuManager.crudMany(PersonTitle.class, null));
-		//commandable.setLabel("Titre personne");
-		systemMenu.getBusinesses().add(commandable = menuManager.crudMany(JobTitle.class, null));
-		//commandable.setLabel("Titre job");
+		systemMenu.getBusinesses().add(menuManager.crudMany(PersonTitle.class, null));
+		systemMenu.getBusinesses().add(menuManager.crudMany(JobTitle.class, null));
 		
 		return systemMenu;
 	}

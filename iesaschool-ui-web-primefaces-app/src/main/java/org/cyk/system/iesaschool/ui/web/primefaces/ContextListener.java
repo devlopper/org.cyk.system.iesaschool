@@ -22,7 +22,7 @@ import org.cyk.ui.api.command.menu.MenuManager;
 import org.cyk.ui.api.command.menu.MenuManager.ModuleGroup;
 import org.cyk.ui.api.command.menu.UIMenu;
 import org.cyk.ui.api.data.collector.form.FormConfiguration;
-import org.cyk.ui.api.model.party.DefaultActorEditFormModel;
+import org.cyk.ui.api.model.party.AbstractActorEditFormModel;
 import org.cyk.ui.api.model.party.DefaultPersonEditFormModel;
 import org.cyk.ui.web.primefaces.page.BusinessEntityFormOnePageListener;
 import org.cyk.ui.web.primefaces.page.tools.AbstractActorConsultPageAdapter;
@@ -73,31 +73,29 @@ public class ContextListener extends AbstractSchoolContextListener implements Se
 	protected <IDENTIFIABLE extends AbstractIdentifiable> void registerBusinessEntityFormOnePageListener(Class<IDENTIFIABLE> aClass,BusinessEntityFormOnePageListener<?> listener) {
 		super.registerBusinessEntityFormOnePageListener(aClass, listener);
 		if(aClass.equals(Teacher.class)){
-			listener.getFormConfigurationMap().get(Crud.CREATE).get(FormConfiguration.TYPE_INPUT_SET_SMALLEST).addRequiredFieldNames(DefaultActorEditFormModel.FIELD_REGISTRATION_CODE);
+			listener.getFormConfigurationMap().get(Crud.CREATE).get(FormConfiguration.TYPE_INPUT_SET_SMALLEST).addRequiredFieldNames(AbstractActorEditFormModel.FIELD_REGISTRATION_CODE);
 			listener.getFormConfigurationMap().get(Crud.CREATE).get(FormConfiguration.TYPE_INPUT_SET_SMALLEST).addFieldNames(DefaultPersonEditFormModel.FIELD_TITLE
 					,DefaultPersonEditFormModel.FIELD_SIGNATURE_SPECIMEN);
 			
 			listener.getFormConfigurationMap().get(Crud.UPDATE).get(DefaultPersonEditFormModel.TAB_PERSON_ID).addFieldNames(
-					DefaultActorEditFormModel.FIELD_REGISTRATION_CODE,DefaultPersonEditFormModel.FIELD_TITLE);
+					AbstractActorEditFormModel.FIELD_REGISTRATION_CODE,DefaultPersonEditFormModel.FIELD_TITLE);
 			
 		}else if(aClass.equals(Student.class)){
-			listener.getFormConfigurationMap().get(Crud.CREATE).get(FormConfiguration.TYPE_INPUT_SET_SMALLEST).addRequiredFieldNames(DefaultActorEditFormModel.FIELD_REGISTRATION_CODE);
-			listener.getFormConfigurationMap().get(Crud.CREATE).get(FormConfiguration.TYPE_INPUT_SET_SMALLEST).addFieldNames(DefaultPersonEditFormModel.FIELD_SURNAME
-					,DefaultPersonEditFormModel.FIELD_BIRTH_DATE,DefaultPersonEditFormModel.FIELD_BIRTH_LOCATION
-					,DefaultPersonEditFormModel.FIELD_SEX,DefaultPersonEditFormModel.FIELD_IMAGE);
+			listener.getFormConfigurationMap().get(Crud.CREATE).get(FormConfiguration.TYPE_INPUT_SET_SMALLEST).addRequiredFieldNames(AbstractActorEditFormModel.FIELD_REGISTRATION_CODE);
+			listener.getFormConfigurationMap().get(Crud.CREATE).get(FormConfiguration.TYPE_INPUT_SET_SMALLEST).addFieldNames(DefaultPersonEditFormModel.FIELD_BIRTH_DATE
+					,DefaultPersonEditFormModel.FIELD_BIRTH_LOCATION,DefaultPersonEditFormModel.FIELD_SEX,DefaultPersonEditFormModel.FIELD_IMAGE);
 			
 			listener.getFormConfigurationMap().get(Crud.UPDATE).get(DefaultPersonEditFormModel.TAB_PERSON_ID).addFieldNames(
-					DefaultActorEditFormModel.FIELD_REGISTRATION_CODE,DefaultPersonEditFormModel.FIELD_SURNAME
-					,DefaultPersonEditFormModel.FIELD_BIRTH_DATE,DefaultPersonEditFormModel.FIELD_BIRTH_LOCATION
+					AbstractActorEditFormModel.FIELD_REGISTRATION_CODE,DefaultPersonEditFormModel.FIELD_BIRTH_DATE,DefaultPersonEditFormModel.FIELD_BIRTH_LOCATION
 					,DefaultPersonEditFormModel.FIELD_SEX,DefaultPersonEditFormModel.FIELD_IMAGE);
 		}else if(aClass.equals(Employee.class)){
-			listener.getFormConfigurationMap().get(Crud.CREATE).get(FormConfiguration.TYPE_INPUT_SET_SMALLEST).addRequiredFieldNames(DefaultActorEditFormModel.FIELD_REGISTRATION_CODE);
+			listener.getFormConfigurationMap().get(Crud.CREATE).get(FormConfiguration.TYPE_INPUT_SET_SMALLEST).addRequiredFieldNames(AbstractActorEditFormModel.FIELD_REGISTRATION_CODE);
 			listener.getFormConfigurationMap().get(Crud.CREATE).get(FormConfiguration.TYPE_INPUT_SET_SMALLEST).addFieldNames(DefaultPersonEditFormModel.FIELD_NAME
 					,DefaultPersonEditFormModel.FIELD_LAST_NAME,DefaultPersonEditFormModel.FIELD_TITLE,DefaultPersonEditFormModel.FIELD_SIGNATURE_SPECIMEN
 					,DefaultPersonEditFormModel.FIELD_JOB_TITLE);
 			
 			listener.getFormConfigurationMap().get(Crud.UPDATE).get(DefaultPersonEditFormModel.TAB_PERSON_ID).addFieldNames(
-					DefaultActorEditFormModel.FIELD_REGISTRATION_CODE,DefaultPersonEditFormModel.FIELD_NAME,DefaultPersonEditFormModel.FIELD_LAST_NAME);
+					AbstractActorEditFormModel.FIELD_REGISTRATION_CODE,DefaultPersonEditFormModel.FIELD_NAME,DefaultPersonEditFormModel.FIELD_LAST_NAME);
 					
 		}else if(aClass.equals(Company.class)){
 			

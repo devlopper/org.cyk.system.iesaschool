@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Student Classroom Session Division Report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="de4e9630-bfde-428f-bc68-96e9a465fd5d">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="704"/>
+	<property name="ireport.y" value="0"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -869,20 +869,30 @@
 		</band>
 		<band height="99">
 			<frame>
-				<reportElement x="0" y="0" width="277" height="93" uuid="2261a94c-5493-40ea-9f3a-b21167bb1ca1"/>
+				<reportElement x="0" y="0" width="278" height="95" backcolor="#000000" uuid="2261a94c-5493-40ea-9f3a-b21167bb1ca1"/>
+				<box rightPadding="0">
+					<pen lineWidth="0.25" lineColor="#00CCCC"/>
+					<topPen lineWidth="0.0" lineColor="#00CCCC"/>
+					<leftPen lineWidth="0.0" lineColor="#00CCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#00CCCC"/>
+					<rightPen lineWidth="0.25" lineColor="#00CCCC"/>
+				</box>
 				<textField>
 					<reportElement style="block header" x="0" y="0" width="277" height="13" uuid="440c6d7c-005f-4d50-a780-8931d3d68733"/>
 					<textElement markup="styled"/>
 					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{commentsBlockTitle}+"</font>"]]></textFieldExpression>
 				</textField>
-				<image isUsingCache="false" onErrorType="Blank">
-					<reportElement x="113" y="27" width="50" height="40" uuid="5df88f9c-cfd0-4d8c-99f8-46f7e049db74"/>
+				<image hAlign="Center" isUsingCache="false" onErrorType="Blank">
+					<reportElement x="54" y="27" width="170" height="40" uuid="5df88f9c-cfd0-4d8c-99f8-46f7e049db74"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+					</box>
 					<imageExpression><![CDATA[$F{commentator}.getPerson().getSignatureSpecimen()]]></imageExpression>
 				</image>
 				<textField>
-					<reportElement x="0" y="67" width="277" height="13" uuid="a6cfe002-7b37-4421-8f2d-bc1802bb083c"/>
+					<reportElement x="0" y="69" width="277" height="13" uuid="a6cfe002-7b37-4421-8f2d-bc1802bb083c"/>
 					<textElement textAlignment="Center" markup="styled"/>
-					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{commentator}.getPerson().getNames()+"</font>"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{commentator}.getPerson().getTitle()+" "+$F{commentator}.getPerson().getNames()+"</font>"]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="2" y="13" width="275" height="13" uuid="fe518cec-68b5-471a-aeaa-44736fb02614"/>
@@ -893,23 +903,33 @@
 				</textField>
 			</frame>
 			<frame>
-				<reportElement x="277" y="0" width="278" height="93" uuid="ad594a11-3e61-4f8c-820b-4879f36773e3"/>
+				<reportElement x="277" y="0" width="278" height="95" uuid="ad594a11-3e61-4f8c-820b-4879f36773e3"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#00CCCC"/>
+					<topPen lineWidth="0.0" lineColor="#00CCCC"/>
+					<leftPen lineWidth="0.25" lineColor="#00CCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#00CCCC"/>
+					<rightPen lineWidth="0.0" lineColor="#00CCCC"/>
+				</box>
 				<textField>
 					<reportElement style="block header" x="0" y="0" width="278" height="13" uuid="54c697bb-906a-4b86-84ac-2b444066d1b3"/>
 					<textElement markup="styled"/>
 					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{schoolStampBlockTitle}+"</font>"]]></textFieldExpression>
 				</textField>
-				<image scaleImage="RetainShape" isUsingCache="false" onErrorType="Blank">
-					<reportElement x="107" y="27" width="50" height="40" uuid="8cdb6d70-e6da-41ae-863b-41162f2f9736"/>
+				<image scaleImage="RetainShape" hAlign="Center" isUsingCache="false" onErrorType="Blank">
+					<reportElement x="54" y="27" width="170" height="40" uuid="8cdb6d70-e6da-41ae-863b-41162f2f9736"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+					</box>
 					<imageExpression><![CDATA[$F{signer}.getPerson().getSignatureSpecimen()]]></imageExpression>
 				</image>
 				<textField>
-					<reportElement x="0" y="67" width="278" height="13" uuid="b98a9418-fe5f-4cca-a1f8-36455e59936c"/>
+					<reportElement x="0" y="69" width="278" height="13" uuid="b98a9418-fe5f-4cca-a1f8-36455e59936c"/>
 					<textElement textAlignment="Center" markup="styled"/>
-					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>"+ $F{signer}.getPerson().getNames()+"</font>"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>"+$F{signer}.getPerson().getTitle()+" "+$F{signer}.getPerson().getNames()+"</font>"]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="0" y="80" width="278" height="13" uuid="b9911f47-d81e-42ad-a299-b00fac13741e"/>
+					<reportElement x="0" y="82" width="278" height="13" uuid="b9911f47-d81e-42ad-a299-b00fac13741e"/>
 					<textElement textAlignment="Center" markup="styled"/>
 					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{signer}.getPerson().getJobTitle()+"</font>"]]></textFieldExpression>
 				</textField>

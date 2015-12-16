@@ -83,7 +83,8 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		}else{
 			ClassroomSessionDivision nextClassroomSessionDivision = studentClassroomSessionDivision.getClassroomSessionDivision();
 			labelValue("school.report.studentclassroomsessiondivision.block.informations.conferencerequested", 
-					studentClassroomSessionDivision.getResults().getConferenceRequested()?"YES":"NO");
+					studentClassroomSessionDivision.getResults().getConferenceRequested()==null?"NO"
+							:studentClassroomSessionDivision.getResults().getConferenceRequested()?"YES":"NO");
 			labelValue("school.report.studentclassroomsessiondivision.block.informations.nextopening", 
 					format(nextClassroomSessionDivision.getPeriod().getFromDate()));
 			labelValue("school.report.studentclassroomsessiondivision.block.informations.nexttermexamination", 

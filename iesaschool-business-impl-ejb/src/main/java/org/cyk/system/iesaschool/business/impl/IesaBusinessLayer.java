@@ -29,6 +29,7 @@ import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollection;
+import org.cyk.system.root.model.mathematics.MetricValueType;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.model.time.TimeDivisionType;
@@ -176,15 +177,15 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		create(studentWorkMetricCollectionG1G6);
 		*/
     	
-    	studentWorkMetricCollectionG1G6 = createBehaviourMetrics("BSWHG1G6","Behaviour,Study and Work Habits"
+    	studentWorkMetricCollectionG1G6 = createBehaviourMetrics("BSWHG1G6","Behaviour,Study and Work Habits",MetricValueType.NUMBER
     			, new String[]{"Respect authority","Works independently and neatly","Completes homework and class work on time","Shows social courtesies","Demonstrates self-control"
     					,"Takes care of school and others materials","Game/Sport","Handwriting","Drawing/Painting","Punctionality/Regularity","Works cooperatively in groups"
     					,"Listens and follows directions"}
     	, new String[][]{ {"1", "Has no regard for the observable traits", "1", "1"},{"2", "Shows minimal regard for the observable traits", "2", "2"}
     	,{"3", "Acceptable level of observable traits", "3", "3"},{"4", "Maintains high level of observable traits", "4", "4"}
     	,{"5", "Maintains an excellent degree of observable traits", "5", "5"} });
-    	
-    	studentWorkMetricCollectionG7G12 = createBehaviourMetrics("BSWHG7G12","Behaviour,Study and Work Habits"
+   
+    	studentWorkMetricCollectionG7G12 = createBehaviourMetrics("BSWHG7G12","Behaviour,Study and Work Habits",MetricValueType.STRING
     			, new String[]{"Respect authority","Works independently and neatly","Completes homework and class work on time","Shows social courtesies","Demonstrates self-control"
     					,"Takes care of school and others materials","Game/Sport","Handwriting","Drawing/Painting","Punctionality/Regularity","Works cooperatively in groups"
     					,"Listens and follows directions"}
@@ -396,10 +397,11 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		return subjectEvaluationType;
 	}
 	
-	private MetricCollection createBehaviourMetrics(String code,String name,String[] items,String[][] intervals){
+	private MetricCollection createBehaviourMetrics(String code,String name,MetricValueType metricValueType,String[] items,String[][] intervals){
 		MetricCollection metricCollection = new MetricCollection(code,name);
+		metricCollection.setValueType(metricValueType);
 		for(int i=0;i<items.length;i++){
-			metricCollection.addItem(i+"",items[0]);
+			metricCollection.addItem(code+"_"+i+"",items[0]);
 		}
 		
 		metricCollection.setValueIntervalCollection(new IntervalCollection(code+"_METRIC_IC"));

@@ -21,8 +21,9 @@ public class SimulateBusinessIT extends AbstractBusinessIT {
     	SchoolBusinessSimulationParameters parameters = new SchoolBusinessSimulationParameters();
 
     	//AbstractBean.SYSTEM_OUT_LOG_TRACE = Boolean.TRUE;
-    	parameters.setGeneratedClassroomSessionCountByLevel(null);
+    	parameters.setGeneratedClassroomSessionCountByLevel(1);
     	parameters.getClassroomSessionDivisionIndexes().add(0);
+    	parameters.setCreateStudentClassroomSessionDivisionReport(Boolean.FALSE);
     	schoolBusinessTestHelper.setCustomClassroomSessionDivisionSubjectEvaluationTypeInfos(new Object[][]{
     		{IesaBusinessLayer.getInstance().getEvaluationTypeTest1(),"0.15","100"},{IesaBusinessLayer.getInstance().getEvaluationTypeTest2(),"0.15","100"}
     		,{IesaBusinessLayer.getInstance().getEvaluationTypeExam(),"0.7","100"}

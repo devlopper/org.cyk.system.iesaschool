@@ -84,7 +84,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	private EvaluationType evaluationTypeTest1,evaluationTypeTest2,evaluationTypeExam;
 	
-	private MetricCollection studentWorkMetricCollection;
+	private MetricCollection studentWorkMetricCollectionG1G6,studentWorkMetricCollectionG7G12;
 	
 	private ArrayList<Subject> subjectsG1G3 = new ArrayList<>(),subjectsG4G6 = new ArrayList<>()
 			,subjectsG7G9 = new ArrayList<>(),subjectsG10G12 = new ArrayList<>(); 
@@ -151,29 +151,47 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	evaluationTypeTest2 = createEnumeration(EvaluationType.class,IesaConstant.EVALUATION_TYPE_TEST2,"Test 2");
     	evaluationTypeExam = createEnumeration(EvaluationType.class,IesaConstant.EVALUATION_TYPE_EXAM,"Exam");
     	
-		studentWorkMetricCollection = new MetricCollection("BSWH","Behaviour,Study and Work Habits");
-		studentWorkMetricCollection.addItem("1","Respect authority");
-		studentWorkMetricCollection.addItem("2","Works independently and neatly");
-		studentWorkMetricCollection.addItem("3","Completes homework and class work on time");
-		studentWorkMetricCollection.addItem("4","Shows social courtesies");
-		studentWorkMetricCollection.addItem("5","Demonstrates self-control");
-		studentWorkMetricCollection.addItem("6","Takes care of school and others materials");
-		studentWorkMetricCollection.addItem("7","Game/Sport");
-		studentWorkMetricCollection.addItem("8","Handwriting");
-		studentWorkMetricCollection.addItem("9","Drawing/Painting");
-		studentWorkMetricCollection.addItem("10","Punctionality/Regularity");
-		studentWorkMetricCollection.addItem("11","Works cooperatively in groups");
-		studentWorkMetricCollection.addItem("12","Listens and follows directions");
+    	/*
+		studentWorkMetricCollectionG1G6 = new MetricCollection("BSWHG1G6","Behaviour,Study and Work Habits");
+		studentWorkMetricCollectionG1G6.addItem("1","Respect authority");
+		studentWorkMetricCollectionG1G6.addItem("2","Works independently and neatly");
+		studentWorkMetricCollectionG1G6.addItem("3","Completes homework and class work on time");
+		studentWorkMetricCollectionG1G6.addItem("4","Shows social courtesies");
+		studentWorkMetricCollectionG1G6.addItem("5","Demonstrates self-control");
+		studentWorkMetricCollectionG1G6.addItem("6","Takes care of school and others materials");
+		studentWorkMetricCollectionG1G6.addItem("7","Game/Sport");
+		studentWorkMetricCollectionG1G6.addItem("8","Handwriting");
+		studentWorkMetricCollectionG1G6.addItem("9","Drawing/Painting");
+		studentWorkMetricCollectionG1G6.addItem("10","Punctionality/Regularity");
+		studentWorkMetricCollectionG1G6.addItem("11","Works cooperatively in groups");
+		studentWorkMetricCollectionG1G6.addItem("12","Listens and follows directions");
 		
-		studentWorkMetricCollection.setValueIntervalCollection(new IntervalCollection("BSWH_METRIC_IC"));
-		studentWorkMetricCollection.getValueIntervalCollection().addItem("1", "Has no regard for the observable traits", "1", "1");
-		studentWorkMetricCollection.getValueIntervalCollection().addItem("2", "Shows minimal regard for the observable traits", "2", "2");
-		studentWorkMetricCollection.getValueIntervalCollection().addItem("3", "Acceptable level of observable traits", "3", "3");
-		studentWorkMetricCollection.getValueIntervalCollection().addItem("4", "Maintains high level of observable traits", "4", "4");
-		studentWorkMetricCollection.getValueIntervalCollection().addItem("5", "Maintains an excellent degree of observable traits", "5", "5");
+		studentWorkMetricCollectionG1G6.setValueIntervalCollection(new IntervalCollection("BSWHG1G6_METRIC_IC"));
+		studentWorkMetricCollectionG1G6.getValueIntervalCollection().addItem("1", "Has no regard for the observable traits", "1", "1");
+		studentWorkMetricCollectionG1G6.getValueIntervalCollection().addItem("2", "Shows minimal regard for the observable traits", "2", "2");
+		studentWorkMetricCollectionG1G6.getValueIntervalCollection().addItem("3", "Acceptable level of observable traits", "3", "3");
+		studentWorkMetricCollectionG1G6.getValueIntervalCollection().addItem("4", "Maintains high level of observable traits", "4", "4");
+		studentWorkMetricCollectionG1G6.getValueIntervalCollection().addItem("5", "Maintains an excellent degree of observable traits", "5", "5");
 		
-		create(studentWorkMetricCollection);
-		
+		create(studentWorkMetricCollectionG1G6);
+		*/
+    	
+    	studentWorkMetricCollectionG1G6 = createBehaviourMetrics("BSWHG1G6","Behaviour,Study and Work Habits"
+    			, new String[]{"Respect authority","Works independently and neatly","Completes homework and class work on time","Shows social courtesies","Demonstrates self-control"
+    					,"Takes care of school and others materials","Game/Sport","Handwriting","Drawing/Painting","Punctionality/Regularity","Works cooperatively in groups"
+    					,"Listens and follows directions"}
+    	, new String[][]{ {"1", "Has no regard for the observable traits", "1", "1"},{"2", "Shows minimal regard for the observable traits", "2", "2"}
+    	,{"3", "Acceptable level of observable traits", "3", "3"},{"4", "Maintains high level of observable traits", "4", "4"}
+    	,{"5", "Maintains an excellent degree of observable traits", "5", "5"} });
+    	
+    	studentWorkMetricCollectionG7G12 = createBehaviourMetrics("BSWHG7G12","Behaviour,Study and Work Habits"
+    			, new String[]{"Respect authority","Works independently and neatly","Completes homework and class work on time","Shows social courtesies","Demonstrates self-control"
+    					,"Takes care of school and others materials","Game/Sport","Handwriting","Drawing/Painting","Punctionality/Regularity","Works cooperatively in groups"
+    					,"Listens and follows directions"}
+    	, new String[][]{ {"E", "Has no regard for the observable traits", "1", "1"},{"G", "Shows minimal regard for the observable traits", "2", "2"}
+    	,{"S", "Acceptable level of observable traits", "3", "3"},{"N", "Maintains high level of observable traits", "4", "4"}
+    	,{"H", "Maintains an excellent degree of observable traits", "5", "5"} });
+    	
 		File reportFile = createFile("report/studentclassroomsessiondivision.jrxml", "studentclassroomsessiondivisionreport.jrxml");
 		ReportTemplate reportTemplate = new ReportTemplate("SCSDRT",reportFile,createFile("image/studentclassroomsessiondivisionreport_background.jpg"));
 		create(reportTemplate);
@@ -181,13 +199,13 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		CommonNodeInformations commonNodeInformationsG1G3 = new CommonNodeInformations(createIntervalCollection("ICEV1",new String[][]{
 			{"A+", "Excellent", "90", "100"},{"A", "Very good", "80", "89.99"},{"B+", "Good", "70", "79.99"},{"B", "Fair", "60", "69.99"}
 			,{"C+", "Satisfactory", "55", "59.99"},{"C", "Barely satisfactory", "50", "54.99"},{"E", "Fail", "0", "49.99"}},Constant.CHARACTER_SLASH.toString())
-				,studentWorkMetricCollection,reportTemplate,getEnumeration(TimeDivisionType.class, TimeDivisionType.DAY));
+				,studentWorkMetricCollectionG1G6,reportTemplate,getEnumeration(TimeDivisionType.class, TimeDivisionType.DAY));
 		
 		CommonNodeInformations commonNodeInformationsG4G6 = commonNodeInformationsG1G3;
 		
 		CommonNodeInformations commonNodeInformationsG7G9 = new CommonNodeInformations(createIntervalCollection("ICEV2",new String[][]{
 			{"A*", "Outstanding", "90", "100"},{"A", "Excellent", "80", "89.99"},{"B", "Very Good", "70", "79.99"},{"C", "Good", "60", "69.99"}
-			,{"D", "Satisfactory", "50", "59.99"},{"E", "Fail", "0", "49.99"}},Constant.CHARACTER_SLASH.toString()),studentWorkMetricCollection,reportTemplate
+			,{"D", "Satisfactory", "50", "59.99"},{"E", "Fail", "0", "49.99"}},Constant.CHARACTER_SLASH.toString()),studentWorkMetricCollectionG7G12,reportTemplate
 				,getEnumeration(TimeDivisionType.class, TimeDivisionType.DAY));
 		
 		CommonNodeInformations commonNodeInformationsG10G12 = commonNodeInformationsG7G9;
@@ -376,6 +394,20 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		SubjectEvaluationType subjectEvaluationType = new SubjectEvaluationType(subject,name,coefficient,new BigDecimal("100"));
 		subjectEvaluationTypes.add(subjectEvaluationType);
 		return subjectEvaluationType;
+	}
+	
+	private MetricCollection createBehaviourMetrics(String code,String name,String[] items,String[][] intervals){
+		MetricCollection metricCollection = new MetricCollection(code,name);
+		for(int i=0;i<items.length;i++){
+			metricCollection.addItem(i+"",items[0]);
+		}
+		
+		metricCollection.setValueIntervalCollection(new IntervalCollection(code+"_METRIC_IC"));
+		for(String[] interval : intervals){
+			metricCollection.getValueIntervalCollection().addItem(interval[0], interval[1], interval[2], interval[3]);
+		}
+		create(metricCollection);
+		return metricCollection;
 	}
     
 }

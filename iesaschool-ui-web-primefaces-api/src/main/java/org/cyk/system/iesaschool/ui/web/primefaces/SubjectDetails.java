@@ -3,9 +3,9 @@ package org.cyk.system.iesaschool.ui.web.primefaces;
 import java.io.Serializable;
 
 import org.cyk.system.iesaschool.model.IesaConstant;
+import org.cyk.system.school.business.impl.session.AbstractSubjectDetails;
 import org.cyk.system.school.model.subject.StudentSubject;
 import org.cyk.system.school.model.subject.StudentSubjectEvaluation;
-import org.cyk.system.school.ui.web.primefaces.session.StudentClassroomSessionDivisionConsultPage.AbstractSubjectDetails;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 import org.cyk.utility.common.annotation.user.interfaces.Sequence;

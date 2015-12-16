@@ -151,32 +151,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	evaluationTypeTest1 = createEnumeration(EvaluationType.class,IesaConstant.EVALUATION_TYPE_TEST1,"Test 1");
     	evaluationTypeTest2 = createEnumeration(EvaluationType.class,IesaConstant.EVALUATION_TYPE_TEST2,"Test 2");
     	evaluationTypeExam = createEnumeration(EvaluationType.class,IesaConstant.EVALUATION_TYPE_EXAM,"Exam");
-    	
-    	/*
-		studentWorkMetricCollectionG1G6 = new MetricCollection("BSWHG1G6","Behaviour,Study and Work Habits");
-		studentWorkMetricCollectionG1G6.addItem("1","Respect authority");
-		studentWorkMetricCollectionG1G6.addItem("2","Works independently and neatly");
-		studentWorkMetricCollectionG1G6.addItem("3","Completes homework and class work on time");
-		studentWorkMetricCollectionG1G6.addItem("4","Shows social courtesies");
-		studentWorkMetricCollectionG1G6.addItem("5","Demonstrates self-control");
-		studentWorkMetricCollectionG1G6.addItem("6","Takes care of school and others materials");
-		studentWorkMetricCollectionG1G6.addItem("7","Game/Sport");
-		studentWorkMetricCollectionG1G6.addItem("8","Handwriting");
-		studentWorkMetricCollectionG1G6.addItem("9","Drawing/Painting");
-		studentWorkMetricCollectionG1G6.addItem("10","Punctionality/Regularity");
-		studentWorkMetricCollectionG1G6.addItem("11","Works cooperatively in groups");
-		studentWorkMetricCollectionG1G6.addItem("12","Listens and follows directions");
-		
-		studentWorkMetricCollectionG1G6.setValueIntervalCollection(new IntervalCollection("BSWHG1G6_METRIC_IC"));
-		studentWorkMetricCollectionG1G6.getValueIntervalCollection().addItem("1", "Has no regard for the observable traits", "1", "1");
-		studentWorkMetricCollectionG1G6.getValueIntervalCollection().addItem("2", "Shows minimal regard for the observable traits", "2", "2");
-		studentWorkMetricCollectionG1G6.getValueIntervalCollection().addItem("3", "Acceptable level of observable traits", "3", "3");
-		studentWorkMetricCollectionG1G6.getValueIntervalCollection().addItem("4", "Maintains high level of observable traits", "4", "4");
-		studentWorkMetricCollectionG1G6.getValueIntervalCollection().addItem("5", "Maintains an excellent degree of observable traits", "5", "5");
-		
-		create(studentWorkMetricCollectionG1G6);
-		*/
-    	
+    	    	
     	studentWorkMetricCollectionG1G6 = createBehaviourMetrics("BSWHG1G6","Behaviour,Study and Work Habits",MetricValueType.NUMBER
     			, new String[]{"Respect authority","Works independently and neatly","Completes homework and class work on time","Shows social courtesies","Demonstrates self-control"
     					,"Takes care of school and others materials","Game/Sport","Handwriting","Drawing/Painting","Punctionality/Regularity","Works cooperatively in groups"
@@ -189,9 +164,9 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     			, new String[]{"Respect authority","Works independently and neatly","Completes homework and class work on time","Shows social courtesies","Demonstrates self-control"
     					,"Takes care of school and others materials","Game/Sport","Handwriting","Drawing/Painting","Punctionality/Regularity","Works cooperatively in groups"
     					,"Listens and follows directions"}
-    	, new String[][]{ {"E", "Has no regard for the observable traits", "1", "1"},{"G", "Shows minimal regard for the observable traits", "2", "2"}
-    	,{"S", "Acceptable level of observable traits", "3", "3"},{"N", "Maintains high level of observable traits", "4", "4"}
-    	,{"H", "Maintains an excellent degree of observable traits", "5", "5"} });
+    	, new String[][]{ {"E", "Excellent", "1", "1"},{"G", "Good", "2", "2"}
+    	,{"S", "Satisfactory", "3", "3"},{"N", "Needs Improvement", "4", "4"}
+    	,{"H", "Has no regard", "5", "5"} });
     	
 		File reportFile = createFile("report/studentclassroomsessiondivision.jrxml", "studentclassroomsessiondivisionreport.jrxml");
 		ReportTemplate reportTemplate = new ReportTemplate("SCSDRT",reportFile,createFile("image/studentclassroomsessiondivisionreport_background.jpg"));
@@ -401,7 +376,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		MetricCollection metricCollection = new MetricCollection(code,name);
 		metricCollection.setValueType(metricValueType);
 		for(int i=0;i<items.length;i++){
-			metricCollection.addItem(code+"_"+i+"",items[0]);
+			metricCollection.addItem(code+"_"+i+"",items[i]);
 		}
 		
 		metricCollection.setValueIntervalCollection(new IntervalCollection(code+"_METRIC_IC"));

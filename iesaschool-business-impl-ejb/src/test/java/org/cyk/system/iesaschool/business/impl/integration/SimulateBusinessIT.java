@@ -20,6 +20,7 @@ public class SimulateBusinessIT extends AbstractBusinessIT {
     	
     	SchoolBusinessSimulationParameters parameters = new SchoolBusinessSimulationParameters();
 
+    	//AbstractBean.SYSTEM_OUT_LOG_TRACE = Boolean.TRUE;
     	parameters.setGeneratedClassroomSessionCountByLevel(null);
     	parameters.getClassroomSessionDivisionIndexes().add(0);
     	schoolBusinessTestHelper.setCustomClassroomSessionDivisionSubjectEvaluationTypeInfos(new Object[][]{

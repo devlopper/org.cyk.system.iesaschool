@@ -7,5 +7,5 @@
 .classpath
 /Workspaces
 rebel.xml
-/cyk_iesaschool_db.sql
+cyk_iesaschool_db.sql
 /studentclassroomsessiondivision.jasper

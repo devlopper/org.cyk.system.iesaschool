@@ -51,14 +51,32 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 			name = "SECOND";
 		else if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==2)
 			name = "THIRD";
+		
+		name += " TERM ,";
+		
+		String gradeCode = studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getLevelTimeDivision().getLevel().getName().getCode();
+		String testCoef = null,examCoef = "";
+		if(gradeCode.equals("Grade1") || gradeCode.equals("Grade2") || gradeCode.equals("Grade3")){
+			name += " LOWER";
+			testCoef = "15";
+			examCoef = "70";
+		}else if(gradeCode.equals("Grade4") || gradeCode.equals("Grade5") || gradeCode.equals("Grade6")){
+			name += " UPPER";
+			testCoef = "15";
+			examCoef = "70";
+		}else if(gradeCode.equals("Grade7") || gradeCode.equals("Grade8") || gradeCode.equals("Grade9")){
+			name += " JUNIOR HIGH SCHOOL";
+			testCoef = "20";
+			examCoef = "60";
+		}
 		r.setName(name+" "+studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getLevelTimeDivision().getLevel().getGroup().getName().toUpperCase()
-				+" TERM REPORT CARD");
+				+" REPORT CARD");
 		
 		r.getSubjectsTableColumnNames().add("No.");
 		r.getSubjectsTableColumnNames().add("SUBJECTS");
-		r.getSubjectsTableColumnNames().add("TEST 1 15%");
-		r.getSubjectsTableColumnNames().add("TEST 2 15%");
-		r.getSubjectsTableColumnNames().add("EXAM 70%");
+		r.getSubjectsTableColumnNames().add("TEST 1 "+testCoef+"%");
+		r.getSubjectsTableColumnNames().add("TEST 2 "+testCoef+"%");
+		r.getSubjectsTableColumnNames().add("EXAM "+examCoef+"%");
 		r.getSubjectsTableColumnNames().add("TOTAL 100%");
 		r.getSubjectsTableColumnNames().add("GRADE");
 		r.getSubjectsTableColumnNames().add("RANK");
@@ -101,11 +119,14 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		for(int i=6;i<=11;i++)
 			r.getBehaviorLabelValueCollection2().getCollection().add(r.getBehaviorLabelValueCollection().getCollection().get(i));
 		
+		
 		return r;
 	}
 	
 	@Override
 	protected String getGradeScaleCode(Interval interval) {
+		if(interval==null)
+			return "NUUL";
 		return StringUtils.substringAfter(interval.getCode(), Constant.CHARACTER_SLASH.toString());
 	}
 	

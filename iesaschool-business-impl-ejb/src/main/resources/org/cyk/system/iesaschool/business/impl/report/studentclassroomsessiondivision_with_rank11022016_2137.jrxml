@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Student Classroom Session Division Report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="5" bottomMargin="5" uuid="de4e9630-bfde-428f-bc68-96e9a465fd5d">
-	<property name="ireport.zoom" value="0.75"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="84"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Student Classroom Session Division Report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="de4e9630-bfde-428f-bc68-96e9a465fd5d">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="176"/>
+	<property name="ireport.y" value="684"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -216,7 +216,7 @@
 	<pageHeader>
 		<band height="113" splitType="Stretch">
 			<image hAlign="Center" isUsingCache="false" onErrorType="Blank">
-				<reportElement x="246" y="0" width="64" height="64" uuid="002be5f5-52d2-48f3-b556-b337746ea1b4"/>
+				<reportElement x="245" y="0" width="64" height="64" uuid="002be5f5-52d2-48f3-b556-b337746ea1b4"/>
 				<imageExpression><![CDATA[$F{academicSession}.getCompany().getImage()]]></imageExpression>
 			</image>
 			<textField>
@@ -240,26 +240,26 @@
 			<frame>
 				<reportElement x="0" y="2" width="555" height="28" uuid="4f4f8572-a429-43a0-b75e-06ad633b33c4"/>
 				<textField>
-					<reportElement style="title" mode="Opaque" x="0" y="0" width="555" height="14" forecolor="#FFFFFF" uuid="ffe17afe-314f-4a8b-985e-c8911a9c2e98"/>
-					<textElement textAlignment="Center" markup="styled">
-						<font size="11" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{name}+"</font>"]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement style="title" mode="Opaque" x="0" y="13" width="555" height="14" forecolor="#FFFFFF" uuid="ddb074ad-65c8-4ec8-b1cd-36d9a9ddaf98"/>
+					<reportElement style="title" mode="Opaque" x="0" y="0" width="555" height="14" forecolor="#FFFFFF" uuid="ddb074ad-65c8-4ec8-b1cd-36d9a9ddaf98"/>
 					<textElement textAlignment="Center" markup="styled">
 						<font size="11" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{academicSession}.getFromDateToDate()+"</font>"]]></textFieldExpression>
 				</textField>
+				<textField>
+					<reportElement style="title" mode="Opaque" x="0" y="13" width="555" height="14" forecolor="#FFFFFF" uuid="ffe17afe-314f-4a8b-985e-c8911a9c2e98"/>
+					<textElement textAlignment="Center" markup="styled">
+						<font size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{name}+"</font>"]]></textFieldExpression>
+				</textField>
 			</frame>
 		</band>
 		<band height="97">
 			<frame>
-				<reportElement mode="Transparent" x="0" y="2" width="290" height="91" backcolor="#33FFFF" uuid="6b6c63bd-9412-43cd-aff6-b9bdc4d25e8a"/>
+				<reportElement mode="Transparent" x="0" y="2" width="228" height="91" backcolor="#33FFFF" uuid="6b6c63bd-9412-43cd-aff6-b9bdc4d25e8a"/>
 				<textField>
-					<reportElement style="block header" x="0" y="0" width="290" height="13" uuid="97c5bac7-e1c0-4d7b-8629-33858d604173"/>
+					<reportElement style="block header" x="0" y="0" width="228" height="13" uuid="97c5bac7-e1c0-4d7b-8629-33858d604173"/>
 					<textElement markup="styled"/>
 					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{studentLabelValueCollection}.getName()+"</font>"]]></textFieldExpression>
 				</textField>
@@ -268,7 +268,7 @@
 					<imageExpression><![CDATA[$F{student}.getPerson().getImage()]]></imageExpression>
 				</image>
 				<componentElement>
-					<reportElement key="table 1" x="68" y="15" width="222" height="74" backcolor="#FF66CC" uuid="711cc9eb-d9e1-40ef-8d1d-c907bf767ba5"/>
+					<reportElement key="table 1" x="68" y="15" width="160" height="74" backcolor="#FF66CC" uuid="711cc9eb-d9e1-40ef-8d1d-c907bf767ba5"/>
 					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 						<datasetRun subDataset="LabelValueDataset" uuid="8679ee7e-164d-4edc-9a19-719ec8341c5d">
 							<datasetParameter name="CYK_TEXT_STATIC_FONT_NAME">
@@ -299,10 +299,10 @@
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="140" uuid="9f81b8f3-735f-4452-8ba7-80f2f9b41974">
+						<jr:column width="78" uuid="9f81b8f3-735f-4452-8ba7-80f2f9b41974">
 							<jr:detailCell style="table_td_underline" height="12" rowSpan="1">
 								<textField>
-									<reportElement x="0" y="0" width="140" height="12" uuid="fce6d6af-3c36-4ce8-8caf-c432e71c0410"/>
+									<reportElement x="0" y="0" width="78" height="12" uuid="fce6d6af-3c36-4ce8-8caf-c432e71c0410"/>
 									<textElement markup="styled">
 										<font fontName="DejaVu Sans"/>
 									</textElement>
@@ -823,59 +823,53 @@
 						</jr:column>
 					</jr:table>
 				</componentElement>
-				<frame>
-					<reportElement x="174" y="12" width="85" height="38" uuid="209b1203-e5a3-4165-a655-bf8afe9cea7e"/>
-					<box>
-						<leftPen lineWidth="0.75" lineColor="#00CCFF"/>
-					</box>
-					<componentElement>
-						<reportElement key="table 1" style="table label column" x="2" y="0" width="33" height="38" uuid="dcba3c6d-f93b-4af7-9721-a50624efd1ad"/>
-						<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-							<datasetRun subDataset="LabelValueDataset" uuid="37b3c187-6f6d-4a1a-8c7b-1f54a37ca1b1">
-								<datasetParameter name="CYK_TEXT_STATIC_FONT_NAME">
-									<datasetParameterExpression><![CDATA[$P{CYK_TEXT_STATIC_FONT_NAME}]]></datasetParameterExpression>
-								</datasetParameter>
-								<datasetParameter name="CYK_TEXT_DYNAMIC_FONT_NAME">
-									<datasetParameterExpression><![CDATA[$P{CYK_TEXT_DYNAMIC_FONT_NAME}]]></datasetParameterExpression>
-								</datasetParameter>
-								<datasetParameter name="CYK_TEXT_STATIC_FONT_SIZE">
-									<datasetParameterExpression><![CDATA[$P{CYK_TEXT_STATIC_FONT_SIZE}]]></datasetParameterExpression>
-								</datasetParameter>
-								<datasetParameter name="CYK_TEXT_DYNAMIC_FONT_SIZE">
-									<datasetParameterExpression><![CDATA[$P{CYK_TEXT_DYNAMIC_FONT_SIZE}]]></datasetParameterExpression>
-								</datasetParameter>
-								<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{behaviorLabelValueCollection2}.getCollection())]]></dataSourceExpression>
-							</datasetRun>
-							<jr:column width="114" uuid="d3e09da2-233c-45c6-bac5-fe6fb76e7d20">
-								<jr:detailCell style="table_td_underline" height="12" rowSpan="1">
-									<textField>
-										<reportElement x="0" y="0" width="114" height="12" uuid="44cc3762-7a40-49e6-be28-57814b07208a"/>
-										<textElement markup="styled">
-											<font fontName="Times New Roman"/>
-										</textElement>
-										<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "' size='"+$P{CYK_TEXT_STATIC_FONT_SIZE}+ "'>" +$F{label}+"</font>"]]></textFieldExpression>
-									</textField>
-								</jr:detailCell>
-							</jr:column>
-							<jr:column width="13" uuid="630d9120-93e8-495c-9092-3c02d234a10d">
-								<jr:detailCell style="table_td_underline" height="12" rowSpan="1">
-									<textField>
-										<reportElement x="0" y="0" width="13" height="12" uuid="6fa38971-7c13-4638-8f31-ae157320724c"/>
-										<textElement markup="styled">
-											<font fontName="Batang"/>
-										</textElement>
-										<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_DYNAMIC_FONT_NAME} + "' size='"+$P{CYK_TEXT_DYNAMIC_FONT_SIZE}+ "'>" +$F{value}+"</font>"]]></textFieldExpression>
-									</textField>
-								</jr:detailCell>
-							</jr:column>
-						</jr:table>
-					</componentElement>
-				</frame>
+				<componentElement>
+					<reportElement key="table 1" style="table label column" x="176" y="12" width="126" height="39" uuid="dcba3c6d-f93b-4af7-9721-a50624efd1ad"/>
+					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+						<datasetRun subDataset="LabelValueDataset" uuid="37b3c187-6f6d-4a1a-8c7b-1f54a37ca1b1">
+							<datasetParameter name="CYK_TEXT_STATIC_FONT_NAME">
+								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_STATIC_FONT_NAME}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="CYK_TEXT_DYNAMIC_FONT_NAME">
+								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_DYNAMIC_FONT_NAME}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="CYK_TEXT_STATIC_FONT_SIZE">
+								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_STATIC_FONT_SIZE}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="CYK_TEXT_DYNAMIC_FONT_SIZE">
+								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_DYNAMIC_FONT_SIZE}]]></datasetParameterExpression>
+							</datasetParameter>
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{behaviorLabelValueCollection2}.getCollection())]]></dataSourceExpression>
+						</datasetRun>
+						<jr:column width="114" uuid="d3e09da2-233c-45c6-bac5-fe6fb76e7d20">
+							<jr:detailCell style="table_td_underline" height="12" rowSpan="1">
+								<textField>
+									<reportElement x="0" y="0" width="114" height="12" uuid="44cc3762-7a40-49e6-be28-57814b07208a"/>
+									<textElement markup="styled">
+										<font fontName="Times New Roman"/>
+									</textElement>
+									<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "' size='"+$P{CYK_TEXT_STATIC_FONT_SIZE}+ "'>" +$F{label}+"</font>"]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="13" uuid="630d9120-93e8-495c-9092-3c02d234a10d">
+							<jr:detailCell style="table_td_underline" height="12" rowSpan="1">
+								<textField>
+									<reportElement x="0" y="0" width="13" height="12" uuid="6fa38971-7c13-4638-8f31-ae157320724c"/>
+									<textElement markup="styled">
+										<font fontName="Batang"/>
+									</textElement>
+									<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_DYNAMIC_FONT_NAME} + "' size='"+$P{CYK_TEXT_DYNAMIC_FONT_SIZE}+ "'>" +$F{value}+"</font>"]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:table>
+				</componentElement>
 			</frame>
 		</band>
-		<band height="130">
+		<band height="99">
 			<frame>
-				<reportElement x="0" y="0" width="278" height="121" backcolor="#000000" uuid="2261a94c-5493-40ea-9f3a-b21167bb1ca1"/>
+				<reportElement x="0" y="0" width="278" height="95" backcolor="#000000" uuid="2261a94c-5493-40ea-9f3a-b21167bb1ca1"/>
 				<box rightPadding="0">
 					<pen lineWidth="0.25" lineColor="#00CCCC"/>
 					<topPen lineWidth="0.0" lineColor="#00CCCC"/>
@@ -889,19 +883,19 @@
 					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{commentsBlockTitle}+"</font>"]]></textFieldExpression>
 				</textField>
 				<image hAlign="Center" isUsingCache="false" onErrorType="Blank">
-					<reportElement x="54" y="68" width="170" height="40" uuid="5df88f9c-cfd0-4d8c-99f8-46f7e049db74"/>
+					<reportElement x="54" y="27" width="170" height="40" uuid="5df88f9c-cfd0-4d8c-99f8-46f7e049db74"/>
 					<box>
 						<bottomPen lineWidth="1.0"/>
 					</box>
 					<imageExpression><![CDATA[$F{commentator}.getPerson().getSignatureSpecimen()]]></imageExpression>
 				</image>
 				<textField>
-					<reportElement x="0" y="108" width="277" height="13" uuid="a6cfe002-7b37-4421-8f2d-bc1802bb083c"/>
+					<reportElement x="0" y="69" width="277" height="13" uuid="a6cfe002-7b37-4421-8f2d-bc1802bb083c"/>
 					<textElement textAlignment="Center" markup="styled"/>
 					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{commentator}.getPerson().getTitle()+" "+$F{commentator}.getPerson().getNames()+"</font>"]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="2" y="13" width="275" height="54" uuid="fe518cec-68b5-471a-aeaa-44736fb02614"/>
+					<reportElement x="2" y="13" width="275" height="13" uuid="fe518cec-68b5-471a-aeaa-44736fb02614"/>
 					<textElement markup="styled">
 						<paragraph leftIndent="5"/>
 					</textElement>
@@ -909,7 +903,7 @@
 				</textField>
 			</frame>
 			<frame>
-				<reportElement x="278" y="0" width="278" height="121" uuid="ad594a11-3e61-4f8c-820b-4879f36773e3"/>
+				<reportElement x="278" y="0" width="278" height="95" uuid="ad594a11-3e61-4f8c-820b-4879f36773e3"/>
 				<box>
 					<pen lineWidth="0.25" lineColor="#00CCCC"/>
 					<topPen lineWidth="0.0" lineColor="#00CCCC"/>

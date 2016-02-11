@@ -27,8 +27,6 @@ import org.cyk.system.school.ui.web.primefaces.session.StudentClassroomSessionDi
 import org.cyk.ui.api.AbstractUserSession;
 import org.cyk.ui.api.command.UICommandable;
 import org.cyk.ui.api.command.menu.SystemMenu;
-import org.cyk.ui.web.api.security.shiro.WebEnvironmentAdapter;
-import org.cyk.ui.web.api.security.shiro.WebEnvironmentAdapter.SecuredUrlProvider;
 import org.cyk.ui.web.primefaces.AbstractPrimefacesManager;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
@@ -53,13 +51,6 @@ public class IesaWebManager extends AbstractPrimefacesManager implements Seriali
     	SchoolReportProducer.DEFAULT_STUDENT_CLASSROOM_SESSION_DIVISION_REPORT_PARAMETERS.setSumMarks(Boolean.TRUE);
     	StudentClassroomSessionDivisionBusiness.DEFAULT_BUILD_REPORT_OPTIONS.setAttendance(Boolean.FALSE);
 		
-		WebEnvironmentAdapter.SECURED_URL_PROVIDERS.add(new SecuredUrlProvider() {
-			
-			@Override
-			public void provide() {
-				
-			}
-		});
 	}
 		
 	public static IesaWebManager getInstance() {

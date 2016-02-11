@@ -10,6 +10,8 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import lombok.Getter;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.company.business.api.structure.CompanyBusiness;
 import org.cyk.system.company.business.api.structure.OwnedCompanyBusiness;
@@ -17,8 +19,6 @@ import org.cyk.system.company.business.impl.CompanyBusinessLayer;
 import org.cyk.system.company.business.impl.CompanyBusinessLayerAdapter;
 import org.cyk.system.company.model.structure.Company;
 import org.cyk.system.iesaschool.model.IesaConstant;
-import org.cyk.system.root.business.api.BusinessLayer;
-import org.cyk.system.root.business.api.BusinessLayerListener;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessLayer;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
@@ -31,13 +31,12 @@ import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricValueType;
 import org.cyk.system.root.model.party.person.Person;
-import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.school.business.api.session.ClassroomSessionBusiness;
 import org.cyk.system.school.business.api.session.ClassroomSessionDivisionBusiness;
 import org.cyk.system.school.business.api.session.SchoolReportProducer;
 import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjectBusiness;
-import org.cyk.system.school.business.api.subject.SubjectEvaluationTypeBusiness;
+import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjectEvaluationTypeBusiness;
 import org.cyk.system.school.business.impl.SchoolBusinessLayer;
 import org.cyk.system.school.business.impl.SchoolBusinessTestHelper.ClassroomSessionDivisionInfos;
 import org.cyk.system.school.business.impl.SchoolBusinessTestHelper.ClassroomSessionDivisionSubjectInfos;
@@ -53,15 +52,13 @@ import org.cyk.system.school.model.session.LevelName;
 import org.cyk.system.school.model.session.LevelTimeDivision;
 import org.cyk.system.school.model.session.School;
 import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubject;
+import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubjectEvaluationType;
 import org.cyk.system.school.model.subject.EvaluationType;
 import org.cyk.system.school.model.subject.Subject;
-import org.cyk.system.school.model.subject.SubjectEvaluationType;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.joda.time.DateTimeConstants;
-
-import lombok.Getter;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=IesaBusinessLayer.DEPLOYMENT_ORDER) @Getter
 public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -78,7 +75,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	@Inject private OwnedCompanyBusiness ownedCompanyBusiness;
 	@Inject private CompanyBusiness companyBusiness;
-	@Inject private SubjectEvaluationTypeBusiness subjectEvaluationTypeBusiness;
+	@Inject private ClassroomSessionDivisionSubjectEvaluationTypeBusiness subjectEvaluationTypeBusiness;
 	@Inject private ClassroomSessionBusiness classroomSessionBusiness;
 	@Inject private ClassroomSessionDivisionBusiness classroomSessionDivisionBusiness;
 	@Inject private ClassroomSessionDivisionSubjectBusiness classroomSessionDivisionSubjectBusiness;
@@ -95,14 +92,15 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	protected void initialisation() {
 		INSTANCE = this;
 		super.initialisation();
-		rootBusinessLayer.getBusinessLayerListeners().add(new BusinessLayerListener.BusinessLayerListenerAdapter(){
+		/*rootBusinessLayer.getBusinessLayerListeners().add(new BusinessLayerListener.Adapter.Default(){
+			
 			private static final long serialVersionUID = -9212697312172717454L;
 			@Override
 			public void beforeInstall(BusinessLayer businessLayer,Installation installation) {
 				installation.getApplication().setName("IESA WebApp");
 				super.beforeInstall(businessLayer, installation);
 			}
-		});
+		});*/
 		
 		companyBusinessLayer.getCompanyBusinessLayerListeners().add(new CompanyBusinessLayerAdapter() {
 			private static final long serialVersionUID = 5179809445850168706L;
@@ -234,7 +232,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	Collection<ClassroomSession> classroomSessions = new ArrayList<>(); 
     	Collection<ClassroomSessionDivision> classroomSessionDivisions = new ArrayList<>(); 
     	Collection<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects = new ArrayList<>();
-    	Collection<SubjectEvaluationType> subjectEvaluationTypes = new ArrayList<>(); 
+    	Collection<ClassroomSessionDivisionSubjectEvaluationType> subjectEvaluationTypes = new ArrayList<>(); 
     	
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
     			, createLevelTimeDivision("Grade 1",levelGroupPrimary,commonNodeInformationsG1G3) , subjectsG1G3,new String[]{"A","B","C"});    	
@@ -314,7 +312,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	}
 	
 	private void grade(Collection<ClassroomSession> classroomSessions,Collection<ClassroomSessionDivision> classroomSessionDivisions
-			,Collection<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects,Collection<SubjectEvaluationType> subjectEvaluationTypes
+			,Collection<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects,Collection<ClassroomSessionDivisionSubjectEvaluationType> subjectEvaluationTypes
 			,AcademicSession academicSession,LevelTimeDivision levelTimeDivision,Collection<Subject> subjects,String[] suffixes){
 		for(String suffix : suffixes){
 			ClassroomSession classroomSession = new ClassroomSession(academicSession, levelTimeDivision,null);
@@ -330,13 +328,13 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	}
 	/*
 	private void grade(Collection<ClassroomSession> classroomSessions,Collection<ClassroomSessionDivision> classroomSessionDivisions
-			,Collection<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects,Collection<SubjectEvaluationType> subjectEvaluationTypes
+			,Collection<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects,Collection<ClassroomSessionDivisionSubjectEvaluationType> subjectEvaluationTypes
 			,AcademicSession academicSession,LevelTimeDivision levelTimeDivision,Collection<Subject> subjects){
 		grade(classroomSessions, classroomSessionDivisions, classroomSessionDivisionSubjects, subjectEvaluationTypes, academicSession, levelTimeDivision, subjects,new String[]{""});
 	}*/
 	
 	private ClassroomSessionDivisionInfos createClassroomSessionDivision(Collection<ClassroomSessionDivision> classroomSessionDivisions
-			,Collection<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects,Collection<SubjectEvaluationType> subjectEvaluationTypes
+			,Collection<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects,Collection<ClassroomSessionDivisionSubjectEvaluationType> subjectEvaluationTypes
 			,ClassroomSession classroomSession,Collection<Subject> subjects){
 		ClassroomSessionDivision classroomSessionDivision = new ClassroomSessionDivision(classroomSession,getEnumeration(TimeDivisionType.class,TimeDivisionType.TRIMESTER)
     			,new BigDecimal("1"));
@@ -355,7 +353,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		return classroomSessionDivisionInfos;
 	}
 	
-	private ClassroomSessionDivisionSubjectInfos createClassroomSessionDivisionSubject(Collection<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects,Collection<SubjectEvaluationType> subjectEvaluationTypes,ClassroomSessionDivision classroomSessionDivision,Subject subject,Object[][] evaluationTypes){
+	private ClassroomSessionDivisionSubjectInfos createClassroomSessionDivisionSubject(Collection<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects,Collection<ClassroomSessionDivisionSubjectEvaluationType> subjectEvaluationTypes,ClassroomSessionDivision classroomSessionDivision,Subject subject,Object[][] evaluationTypes){
 		ClassroomSessionDivisionSubject classroomSessionDivisionSubject = new ClassroomSessionDivisionSubject(classroomSessionDivision,subject,BigDecimal.ONE,null);
 		classroomSessionDivisionSubjects.add(classroomSessionDivisionSubject);
 		ClassroomSessionDivisionSubjectInfos classroomSessionDivisionSubjectInfos = new ClassroomSessionDivisionSubjectInfos(classroomSessionDivisionSubject);
@@ -366,8 +364,8 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		return classroomSessionDivisionSubjectInfos;
 	}
 	
-	private SubjectEvaluationType createSubjectEvaluationType(Collection<SubjectEvaluationType> subjectEvaluationTypes,ClassroomSessionDivisionSubject subject,EvaluationType name,BigDecimal coefficient){
-		SubjectEvaluationType subjectEvaluationType = new SubjectEvaluationType(subject,name,coefficient,new BigDecimal("100"));
+	private ClassroomSessionDivisionSubjectEvaluationType createSubjectEvaluationType(Collection<ClassroomSessionDivisionSubjectEvaluationType> subjectEvaluationTypes,ClassroomSessionDivisionSubject subject,EvaluationType name,BigDecimal coefficient){
+		ClassroomSessionDivisionSubjectEvaluationType subjectEvaluationType = new ClassroomSessionDivisionSubjectEvaluationType(subject,name,coefficient,new BigDecimal("100"));
 		subjectEvaluationTypes.add(subjectEvaluationType);
 		return subjectEvaluationType;
 	}

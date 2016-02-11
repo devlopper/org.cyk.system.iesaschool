@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Student Classroom Session Division Report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="de4e9630-bfde-428f-bc68-96e9a465fd5d">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="60"/>
-	<property name="ireport.y" value="418"/>
+	<property name="ireport.x" value="176"/>
+	<property name="ireport.y" value="684"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -59,7 +59,6 @@
 			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 		</parameter>
 		<parameter name="CYK_TEXT_DYNAMIC_FONT_NAME" class="java.lang.String"/>
-		<parameter name="CYK_RANKABLE" class="java.lang.Boolean"/>
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
@@ -124,9 +123,6 @@
 		<defaultValueExpression><![CDATA["9"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CYK_LABEL_VALUE_HEIGHT" class="java.lang.Integer" isForPrompting="false"/>
-	<parameter name="CYK_RANKABLE" class="java.lang.Boolean" isForPrompting="false">
-		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
-	</parameter>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -381,15 +377,12 @@
 				<componentElement>
 					<reportElement key="table 2" x="0" y="12" width="555" height="36" uuid="68657a31-e9fb-40e2-99b6-b3069f952bde"/>
 					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-						<datasetRun subDataset="Subjects Dataset" uuid="837acab9-9d78-4699-b69a-5cb4572f86e3">
+						<datasetRun subDataset="Subjects Dataset" uuid="b5c7b352-ecca-4b2d-be57-34e79e3bd611">
 							<datasetParameter name="CYK_TEXT_STATIC_FONT_NAME">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_STATIC_FONT_NAME}]]></datasetParameterExpression>
 							</datasetParameter>
 							<datasetParameter name="CYK_TEXT_DYNAMIC_FONT_NAME">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_DYNAMIC_FONT_NAME}]]></datasetParameterExpression>
-							</datasetParameter>
-							<datasetParameter name="CYK_RANKABLE">
-								<datasetParameterExpression><![CDATA[$P{CYK_RANKABLE}]]></datasetParameterExpression>
 							</datasetParameter>
 							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{subjects})]]></dataSourceExpression>
 						</datasetRun>
@@ -589,7 +582,6 @@
 							</jr:detailCell>
 						</jr:column>
 						<jr:column width="24" uuid="f72e56cb-2084-4c49-a262-22e0187f0771">
-							<printWhenExpression><![CDATA[$P{CYK_RANKABLE}]]></printWhenExpression>
 							<jr:columnHeader style="table TH" height="38" rowSpan="1">
 								<textField>
 									<reportElement style="subjects vertical table header" x="0" y="0" width="24" height="38" uuid="5358fd58-58b3-44f3-99c2-c6f74b799a9d"/>
@@ -613,7 +605,6 @@
 							</jr:detailCell>
 						</jr:column>
 						<jr:column width="24" uuid="f8bf5c5e-4ec7-4207-8d53-84b9e5534e6b">
-							<printWhenExpression><![CDATA[$P{CYK_RANKABLE}]]></printWhenExpression>
 							<jr:columnHeader style="table TH" height="38" rowSpan="1">
 								<textField>
 									<reportElement style="subjects vertical table header" x="0" y="0" width="24" height="38" uuid="c40baa4d-ba9a-479e-b0b4-04079961497c"/>
@@ -637,7 +628,6 @@
 							</jr:detailCell>
 						</jr:column>
 						<jr:column width="34" uuid="83e61f6e-afaa-4f4c-908e-c361c613ca7e">
-							<printWhenExpression><![CDATA[$P{CYK_RANKABLE}]]></printWhenExpression>
 							<jr:columnHeader style="table TH" height="38" rowSpan="1">
 								<textField>
 									<reportElement style="subjects vertical table header" x="0" y="0" width="34" height="38" uuid="63fc566b-544f-42ec-9b85-7f300ca940a7"/>
@@ -661,7 +651,6 @@
 							</jr:detailCell>
 						</jr:column>
 						<jr:column width="34" uuid="4a9322db-3ca1-4e87-b959-264c5ea60965">
-							<printWhenExpression><![CDATA[$P{CYK_RANKABLE}]]></printWhenExpression>
 							<jr:columnHeader style="table TH" height="38" rowSpan="1">
 								<textField>
 									<reportElement style="subjects vertical table header" x="0" y="0" width="34" height="38" uuid="5ed8f859-1d26-409f-9733-efff036bfd1c"/>

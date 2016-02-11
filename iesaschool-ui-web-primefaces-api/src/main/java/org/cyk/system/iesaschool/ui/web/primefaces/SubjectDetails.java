@@ -22,11 +22,11 @@ public class SubjectDetails extends AbstractSubjectDetails implements Serializab
 		super(studentSubject);
 		for(StudentSubjectEvaluation studentSubjectEvaluation : studentSubject.getDetails()){
 			if(studentSubjectEvaluation.getStudentSubject().equals(studentSubject)){
-				if(studentSubjectEvaluation.getSubjectEvaluation().getType().getType().getCode().equals(IesaConstant.EVALUATION_TYPE_TEST1))
+				if(studentSubjectEvaluation.getEvaluation().getClassroomSessionDivisionSubjectEvaluationType().getEvaluationType().getCode().equals(IesaConstant.EVALUATION_TYPE_TEST1))
 					test1 = numberBusiness.format(studentSubjectEvaluation.getValue());
-				else if(studentSubjectEvaluation.getSubjectEvaluation().getType().getType().getCode().equals(IesaConstant.EVALUATION_TYPE_TEST2))
+				else if(studentSubjectEvaluation.getEvaluation().getClassroomSessionDivisionSubjectEvaluationType().getEvaluationType().getCode().equals(IesaConstant.EVALUATION_TYPE_TEST2))
 					test2 = numberBusiness.format(studentSubjectEvaluation.getValue());
-				else if(studentSubjectEvaluation.getSubjectEvaluation().getType().getType().getCode().equals(IesaConstant.EVALUATION_TYPE_EXAM))
+				else if(studentSubjectEvaluation.getEvaluation().getClassroomSessionDivisionSubjectEvaluationType().getEvaluationType().getCode().equals(IesaConstant.EVALUATION_TYPE_EXAM))
 					exam = numberBusiness.format(studentSubjectEvaluation.getValue());
 			}
 				

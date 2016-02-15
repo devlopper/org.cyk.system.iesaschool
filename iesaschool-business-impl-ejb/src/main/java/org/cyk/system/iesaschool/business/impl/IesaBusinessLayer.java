@@ -32,6 +32,7 @@ import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricValueType;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.time.TimeDivisionType;
+import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.school.business.api.session.ClassroomSessionBusiness;
 import org.cyk.system.school.business.api.session.ClassroomSessionDivisionBusiness;
 import org.cyk.system.school.business.api.session.SchoolReportProducer;
@@ -79,6 +80,8 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	@Inject private ClassroomSessionBusiness classroomSessionBusiness;
 	@Inject private ClassroomSessionDivisionBusiness classroomSessionDivisionBusiness;
 	@Inject private ClassroomSessionDivisionSubjectBusiness classroomSessionDivisionSubjectBusiness;
+	
+	@Inject private GenericDao genericDao;
 	
 	private EvaluationType evaluationTypeTest1,evaluationTypeTest2,evaluationTypeExam;
 	
@@ -187,8 +190,8 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		School school = new School(ownedCompanyBusiness.findDefaultOwnedCompany(),null);
     	create(school);
     	
-    	school.getOwnedCompany().getCompany().setManager(rootRandomDataProvider.oneFromDatabase(Person.class));
-    	companyBusiness.update(school.getOwnedCompany().getCompany());
+    	//school.getOwnedCompany().getCompany().setManager(rootRandomDataProvider.oneFromDatabase(Person.class));
+    	//companyBusiness.update(school.getOwnedCompany().getCompany());
     	
     	AcademicSession academicSession = new AcademicSession(school,null,new Date());
     	academicSession.getPeriod().setFromDate(new Date());
@@ -235,46 +238,46 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	Collection<ClassroomSessionDivisionSubjectEvaluationType> subjectEvaluationTypes = new ArrayList<>(); 
     	
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 1",levelGroupPrimary,commonNodeInformationsG1G3) , subjectsG1G3,new String[]{"A","B","C"});    	
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G1,"Grade 1",levelGroupPrimary,commonNodeInformationsG1G3) , subjectsG1G3,new String[]{"A","B","C"});    	
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 2",levelGroupPrimary,commonNodeInformationsG1G3) , subjectsG1G3,new String[]{"A","B","C"});
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G2,"Grade 2",levelGroupPrimary,commonNodeInformationsG1G3) , subjectsG1G3,new String[]{"A","B","C"});
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 3",levelGroupPrimary,commonNodeInformationsG1G3) , subjectsG1G3,new String[]{"A","B","C"});
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G3,"Grade 3",levelGroupPrimary,commonNodeInformationsG1G3) , subjectsG1G3,new String[]{"A","B","C"});
     	
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 4",levelGroupPrimary,commonNodeInformationsG4G6) , subjectsG4G6,new String[]{"A","B","C"});
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G4,"Grade 4",levelGroupPrimary,commonNodeInformationsG4G6) , subjectsG4G6,new String[]{"A","B","C"});
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 5",levelGroupPrimary,commonNodeInformationsG4G6) , subjectsG4G6,new String[]{"A","B","C"});
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G5,"Grade 5",levelGroupPrimary,commonNodeInformationsG4G6) , subjectsG4G6,new String[]{"A","B","C"});
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 6",levelGroupPrimary,commonNodeInformationsG4G6) , subjectsG4G6,new String[]{"A","B","C"});
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G6,"Grade 6",levelGroupPrimary,commonNodeInformationsG4G6) , subjectsG4G6,new String[]{"A","B","C"});
     	
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 7",levelGroupSecondary,commonNodeInformationsG7G9) , subjectsG7G9,new String[]{"A","B","C"});
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G7,"Grade 7",levelGroupSecondary,commonNodeInformationsG7G9) , subjectsG7G9,new String[]{"A","B","C"});
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 8",levelGroupSecondary,commonNodeInformationsG7G9) , subjectsG7G9,new String[]{"A","B","C"});
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G8,"Grade 8",levelGroupSecondary,commonNodeInformationsG7G9) , subjectsG7G9,new String[]{"A","B","C"});
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 9",levelGroupSecondary,commonNodeInformationsG7G9) , subjectsG7G9,new String[]{"A","B","C"});
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G9,"Grade 9",levelGroupSecondary,commonNodeInformationsG7G9) , subjectsG7G9,new String[]{"A","B","C"});
     	
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 10",levelGroupSecondary,commonNodeInformationsG10G12) , subjectsG10G12,new String[]{"A","B","C"});
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G10,"Grade 10",levelGroupSecondary,commonNodeInformationsG10G12) , subjectsG10G12,new String[]{"A","B","C"});
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 11",levelGroupSecondary,commonNodeInformationsG10G12) , subjectsG10G12,new String[]{"A","B","C"});
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G11,"Grade 11",levelGroupSecondary,commonNodeInformationsG10G12) , subjectsG10G12,new String[]{"A","B","C"});
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision("Grade 12",levelGroupSecondary,commonNodeInformationsG10G12) , subjectsG10G12,new String[]{"A","B","C"});
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G12,"Grade 12",levelGroupSecondary,commonNodeInformationsG10G12) , subjectsG10G12,new String[]{"A","B","C"});
     	
     	classroomSessionBusiness.create(classroomSessions);
     	classroomSessionDivisionBusiness.create(classroomSessionDivisions);
     	classroomSessionDivisionSubjectBusiness.create(classroomSessionDivisionSubjects);
     	subjectEvaluationTypeBusiness.create(subjectEvaluationTypes);
     	
-    	for(AbstractIdentifiable identifiable : genericBusiness.use(EvaluationType.class).find().all())
+    	for(AbstractIdentifiable identifiable :  genericDao.use(EvaluationType.class).select().all())
     		SchoolReportProducer.DEFAULT_STUDENT_CLASSROOM_SESSION_DIVISION_REPORT_PARAMETERS.getEvaluationTypeCodes().add(((EvaluationType)identifiable).getCode());
     	SchoolReportProducer.DEFAULT_STUDENT_CLASSROOM_SESSION_DIVISION_REPORT_PARAMETERS.setSumMarks(Boolean.TRUE);
 	}
 	
-	private LevelTimeDivision createLevelTimeDivision(String levelName,LevelGroup levelGroup,CommonNodeInformations commonNodeInformations){
+	private LevelTimeDivision createLevelTimeDivision(String levelCode,String levelName,LevelGroup levelGroup,CommonNodeInformations commonNodeInformations){
 		commonNodeInformations.setAggregateAttendance(Boolean.FALSE);
-		LevelName _levelName = createEnumeration(LevelName.class,levelName);
+		LevelName _levelName = createEnumeration(LevelName.class,levelCode,levelName);
 		_levelName.setNodeInformations(commonNodeInformations);
 		return create(new LevelTimeDivision(create(new Level(levelGroup,_levelName)), getEnumeration(TimeDivisionType.class,TimeDivisionType.YEAR)));
 	}

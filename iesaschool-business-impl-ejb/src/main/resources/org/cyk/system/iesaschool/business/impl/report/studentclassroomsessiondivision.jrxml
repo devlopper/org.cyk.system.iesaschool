@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Student Classroom Session Division Report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="de4e9630-bfde-428f-bc68-96e9a465fd5d">
-	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="418"/>
+	<property name="ireport.y" value="38"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -38,7 +38,7 @@
 			<rightPen lineWidth="0.0" lineColor="#0066CC"/>
 		</box>
 	</style>
-	<style name="title" mode="Opaque" forecolor="#FFFFFF" backcolor="#3399FF" fontName="Times New Roman"/>
+	<style name="title" mode="Opaque" forecolor="#FFFFFF" backcolor="#3399FF" fill="Solid" fontName="Times New Roman"/>
 	<style name="table label column" fontName="Times New Roman"/>
 	<style name="table_td_underline">
 		<box>
@@ -244,11 +244,11 @@
 			<frame>
 				<reportElement x="0" y="2" width="555" height="28" uuid="4f4f8572-a429-43a0-b75e-06ad633b33c4"/>
 				<textField>
-					<reportElement style="title" mode="Opaque" x="0" y="0" width="555" height="14" forecolor="#FFFFFF" uuid="ddb074ad-65c8-4ec8-b1cd-36d9a9ddaf98"/>
+					<reportElement key="" style="title" mode="Opaque" x="0" y="0" width="555" height="14" forecolor="#FFFFFF" uuid="ddb074ad-65c8-4ec8-b1cd-36d9a9ddaf98"/>
 					<textElement textAlignment="Center" markup="styled">
 						<font size="11" isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{academicSession}.getFromDateToDate()+"</font>"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "' forecolor='red' >" +$F{academicSession}.getFromDateToDate()+"</font>"]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement style="title" mode="Opaque" x="0" y="13" width="555" height="14" forecolor="#FFFFFF" uuid="ffe17afe-314f-4a8b-985e-c8911a9c2e98"/>

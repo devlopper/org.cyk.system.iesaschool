@@ -23,6 +23,7 @@ import org.cyk.system.root.business.impl.validation.ValidatorMap;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.system.root.persistence.impl.PersistenceIntegrationTestHelper;
+import org.cyk.system.school.business.impl.SchoolBusinessTestHelper;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.test.ArchiveBuilder;
 import org.cyk.utility.test.Transaction;
@@ -60,6 +61,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 	@Inject protected RootBusinessTestHelper rootTestHelper;
 	@Inject protected RootDataProducerHelper rootDataProducerHelper;
 	
+	@Inject protected SchoolBusinessTestHelper schoolBusinessTestHelper;
 	@Inject protected IesaBusinessLayer iesaschoolBusinessLayer;
 	@Inject protected IesaBusinessTestHelper iesaschoolBusinessTestHelper;
 	

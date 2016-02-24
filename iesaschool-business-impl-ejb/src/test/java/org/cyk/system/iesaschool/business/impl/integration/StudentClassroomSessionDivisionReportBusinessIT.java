@@ -1,24 +1,27 @@
 package org.cyk.system.iesaschool.business.impl.integration;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.cyk.system.iesaschool.model.IesaConstant;
 import org.cyk.system.school.business.impl.SchoolBusinessLayer;
-import org.cyk.system.school.business.impl.SchoolBusinessTestHelper.ClassroomSessionDivisionInfos;
 import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.session.ClassroomSession;
+import org.cyk.system.school.model.session.ClassroomSessionDivision;
+import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubject;
+import org.cyk.system.school.model.subject.EvaluationType;
 
 public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBusinessIT {
 
     private static final long serialVersionUID = -6691092648665798471L;
- 
+    
     @Override
     protected void businesses() {
     	installApplication();
     	
     	Collection<ClassroomSession> classroomSessions = SchoolBusinessLayer.getInstance().getClassroomSessionBusiness().findAll();
-    	ClassroomSession g1,g2,g3,g4,g5,g6,g7,g8,g9,g10,g11,g12;
+    	ClassroomSession g1=null,g2=null,g3=null,g4=null,g5=null,g6=null,g7=null,g8=null,g9=null,g10=null,g11=null,g12=null;
     	for(ClassroomSession classroomSession : classroomSessions)
     		if(classroomSession.getLevelTimeDivision().getLevel().getName().getCode().equals(IesaConstant.LEVEL_NAME_CODE_G1) && g1 == null )
     			g1 = classroomSession;
@@ -46,82 +49,31 @@ public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBus
     			g12 = classroomSession;
     	
     	schoolBusinessTestHelper.createActors(Student.class,new String[]{"STUD1","STUD2","STUD3","STUD4","STUD5"});
-    	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"STUD1","STUD2"/*,"STUD3","STUD4","STUD5"*/},g1, new Object[][]{{15},{15},{15}}); 
+    	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"STUD1","STUD2"},g1, new Object[][]{{15},{15},{15}}); 
     	
-    	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"STUD1","STUD2"/*,"STUD3","STUD4","STUD5"*/},g2, new Object[][]{{15},{15},{15}}); 
+    	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"STUD1","STUD2"},g9, new Object[][]{{15},{15},{15}}); 
     	
-    	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"STUD1","STUD2"/*,"STUD3","STUD4","STUD5"*/},g3, new Object[][]{{15},{15},{15}}); 
+    	//schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"STUD1","STUD2"},g3, new Object[][]{{15},{15},{15}}); 
     	
-    	schoolBusinessTestHelper.getEvaluationTypes().addAll(dataProducer.getEvaluationTypes());
+    	schoolBusinessTestHelper.getEvaluationTypes().addAll(rootDataProducerHelper.getEnumerations(EvaluationType.class));
     	
-    	//trimesterEverybodyHaveAllEvaluations(dataProducer.getGrade1().division(0),Boolean.TRUE,Boolean.TRUE);
+    	ClassroomSessionDivision classroomSessionDivision = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionBusiness().findByClassroomSession(g1).iterator().next();
+    	List<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects = new ArrayList<>(SchoolBusinessLayer.getInstance().getClassroomSessionDivisionSubjectBusiness().findByClassroomSessionDivision(classroomSessionDivision));
+    	schoolBusinessTestHelper.simulateStudentClassroomSessionDivisionReport(classroomSessionDivision, new Object[][]{
+    		new Object[]{classroomSessionDivisionSubjects.get(0),new String[][]{
+    	    		{"STUD1","90","30","60"}
+    	    		,{"STUD2","70","50","60"}
+    	    	}}
+    	}, Boolean.TRUE,Boolean.TRUE);
     	
-    	trimesterEverybodyHaveNotAllEvaluations(dataProducer.getGrade1().division(0),Boolean.TRUE,Boolean.TRUE);
-    	trimesterEverybodyHaveNotAllEvaluations(dataProducer.getGrade2().division(0),Boolean.TRUE,Boolean.TRUE);
+    	classroomSessionDivision = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionBusiness().findByClassroomSession(g9).iterator().next();
+    	classroomSessionDivisionSubjects = new ArrayList<>(SchoolBusinessLayer.getInstance().getClassroomSessionDivisionSubjectBusiness().findByClassroomSessionDivision(classroomSessionDivision));
+    	schoolBusinessTestHelper.simulateStudentClassroomSessionDivisionReport(classroomSessionDivision, new Object[][]{
+    		new Object[]{classroomSessionDivisionSubjects.get(0),new String[][]{
+    	    		{"STUD1","90","30","60"}
+    	    		,{"STUD2","70","50","60"}
+    	    	}}
+    	}, Boolean.TRUE,Boolean.TRUE);
     }
-    
-    private void trimesterEverybodyHaveNotAllEvaluations(ClassroomSessionDivisionInfos classroomSessionDivisionInfos,Boolean generateReport,Boolean printReport){
-    	schoolBusinessTestHelper.createSubjectEvaluations(classroomSessionDivisionInfos.subject(0).getClassroomSessionDivisionSubject(),new String[][]{
-    		{"STUD1","90","30","60"}
-    		,{"STUD2","70","50","60"}
-              /*,{"STUD3","40","60","40"}
-              ,{"STUD4","45","45","80"}
-              ,{"STUD5","20","95","55"}*/
-    	});
-    	
-    	schoolBusinessTestHelper.createSubjectEvaluations(classroomSessionDivisionInfos.subject(1).getClassroomSessionDivisionSubject(),new String[][]{{
-    		"STUD1",null,"50","70"}
-    		,{"STUD2","90","15","65"}
-              /*,{"STUD3","40","60","40"}
-              ,{"STUD4","45","45","80"}
-              ,{"STUD5","20","95","55"}*/
-    	});
-    	
-    	schoolBusinessTestHelper.createSubjectEvaluations(classroomSessionDivisionInfos.subject(2).getClassroomSessionDivisionSubject(),new String[][]{{
-    		"STUD1",null,null,"70"}
-    		,{"STUD2","45","50","50"}
-              /*,{"STUD3","40","60","40"}
-              ,{"STUD4","45","45","80"}
-              ,{"STUD5","20","95","55"}*/
-    	});
-    	
-    	schoolBusinessTestHelper.createSubjectEvaluations(classroomSessionDivisionInfos.subject(3).getClassroomSessionDivisionSubject(),new String[][]{{
-    		"STUD1",null,null,null}
-    		,{"STUD2","80","30","75"}
-              /*,{"STUD3","40","60","40"}
-              ,{"STUD4","45","45","80"}
-              ,{"STUD5","20","95","55"}*/
-    	});
-    	
-    	schoolBusinessTestHelper.createSubjectEvaluations(classroomSessionDivisionInfos.subject(4).getClassroomSessionDivisionSubject(),new String[][]{{
-    		"STUD1","50",null,"70"}
-    		,{"STUD2","55","75","60"}
-             /* ,{"STUD3","40","60","40"}
-              ,{"STUD4","45","45","80"}
-              ,{"STUD5","20","95","55"}*/
-    	});
-    	
-    	schoolBusinessTestHelper.createSubjectEvaluations(classroomSessionDivisionInfos.subject(5).getClassroomSessionDivisionSubject(),new String[][]{{
-    		"STUD1","50","70",null}
-    		,{"STUD2","80","80","40"}
-              /*,{"STUD3","40","60","40"}
-              ,{"STUD4","45","45","80"}
-              ,{"STUD5","20","95","55"}*/
-    	});
-    	
-    	schoolBusinessTestHelper.createSubjectEvaluations(classroomSessionDivisionInfos.subject(6).getClassroomSessionDivisionSubject(),new String[][]{{
-    		"STUD1",null,null,"70"}
-    		,{"STUD2","50","50","50"}
-              /*,{"STUD3","40","60","40"}
-              ,{"STUD4","45","45","80"}
-              ,{"STUD5","20","95","55"}*/
-    	});
-
-    	 
-    	if(Boolean.TRUE.equals(generateReport)){
-    		schoolBusinessTestHelper.randomValues(Arrays.asList(classroomSessionDivisionInfos.getClassroomSessionDivision()),Boolean.TRUE,Boolean.TRUE,Boolean.TRUE);
-    		schoolBusinessTestHelper.createStudentClassroomSessionDivisionReport(Arrays.asList(classroomSessionDivisionInfos.getClassroomSessionDivision()),printReport);
-    	}
-    }
-    
+        
 }

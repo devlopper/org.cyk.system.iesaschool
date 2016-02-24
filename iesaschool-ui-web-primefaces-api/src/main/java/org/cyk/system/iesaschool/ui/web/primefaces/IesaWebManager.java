@@ -71,8 +71,8 @@ public class IesaWebManager extends AbstractPrimefacesManager implements Seriali
 		group.addChild(menuManager.crudMany(ClassroomSession.class, null));
 		group.addChild(menuManager.createMany(StudentClassroomSession.class, null));
 		group.addChild(menuManager.createMany(StudentSubject.class, null));
-		group.addChild(menuManager.createSelect(ClassroomSessionDivisionSubject.class,SchoolBusinessLayer.getInstance().getActionCreateSubjectEvaluation() ,null));
-		group.addChild(menuManager.createSelect(ClassroomSessionDivision.class,SchoolBusinessLayer.getInstance().getActionUpdateStudentClassroomSessionDivisionResults() ,null));
+		//group.addChild(menuManager.createSelect(ClassroomSessionDivisionSubject.class,SchoolBusinessLayer.getInstance().getActionCreateSubjectEvaluation() ,null));
+		//group.addChild(menuManager.createSelect(ClassroomSessionDivision.class,SchoolBusinessLayer.getInstance().getActionUpdateStudentClassroomSessionDivisionResults() ,null));
 		systemMenu.getBusinesses().add(group);
 		
 		group = uiProvider.createCommandable("iesa.menu.configuration", null);		

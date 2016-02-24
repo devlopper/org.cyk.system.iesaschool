@@ -231,6 +231,8 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 			{"A+", "Excellent", "90", "100"},{"A", "Very good", "80", "89.99"},{"B+", "Good", "70", "79.99"},{"B", "Fair", "60", "69.99"}
 			,{"C+", "Satisfactory", "55", "59.99"},{"C", "Barely satisfactory", "50", "54.99"},{"E", "Fail", "0", "49.99"}},Constant.CHARACTER_SLASH.toString())
 				,studentWorkMetricCollectionG1G6,reportTemplate,getEnumeration(TimeDivisionType.class, TimeDivisionType.DAY));
+		commonNodeInformationsG1G3.setClassroomSessionTimeDivisionType(getEnumeration(TimeDivisionType.class,TimeDivisionType.TRIMESTER));
+		commonNodeInformationsG1G3.setCurrentClassroomSessionDivisionIndex(new Byte("1"));
 		
 		CommonNodeInformations commonNodeInformationsG4G6 = commonNodeInformationsG1G3;
 		
@@ -238,16 +240,18 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 			{"A*", "Outstanding", "90", "100"},{"A", "Excellent", "80", "89.99"},{"B", "Very Good", "70", "79.99"},{"C", "Good", "60", "69.99"}
 			,{"D", "Satisfactory", "50", "59.99"},{"E", "Fail", "0", "49.99"}},Constant.CHARACTER_SLASH.toString()),studentWorkMetricCollectionG7G12,reportTemplate
 				,getEnumeration(TimeDivisionType.class, TimeDivisionType.DAY));
+		commonNodeInformationsG7G9.setClassroomSessionTimeDivisionType(getEnumeration(TimeDivisionType.class,TimeDivisionType.TRIMESTER));
+		commonNodeInformationsG7G9.setCurrentClassroomSessionDivisionIndex(new Byte("1"));
 		
 		CommonNodeInformations commonNodeInformationsG10G12 = commonNodeInformationsG7G9;
 		
-		School school = new School(ownedCompanyBusiness.findDefaultOwnedCompany(),null);
+		School school = new School(ownedCompanyBusiness.findDefaultOwnedCompany(),commonNodeInformationsG1G3);
     	create(school);
     	
     	//school.getOwnedCompany().getCompany().setManager(rootRandomDataProvider.oneFromDatabase(Person.class));
     	//companyBusiness.update(school.getOwnedCompany().getCompany());
     	
-    	AcademicSession academicSession = new AcademicSession(school,null,new Date());
+    	AcademicSession academicSession = new AcademicSession(school,commonNodeInformationsG1G3,new Date());
     	academicSession.getPeriod().setFromDate(new Date());
     	academicSession.getPeriod().setToDate(new Date(academicSession.getPeriod().getFromDate().getTime()+DateTimeConstants.MILLIS_PER_DAY*355));
     	academicSession = create(academicSession);

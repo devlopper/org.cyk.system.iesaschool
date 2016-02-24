@@ -62,10 +62,10 @@ public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBus
     	schoolBusinessTestHelper.simulateStudentClassroomSessionDivisionReport(classroomSessionDivision, new Object[][]{
     		new Object[]{classroomSessionDivisionSubjects.get(0),new String[][]{
     	    		{"STUD1","90","30","60"}
-    	    		,{"STUD2","70","50","60"}
+    	    		//,{"STUD2","70","50","60"}
     	    	}}
     	}, Boolean.TRUE,Boolean.TRUE);
-    	
+    	/*
     	classroomSessionDivision = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionBusiness().findByClassroomSession(g9).iterator().next();
     	classroomSessionDivisionSubjects = new ArrayList<>(SchoolBusinessLayer.getInstance().getClassroomSessionDivisionSubjectBusiness().findByClassroomSessionDivision(classroomSessionDivision));
     	schoolBusinessTestHelper.simulateStudentClassroomSessionDivisionReport(classroomSessionDivision, new Object[][]{
@@ -74,6 +74,7 @@ public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBus
     	    		,{"STUD2","70","50","60"}
     	    	}}
     	}, Boolean.TRUE,Boolean.TRUE);
+    	*/
     }
         
 }

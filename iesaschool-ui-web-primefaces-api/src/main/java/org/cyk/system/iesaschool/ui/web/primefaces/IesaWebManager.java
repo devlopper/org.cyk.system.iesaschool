@@ -2,6 +2,7 @@ package org.cyk.system.iesaschool.ui.web.primefaces;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collection;
 
 import javax.inject.Singleton;
 
@@ -21,11 +22,12 @@ import org.cyk.system.school.model.actor.Teacher;
 import org.cyk.system.school.model.session.ClassroomSession;
 import org.cyk.system.school.model.session.ClassroomSessionDivision;
 import org.cyk.system.school.model.session.StudentClassroomSession;
-import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubject;
+import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubjectEvaluationType;
 import org.cyk.system.school.model.subject.StudentSubject;
 import org.cyk.system.school.ui.web.primefaces.session.StudentClassroomSessionDivisionConsultPage;
 import org.cyk.ui.api.AbstractUserSession;
 import org.cyk.ui.api.command.UICommandable;
+import org.cyk.ui.api.command.UICommandable.IconType;
 import org.cyk.ui.api.command.menu.SystemMenu;
 import org.cyk.ui.web.primefaces.AbstractPrimefacesManager;
 import org.cyk.utility.common.annotation.Deployment;
@@ -60,7 +62,7 @@ public class IesaWebManager extends AbstractPrimefacesManager implements Seriali
 	@Override
 	public SystemMenu systemMenu(AbstractUserSession userSession) {
 		SystemMenu systemMenu = new SystemMenu();
-		
+		/*
 		UICommandable group = uiProvider.createCommandable("iesa.menu.registration", null);		
 		group.addChild(menuManager.crudMany(Student.class, null));
 		group.addChild(menuManager.crudMany(Teacher.class, null));
@@ -80,11 +82,50 @@ public class IesaWebManager extends AbstractPrimefacesManager implements Seriali
 		group.addChild(menuManager.crudMany(PersonTitle.class, null));
 		group.addChild(menuManager.crudMany(JobTitle.class, null));
 		systemMenu.getBusinesses().add(group);
+		*/
+		systemMenu.getBusinesses().add(getRegistrationCommandable(userSession, null));
+		systemMenu.getBusinesses().add(getClassCommandable(userSession, null));			
+		systemMenu.getBusinesses().add(getMarksCardCommandable(userSession, null));
 		
+		systemMenu.getReferenceEntities().add(getControlPanelCommandable(userSession, null));
 		
 		return systemMenu;
 	}
 	
+	public UICommandable getRegistrationCommandable(AbstractUserSession userSession,Collection<UICommandable> mobileCommandables){
+		UICommandable module = uiProvider.createCommandable("command.actor.registration", IconType.PERSON);
+		module.addChild(menuManager.crudMany(Student.class, null));
+		module.addChild(menuManager.crudMany(Teacher.class, null));
+		module.addChild(menuManager.crudMany(Employee.class, null));
+		return module;
+	}
 	
+	public UICommandable getClassCommandable(AbstractUserSession userSession,Collection<UICommandable> mobileCommandables){
+		UICommandable module = uiProvider.createCommandable(businessEntityInfos(ClassroomSession.class).getUserInterface().getLabelId(), null);
+		module.addChild(menuManager.crudMany(ClassroomSession.class, null));
+		module.addChild(menuManager.createMany(StudentClassroomSession.class, null));
+		module.addChild(menuManager.createMany(StudentSubject.class, null));
+		module.addChild(menuManager.createSelectOne(ClassroomSessionDivisionSubjectEvaluationType.class,SchoolBusinessLayer.getInstance().getActionCreateSubjectEvaluation() ,null));
+		module.addChild(menuManager.createSelectOne(ClassroomSessionDivision.class,SchoolBusinessLayer.getInstance().getActionUpdateStudentClassroomSessionDivisionResults() ,null));
+		return module;
+	}
+	
+	public UICommandable getMarksCardCommandable(AbstractUserSession userSession,Collection<UICommandable> mobileCommandables){
+		UICommandable module = uiProvider.createCommandable("school.markscard", null);
+		module.addChild(menuManager.createSelectMany(ClassroomSession.class,SchoolBusinessLayer.getInstance().getActionUpdateStudentClassroomSessionDivisionReportFiles() ,null));
+		module.addChild(menuManager.createSelectMany(ClassroomSession.class,SchoolBusinessLayer.getInstance().getActionConsultStudentClassroomSessionDivisionReportFiles() ,null));
+		
+		//module.addChild(uiProvider.createCommandable("school", null,outcomeConsultSchoolStudentClassroomSessionDivisionReportFile));
+		//module.addChild(menuManager.createSelectOne(ClassroomSession.class,SchoolBusinessLayer.getInstance().getActionConsultStudentClassroomSessionDivisionReportFiles() ,null));
+		return module;
+	}
+	
+	public UICommandable getControlPanelCommandable(AbstractUserSession userSession,Collection<UICommandable> mobileCommandables){
+		UICommandable module = uiProvider.createCommandable("commandable.school", null);
+		module.addChild(menuManager.crudMany(Company.class, null));
+		module.addChild(menuManager.crudMany(PersonTitle.class, null));
+		module.addChild(menuManager.crudMany(JobTitle.class, null));
+		return module;
+	}
 	
 }

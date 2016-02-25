@@ -11,7 +11,6 @@ public class SimulateBusinessIT extends AbstractBusinessIT {
     @Override
     protected void businesses() {
     	installApplication();
-    	schoolBusinessTestHelper.setCoefficientApplied(Boolean.FALSE);
     	
     	SchoolBusinessSimulationParameters parameters = new SchoolBusinessSimulationParameters();
 

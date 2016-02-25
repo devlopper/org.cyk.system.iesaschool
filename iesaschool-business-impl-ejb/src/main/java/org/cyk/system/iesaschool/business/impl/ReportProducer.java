@@ -2,7 +2,10 @@ package org.cyk.system.iesaschool.business.impl;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.iesaschool.model.IesaConstant;
+import org.cyk.system.root.business.api.mathematics.NumberBusiness.FormatArguments;
 import org.cyk.system.root.model.file.report.LabelValueCollectionReport;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.userinterface.style.FontName;
@@ -43,31 +46,48 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		AcademicSession as = studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getAcademicSession();
 		r.getAcademicSession().setFromDateToDate(timeBusiness.findYear(as.getPeriod().getFromDate())+"/"+timeBusiness.findYear(as.getPeriod().getToDate())+" ACADEMIC SESSION");
 	
-		String name = null;
-		if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==0)
+		FormatArguments formatArguments = new FormatArguments();
+		formatArguments.setIsRank(Boolean.TRUE);
+		String name = numberBusiness.format(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()+1, formatArguments);
+		/*if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==0)
 			name = "FIRST";
 		else if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==1)
 			name = "SECOND";
 		else if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==2)
 			name = "THIRD";
-		
+		*/
 		name += " TERM ,";
 		
-		String gradeCode = studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getLevelTimeDivision().getLevel().getName().getCode();
+		String levelNameCode = studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getLevelTimeDivision().getLevel().getName().getCode();
 		String testCoef = null,examCoef = "";
-		if(gradeCode.equals("Grade1") || gradeCode.equals("Grade2") || gradeCode.equals("Grade3")){
+		if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G1,IesaConstant.LEVEL_NAME_CODE_G2,IesaConstant.LEVEL_NAME_CODE_G3},levelNameCode)){
 			name += " LOWER";
 			testCoef = "15";
 			examCoef = "70";
-		}else if(gradeCode.equals("Grade4") || gradeCode.equals("Grade5") || gradeCode.equals("Grade6")){
+		}else if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G4,IesaConstant.LEVEL_NAME_CODE_G5,IesaConstant.LEVEL_NAME_CODE_G6},levelNameCode)){
 			name += " UPPER";
 			testCoef = "15";
 			examCoef = "70";
-		}else if(gradeCode.equals("Grade7") || gradeCode.equals("Grade8") || gradeCode.equals("Grade9")){
+		}else if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G7,IesaConstant.LEVEL_NAME_CODE_G8,IesaConstant.LEVEL_NAME_CODE_G9},levelNameCode)){
 			name += " JUNIOR HIGH SCHOOL";
 			testCoef = "20";
 			examCoef = "60";
 		}
+		/*
+		if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G1,IesaConstant.LEVEL_NAME_CODE_G2,IesaConstant.LEVEL_NAME_CODE_G3},levelNameCode)){
+			name += " LOWER";
+			testCoef = "15";
+			examCoef = "70";
+		}else if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G4,IesaConstant.LEVEL_NAME_CODE_G5,IesaConstant.LEVEL_NAME_CODE_G6},levelNameCode)){
+			name += " UPPER";
+			testCoef = "15";
+			examCoef = "70";
+		}else if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G7,IesaConstant.LEVEL_NAME_CODE_G8,IesaConstant.LEVEL_NAME_CODE_G9},levelNameCode)){
+			name += " JUNIOR HIGH SCHOOL";
+			testCoef = "20";
+			examCoef = "60";
+		}
+		*/
 		r.setName(name+" "+studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getLevelTimeDivision().getLevel().getGroup().getName().toUpperCase()
 				+" REPORT CARD");
 		

@@ -24,6 +24,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.system.root.persistence.impl.PersistenceIntegrationTestHelper;
 import org.cyk.system.school.business.impl.SchoolBusinessTestHelper;
+import org.cyk.system.school.model.subject.Evaluation;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.test.ArchiveBuilder;
 import org.cyk.utility.test.Transaction;
@@ -79,6 +80,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     
     protected void installApplication(){
     	long t = System.currentTimeMillis();
+    	Evaluation.COEFFICIENT_APPLIED = Boolean.FALSE;
     	installApplication(Boolean.TRUE);
     	produce(getFakedDataProducer());
     	System.out.println( ((System.currentTimeMillis()-t)/1000)+" s" );

@@ -161,6 +161,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     		
     		@Override
     		public String processJrxml(ReportBasedOnTemplateFile<?> aReport,String jrxml) {
+    			System.out.println(jrxml);
     			jrxml = updateTableColumn(jrxml,new Object[]{DETAIL,0,BAND,2,FRAME,0,COMPONENT_ELEMENT,0}, 0, 11, new String[]{WIDTH,"124"});
     			jrxml = updateTableColumn(jrxml,new Object[]{DETAIL,0,BAND,2,FRAME,0,COMPONENT_ELEMENT,0}, 0, 12, new String[]{WIDTH,"150"});
     			return jrxml;
@@ -174,8 +175,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     			if(object instanceof StudentClassroomSessionDivisionReport){
     				StudentClassroomSessionDivisionReport studentClassroomSessionDivisionReport = (StudentClassroomSessionDivisionReport) object;
     				ClassroomSession classroomSession = ((StudentClassroomSessionDivision)studentClassroomSessionDivisionReport.getSource()).getClassroomSessionDivision().getClassroomSession();
-    				
-    				((JRDesignExpression)jasperDesign.getParametersMap().get("CYK_RANKABLE").getDefaultValueExpression())
+    				((JRDesignExpression)jasperDesign.getParametersMap().get(IesaConstant.REPORT_CYK_GLOBAL_RANKABLE).getDefaultValueExpression())
     					.setText(classroomSession.getStudentClassroomSessionDivisionRankable().toString());
     				
     				if(Boolean.TRUE.equals(classroomSession.getStudentClassroomSessionDivisionRankable())){
@@ -224,7 +224,8 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	,{"H", "Has no regard", "5", "5"} });
     	
 		File reportFile = createFile("report/studentclassroomsessiondivision.jrxml", "studentclassroomsessiondivisionreport.jrxml");
-		ReportTemplate reportTemplate = new ReportTemplate("SCSDRT",reportFile,createFile("image/studentclassroomsessiondivisionreport_background.jpg"));
+		ReportTemplate reportTemplate = new ReportTemplate("SCSDRT",reportFile,createFile("image/document_header.png")
+				,createFile("image/studentclassroomsessiondivisionreport_background.jpg"));
 		create(reportTemplate);
 		
 		CommonNodeInformations commonNodeInformationsG1G3 = new CommonNodeInformations(createIntervalCollection("ICEV1",new String[][]{

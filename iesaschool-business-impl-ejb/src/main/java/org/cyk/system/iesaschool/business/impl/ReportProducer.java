@@ -6,6 +6,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.iesaschool.model.IesaConstant;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness.FormatArguments;
+import org.cyk.system.root.business.api.mathematics.NumberBusiness.FormatArguments.CharacterSet;
 import org.cyk.system.root.model.file.report.LabelValueCollectionReport;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.userinterface.style.FontName;
@@ -48,14 +49,8 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 	
 		FormatArguments formatArguments = new FormatArguments();
 		formatArguments.setIsRank(Boolean.TRUE);
+		formatArguments.setType(CharacterSet.LETTER);
 		String name = numberBusiness.format(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()+1, formatArguments);
-		/*if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==0)
-			name = "FIRST";
-		else if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==1)
-			name = "SECOND";
-		else if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==2)
-			name = "THIRD";
-		*/
 		name += " TERM ,";
 		
 		String levelNameCode = studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getLevelTimeDivision().getLevel().getName().getCode();

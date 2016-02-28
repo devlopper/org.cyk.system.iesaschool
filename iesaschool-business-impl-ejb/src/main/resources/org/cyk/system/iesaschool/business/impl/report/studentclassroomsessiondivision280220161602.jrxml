@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Student Classroom Session Division Report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="de4e9630-bfde-428f-bc68-96e9a465fd5d">
-	<property name="ireport.zoom" value="1.0"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Student Classroom Session Division Report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="5" bottomMargin="5" uuid="de4e9630-bfde-428f-bc68-96e9a465fd5d">
+	<property name="ireport.zoom" value="0.75"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="table">
@@ -209,9 +209,6 @@
 	<field name="backgroundImage" class="java.io.InputStream">
 		<fieldDescription><![CDATA[backgroundImage]]></fieldDescription>
 	</field>
-	<field name="headerImage" class="java.io.InputStream">
-		<fieldDescription><![CDATA[headerImage]]></fieldDescription>
-	</field>
 	<background>
 		<band height="802" splitType="Stretch">
 			<image>
@@ -221,11 +218,25 @@
 		</band>
 	</background>
 	<pageHeader>
-		<band height="66" splitType="Stretch">
-			<image scaleImage="RetainShape" hAlign="Center" isUsingCache="false" onErrorType="Blank">
-				<reportElement x="0" y="0" width="555" height="66" uuid="002be5f5-52d2-48f3-b556-b337746ea1b4"/>
-				<imageExpression><![CDATA[$F{headerImage}]]></imageExpression>
+		<band height="113" splitType="Stretch">
+			<image hAlign="Center" isUsingCache="false" onErrorType="Blank">
+				<reportElement x="246" y="0" width="64" height="64" uuid="002be5f5-52d2-48f3-b556-b337746ea1b4"/>
+				<imageExpression><![CDATA[$F{academicSession}.getCompany().getImage()]]></imageExpression>
 			</image>
+			<textField>
+				<reportElement x="0" y="62" width="555" height="42" forecolor="#003333" uuid="8821cbc7-e748-4afe-9035-5aa30102c585"/>
+				<textElement textAlignment="Center" markup="styled">
+					<font fontName="Tin Birdhouse" size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<font face='Tin Birdhouse'>" +$F{academicSession}.getCompany().getName()+"</font>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="104" width="555" height="9" uuid="558cda08-1619-472c-a906-f38ed8ab7b5d"/>
+				<textElement textAlignment="Center" markup="styled">
+					<font fontName="Times New Roman" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{academicSession}.getCompany().getContact().getAll()+"</font>"]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<detail>

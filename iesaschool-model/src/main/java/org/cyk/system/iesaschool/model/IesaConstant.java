@@ -6,6 +6,10 @@ public interface IesaConstant {
 	String EVALUATION_TYPE_TEST2 = "Test2";
 	String EVALUATION_TYPE_EXAM = "Exam";
 	
+	String LEVEL_NAME_CODE_PK = "PK";
+	String LEVEL_NAME_CODE_K1 = "K1";
+	String LEVEL_NAME_CODE_K2 = "K2";
+	String LEVEL_NAME_CODE_K3 = "K3";
 	String LEVEL_NAME_CODE_G1 = "G1";
 	String LEVEL_NAME_CODE_G2 = "G2";
 	String LEVEL_NAME_CODE_G3 = "G3";
@@ -19,5 +23,5 @@ public interface IesaConstant {
 	String LEVEL_NAME_CODE_G11 = "G11";
 	String LEVEL_NAME_CODE_G12 = "G12";
 	
-	
+	String REPORT_CYK_GLOBAL_RANKABLE = "CYK_GLOBAL_RANKABLE";
 }

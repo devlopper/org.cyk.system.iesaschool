@@ -1,6 +1,7 @@
 package org.cyk.system.iesaschool.business.impl.integration;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -24,7 +25,10 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.system.root.persistence.impl.PersistenceIntegrationTestHelper;
 import org.cyk.system.school.business.impl.SchoolBusinessTestHelper;
+import org.cyk.system.school.model.session.ClassroomSession;
 import org.cyk.system.school.model.subject.Evaluation;
+import org.cyk.system.school.persistence.api.session.ClassroomSessionDao;
+import org.cyk.system.school.persistence.api.session.LevelTimeDivisionDao;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.test.ArchiveBuilder;
 import org.cyk.utility.test.Transaction;
@@ -65,6 +69,9 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 	@Inject protected SchoolBusinessTestHelper schoolBusinessTestHelper;
 	@Inject protected IesaBusinessLayer iesaschoolBusinessLayer;
 	@Inject protected IesaBusinessTestHelper iesaschoolBusinessTestHelper;
+	
+	@Inject protected ClassroomSessionDao classroomSessionDao;
+	@Inject protected LevelTimeDivisionDao levelTimeDivisionDao;
 	
 	@Inject protected UserTransaction userTransaction;
     
@@ -160,5 +167,9 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 				//getEntityManager().flush();
 			}
     	}.run();
+    }
+
+    protected Collection<ClassroomSession> getClassroomSessions(Integer index){
+    	return classroomSessionDao.readByLevelTimeDivision(levelTimeDivisionDao.readByIndex(0).iterator().next());
     }
 }

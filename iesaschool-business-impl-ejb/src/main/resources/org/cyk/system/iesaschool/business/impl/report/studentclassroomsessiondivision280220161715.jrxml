@@ -209,9 +209,6 @@
 	<field name="backgroundImage" class="java.io.InputStream">
 		<fieldDescription><![CDATA[backgroundImage]]></fieldDescription>
 	</field>
-	<field name="headerImage" class="java.io.InputStream">
-		<fieldDescription><![CDATA[headerImage]]></fieldDescription>
-	</field>
 	<background>
 		<band height="802" splitType="Stretch">
 			<image>
@@ -222,10 +219,38 @@
 	</background>
 	<pageHeader>
 		<band height="66" splitType="Stretch">
-			<image scaleImage="RetainShape" hAlign="Center" isUsingCache="false" onErrorType="Blank">
-				<reportElement x="0" y="0" width="555" height="66" uuid="002be5f5-52d2-48f3-b556-b337746ea1b4"/>
-				<imageExpression><![CDATA[$F{headerImage}]]></imageExpression>
+			<image hAlign="Center" isUsingCache="false" onErrorType="Blank">
+				<reportElement x="0" y="0" width="64" height="64" uuid="002be5f5-52d2-48f3-b556-b337746ea1b4"/>
+				<imageExpression><![CDATA[$F{academicSession}.getCompany().getImage()]]></imageExpression>
 			</image>
+			<textField>
+				<reportElement x="64" y="0" width="491" height="48" forecolor="#003333" uuid="8821cbc7-e748-4afe-9035-5aa30102c585"/>
+				<textElement textAlignment="Center" markup="styled">
+					<font fontName="Tin Birdhouse" size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<font face='Tin Birdhouse'>" +$F{academicSession}.getCompany().getName()+"</font>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="64" y="48" width="491" height="9" uuid="558cda08-1619-472c-a906-f38ed8ab7b5d"/>
+				<textElement textAlignment="Center" markup="styled">
+					<font fontName="Times New Roman" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{academicSession}.getCompany().getContact().getLocations()+" - "+$F{academicSession}.getCompany().getContact().getPostalBoxs()+" - "+$F{academicSession}.getCompany().getContact().getPhoneNumbers()+"</font>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="64" y="57" width="120" height="9" uuid="1af100f3-3d1e-4f39-8f7a-22cfca41db3b"/>
+				<textElement textAlignment="Center" markup="styled">
+					<font fontName="Times New Roman" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>E-mail : " +$F{academicSession}.getCompany().getContact().getEmails()+"</font>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="434" y="57" width="120" height="9" uuid="27df4e20-6e78-4924-a302-d809c15a9e32"/>
+				<textElement textAlignment="Center" markup="styled">
+					<font fontName="Times New Roman" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>Websites : " +$F{academicSession}.getCompany().getContact().getWebsites()+"</font>"]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<detail>

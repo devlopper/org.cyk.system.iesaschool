@@ -90,7 +90,8 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	private EvaluationType evaluationTypeTest1,evaluationTypeTest2,evaluationTypeExam;
 	
-	private MetricCollection studentWorkMetricCollectionG1G6,studentWorkMetricCollectionG7G12;
+	private MetricCollection studentWorkMetricCollectionPk,studentWorkMetricCollectionK1,studentWorkMetricCollectionK2,studentWorkMetricCollectionK3
+		,studentWorkMetricCollectionG1G6,studentWorkMetricCollectionG7G12;
 	
 	private ArrayList<Subject> subjectsG1G3 = new ArrayList<>(),subjectsG4G6 = new ArrayList<>()
 			,subjectsG7G9 = new ArrayList<>(),subjectsG10G12 = new ArrayList<>(); 
@@ -153,19 +154,18 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     			Object object = aReport.getDataSource().iterator().next();
     			if(object instanceof StudentClassroomSessionDivisionReport){
     				StudentClassroomSessionDivisionReport studentClassroomSessionDivisionReport = (StudentClassroomSessionDivisionReport) object;
-    				ClassroomSession classroomSession = ((StudentClassroomSessionDivision)studentClassroomSessionDivisionReport.getSource()).getClassroomSessionDivision().getClassroomSession();
-    				return !Boolean.TRUE.equals(classroomSession.getStudentClassroomSessionDivisionRankable());
+    				return !Boolean.TRUE.equals(((StudentClassroomSessionDivision)studentClassroomSessionDivisionReport.getSource()).getClassroomSessionDivision().getStudentRankable());
     			}
     			return super.isJrxmlProcessable(aReport);
     		}
     		
-    		@Override
+    		/*@Override
     		public String processJrxml(ReportBasedOnTemplateFile<?> aReport,String jrxml) {
     			System.out.println(jrxml);
     			jrxml = updateTableColumn(jrxml,new Object[]{DETAIL,0,BAND,2,FRAME,0,COMPONENT_ELEMENT,0}, 0, 11, new String[]{WIDTH,"124"});
     			jrxml = updateTableColumn(jrxml,new Object[]{DETAIL,0,BAND,2,FRAME,0,COMPONENT_ELEMENT,0}, 0, 12, new String[]{WIDTH,"150"});
     			return jrxml;
-    		}
+    		}*/
     		
 			private static final long serialVersionUID = -4233974280078518157L;
     		@Override
@@ -173,6 +173,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     			super.processDesign(aReport,jasperDesign);
     			Object object = aReport.getDataSource().iterator().next();
     			if(object instanceof StudentClassroomSessionDivisionReport){
+    				/*
     				StudentClassroomSessionDivisionReport studentClassroomSessionDivisionReport = (StudentClassroomSessionDivisionReport) object;
     				ClassroomSession classroomSession = ((StudentClassroomSessionDivision)studentClassroomSessionDivisionReport.getSource()).getClassroomSessionDivision().getClassroomSession();
     				((JRDesignExpression)jasperDesign.getParametersMap().get(IesaConstant.REPORT_CYK_GLOBAL_RANKABLE).getDefaultValueExpression())
@@ -183,7 +184,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     				}else{
     					
     				}
-    				
+    				*/
     				/* Color */
     				/*if( classroomSession.getLevelTimeDivision().getLevel().getName().getCode().equals("Grade2") ){
     					jasperDesign.getStylesMap().get("title").setBackcolor(Color.ORANGE);
@@ -206,7 +207,14 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	evaluationTypeTest1 = createEnumeration(EvaluationType.class,IesaConstant.EVALUATION_TYPE_TEST1,"Test 1");
     	evaluationTypeTest2 = createEnumeration(EvaluationType.class,IesaConstant.EVALUATION_TYPE_TEST2,"Test 2");
     	evaluationTypeExam = createEnumeration(EvaluationType.class,IesaConstant.EVALUATION_TYPE_EXAM,"Exam");
-    	    	
+    	
+    	studentWorkMetricCollectionPk = createBehaviourMetrics("BSWHPk","Behaviour,Study and Work Habits",MetricValueType.NUMBER
+    			, new String[]{"Participates actively during circle time","Participates in singing rhymes","Can say her name and name of classmates"
+    			,"Can respond appropriately to “how are you?”","Can say his/her age","Can say the name of her school","Names objects in the classroom and school environment"
+    			,"Uses at least one of the following words “me”,“I”, “he”, “she”, “you”","Talks in two or three word phrases and longer sentences"
+    			,"Can use “and” to connect words/phrases","Talks with words in correct order","Can be engaged in conversations"}
+    	, new String[][]{ {"BSWHPk_1", "Learning to do", "1", "1"},{"BSWHPk_2", "Does sometimes", "2", "2"} ,{"BSWHPk_3", "Does regularly", "3", "3"} });
+    	
     	studentWorkMetricCollectionG1G6 = createBehaviourMetrics("BSWHG1G6","Behaviour,Study and Work Habits",MetricValueType.NUMBER
     			, new String[]{"Respect authority","Works independently and neatly","Completes homework and class work on time","Shows social courtesies","Demonstrates self-control"
     					,"Takes care of school and others materials","Game/Sport","Handwriting","Drawing/Painting","Punctionality/Regularity","Works cooperatively in groups"
@@ -223,10 +231,19 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	,{"S", "Satisfactory", "3", "3"},{"N", "Needs Improvement", "4", "4"}
     	,{"H", "Has no regard", "5", "5"} });
     	
+    	File reportHeaderFile = createFile("image/document_header.png");
+    	
 		File reportFile = createFile("report/studentclassroomsessiondivision.jrxml", "studentclassroomsessiondivisionreport.jrxml");
-		ReportTemplate reportTemplate = new ReportTemplate("SCSDRT",reportFile,createFile("image/document_header.png")
-				,createFile("image/studentclassroomsessiondivisionreport_background.jpg"));
+		ReportTemplate reportTemplate = new ReportTemplate("SCSDRT",reportFile,reportHeaderFile,createFile("image/studentclassroomsessiondivisionreport_background.jpg"));
 		create(reportTemplate);
+		
+		File reportFilePk = createFile("report/pkg.jrxml", "studentclassroomsessiondivision_pkg.jrxml");
+		ReportTemplate reportTemplatePk = new ReportTemplate("SCSDRTPK",reportFilePk,reportHeaderFile,createFile("image/studentclassroomsessiondivisionreport_background.jpg"));
+		create(reportTemplatePk);
+		
+		CommonNodeInformations commonNodeInformationsPk = new CommonNodeInformations(null,studentWorkMetricCollectionPk,reportTemplatePk,getEnumeration(TimeDivisionType.class, TimeDivisionType.DAY));
+		commonNodeInformationsPk.setClassroomSessionTimeDivisionType(getEnumeration(TimeDivisionType.class,TimeDivisionType.TRIMESTER));
+		commonNodeInformationsPk.setCurrentClassroomSessionDivisionIndex(new Byte("1"));
 		
 		CommonNodeInformations commonNodeInformationsG1G3 = new CommonNodeInformations(createIntervalCollection("ICEV1",new String[][]{
 			{"A+", "Excellent", "90", "100"},{"A", "Very good", "80", "89.99"},{"B+", "Good", "70", "79.99"},{"B", "Fair", "60", "69.99"}
@@ -296,33 +313,44 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	Collection<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects = new ArrayList<>();
     	Collection<ClassroomSessionDivisionSubjectEvaluationType> subjectEvaluationTypes = new ArrayList<>(); 
     	
-    	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G1,"Grade 1",levelGroupPrimary,commonNodeInformationsG1G3,0) , subjectsG1G3,new String[]{"A","B"},Boolean.TRUE);    	
-    	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G2,"Grade 2",levelGroupPrimary,commonNodeInformationsG1G3,1) , subjectsG1G3,null,Boolean.TRUE);
-    	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G3,"Grade 3",levelGroupPrimary,commonNodeInformationsG1G3,2) , subjectsG1G3,new String[]{"A","B"},Boolean.TRUE);
+    	Integer gradeIndex = 0;
     	
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G4,"Grade 4",levelGroupPrimary,commonNodeInformationsG4G6,3) , subjectsG4G6,new String[]{"A","B"},Boolean.TRUE);
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_PK,"Pre-Kindergarten",levelGroupPrimary,commonNodeInformationsPk,gradeIndex++) ,null,null, null,null,Boolean.TRUE,Boolean.TRUE);
+    	/*grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_K1,"Kindergarten 1",levelGroupPrimary,commonNodeInformationsG1G3,gradeIndex++) , null,null,Boolean.TRUE,Boolean.TRUE);
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G5,"Grade 5",levelGroupPrimary,commonNodeInformationsG4G6,4) , subjectsG4G6,new String[]{"A","B"},Boolean.TRUE);
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_K2,"Kindergarten 2",levelGroupPrimary,commonNodeInformationsG1G3,gradeIndex++) , null,null,Boolean.TRUE,Boolean.TRUE);
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G6,"Grade 6",levelGroupPrimary,commonNodeInformationsG4G6,5) , subjectsG4G6,null,Boolean.TRUE);
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_K3,"Kindergarten 3",levelGroupPrimary,commonNodeInformationsG1G3,gradeIndex++) , null,null,Boolean.TRUE,Boolean.TRUE);
+    	*/
+    	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G1,"Grade 1",levelGroupPrimary,commonNodeInformationsG1G3,gradeIndex++) ,"0.15","0.7", subjectsG1G3,new String[]{"A","B"},Boolean.TRUE,Boolean.TRUE);    	
+    	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G2,"Grade 2",levelGroupPrimary,commonNodeInformationsG1G3,gradeIndex++) ,"0.15","0.7", subjectsG1G3,null,Boolean.TRUE,Boolean.TRUE);
+    	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G3,"Grade 3",levelGroupPrimary,commonNodeInformationsG1G3,gradeIndex++) , "0.15","0.7",subjectsG1G3,new String[]{"A","B"},Boolean.TRUE,Boolean.TRUE);
     	
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G7,"Grade 7",levelGroupSecondary,commonNodeInformationsG7G9,6) , subjectsG7G9,null,Boolean.TRUE);
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G4,"Grade 4",levelGroupPrimary,commonNodeInformationsG4G6,gradeIndex++) , "0.15","0.7",subjectsG4G6,new String[]{"A","B"},Boolean.TRUE,Boolean.TRUE);
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G8,"Grade 8",levelGroupSecondary,commonNodeInformationsG7G9,7) , subjectsG7G9,null,Boolean.TRUE);
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G5,"Grade 5",levelGroupPrimary,commonNodeInformationsG4G6,gradeIndex++) , "0.15","0.7",subjectsG4G6,new String[]{"A","B"},Boolean.TRUE,Boolean.TRUE);
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G9,"Grade 9",levelGroupSecondary,commonNodeInformationsG7G9,8) , subjectsG7G9,null,Boolean.FALSE);
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G6,"Grade 6",levelGroupPrimary,commonNodeInformationsG4G6,gradeIndex++) , "0.15","0.7",subjectsG4G6,null,Boolean.TRUE,Boolean.TRUE);
     	
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G10,"Grade 10",levelGroupSecondary,commonNodeInformationsG10G12,9) , subjectsG10G12,null,Boolean.FALSE);
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G7,"Grade 7",levelGroupSecondary,commonNodeInformationsG7G9,gradeIndex++) , "0.15","0.7",subjectsG7G9,null,Boolean.TRUE,Boolean.TRUE);
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G11,"Grade 11",levelGroupSecondary,commonNodeInformationsG10G12,10) , subjectsG10G12,null,Boolean.FALSE);
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G8,"Grade 8",levelGroupSecondary,commonNodeInformationsG7G9,gradeIndex++) , "0.15","0.7",subjectsG7G9,null,Boolean.TRUE,Boolean.TRUE);
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G12,"Grade 12",levelGroupSecondary,commonNodeInformationsG10G12,11) , subjectsG10G12,null,Boolean.FALSE);
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G9,"Grade 9",levelGroupSecondary,commonNodeInformationsG7G9,gradeIndex++) , "0.15","0.7",subjectsG7G9,null,Boolean.TRUE,Boolean.FALSE);
+    	
+    	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G10,"Grade 10",levelGroupSecondary,commonNodeInformationsG10G12,gradeIndex++) , "0.2","0.8",subjectsG10G12,null,Boolean.TRUE,Boolean.FALSE);
+    	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G11,"Grade 11",levelGroupSecondary,commonNodeInformationsG10G12,gradeIndex++) , "0.2","0.8",subjectsG10G12,null,Boolean.TRUE,Boolean.FALSE);
+    	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G12,"Grade 12",levelGroupSecondary,commonNodeInformationsG10G12,gradeIndex++) , "0.2","0.8",subjectsG10G12,null,Boolean.TRUE,Boolean.FALSE);
     	
     	classroomSessionBusiness.create(classroomSessions);
     	classroomSessionDivisionBusiness.create(classroomSessionDivisions);
@@ -375,20 +403,23 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	private void grade(Collection<ClassroomSession> classroomSessions,Collection<ClassroomSessionDivision> classroomSessionDivisions
 			,Collection<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects,Collection<ClassroomSessionDivisionSubjectEvaluationType> subjectEvaluationTypes
-			,AcademicSession academicSession,LevelTimeDivision levelTimeDivision,Collection<Subject> subjects,String[] suffixes,Boolean studentClassroomSessionDivisionRankable){
+			,AcademicSession academicSession,LevelTimeDivision levelTimeDivision,String testCoefficient,String examCoefficient,Collection<Subject> subjects,String[] suffixes,Boolean studentEvaluationRequired,Boolean studentRankable){
 		if(suffixes==null)
 			suffixes = new String[]{null};
 		for(String suffix : suffixes){
 			ClassroomSession classroomSession = new ClassroomSession(academicSession, levelTimeDivision,null);
-			classroomSession.setStudentClassroomSessionDivisionRankable(studentClassroomSessionDivisionRankable);
 			classroomSession.setSuffix(StringUtils.isBlank(suffix)?null:suffix);
 			classroomSession.getPeriod().setFromDate(new Date());
 			classroomSession.getPeriod().setToDate(new Date());
 			classroomSessions.add(classroomSession);
 			ClassroomSessionInfos classroomSessionInfos = new ClassroomSessionInfos(classroomSession);
-			classroomSessionInfos.getDivisions().add(createClassroomSessionDivision(classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,classroomSessionInfos.getClassroomSession(),subjects));
-			classroomSessionInfos.getDivisions().add(createClassroomSessionDivision(classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,classroomSessionInfos.getClassroomSession(),subjects));
-			classroomSessionInfos.getDivisions().add(createClassroomSessionDivision(classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,classroomSessionInfos.getClassroomSession(),subjects));
+			classroomSessionInfos.getDivisions().add(createClassroomSessionDivision(classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,classroomSessionInfos.getClassroomSession()
+					,testCoefficient,examCoefficient,subjects,studentEvaluationRequired,studentRankable));
+			classroomSessionInfos.getDivisions().add(createClassroomSessionDivision(classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,classroomSessionInfos.getClassroomSession()
+					,testCoefficient,examCoefficient,subjects,studentEvaluationRequired,studentRankable));
+			classroomSessionInfos.getDivisions().add(createClassroomSessionDivision(classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,classroomSessionInfos.getClassroomSession()
+					,testCoefficient,examCoefficient,subjects
+					,studentEvaluationRequired,studentRankable));
 		}
 	}
 	/*
@@ -400,20 +431,23 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	private ClassroomSessionDivisionInfos createClassroomSessionDivision(Collection<ClassroomSessionDivision> classroomSessionDivisions
 			,Collection<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects,Collection<ClassroomSessionDivisionSubjectEvaluationType> subjectEvaluationTypes
-			,ClassroomSession classroomSession,Collection<Subject> subjects){
+			,ClassroomSession classroomSession,String testCoefficient,String examCoefficient,Collection<Subject> subjects,Boolean studentEvaluationRequired,Boolean studentRankable){
 		ClassroomSessionDivision classroomSessionDivision = new ClassroomSessionDivision(classroomSession,getEnumeration(TimeDivisionType.class,TimeDivisionType.TRIMESTER)
     			,new BigDecimal("1"));
+		classroomSessionDivision.setStudentEvaluationRequired(studentEvaluationRequired);
+		classroomSessionDivision.setStudentRankable(studentRankable);
 		classroomSessionDivision.setDuration(DateTimeConstants.MILLIS_PER_DAY * 45l);
 		classroomSessionDivisions.add(classroomSessionDivision);
 		classroomSessionDivision.getPeriod().setFromDate(new Date());
 		classroomSessionDivision.getPeriod().setToDate(new Date());
 		ClassroomSessionDivisionInfos classroomSessionDivisionInfos = new ClassroomSessionDivisionInfos(classroomSessionDivision);
 		
-		for(Subject subject : subjects){
-			classroomSessionDivisionInfos.getSubjects().add(createClassroomSessionDivisionSubject(classroomSessionDivisionSubjects,subjectEvaluationTypes,classroomSessionDivision,subject,new Object[][]{
-				{evaluationTypeTest1,"0.15"},{evaluationTypeTest2,"0.15"},{evaluationTypeExam,"0.7"}
-			}));
-    	}
+		if(subjects!=null)
+			for(Subject subject : subjects){
+				classroomSessionDivisionInfos.getSubjects().add(createClassroomSessionDivisionSubject(classroomSessionDivisionSubjects,subjectEvaluationTypes,classroomSessionDivision,subject,new Object[][]{
+						{evaluationTypeTest1,testCoefficient},{evaluationTypeTest2,testCoefficient},{evaluationTypeExam,examCoefficient}
+				}));
+			}
     	
 		return classroomSessionDivisionInfos;
 	}

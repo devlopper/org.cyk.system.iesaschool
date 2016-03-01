@@ -138,28 +138,28 @@
 		<fieldDescription><![CDATA[labelValueCollectionAtIndex2]]></fieldDescription>
 	</field>
 	<field name="labelValueCollectionAtIndex3" class="org.cyk.system.root.model.file.report.LabelValueCollectionReport">
-		<fieldDescription><![CDATA[labelValueCollectionAtIndex3]]></fieldDescription>
+		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="labelValueCollectionAtIndex4" class="org.cyk.system.root.model.file.report.LabelValueCollectionReport">
-		<fieldDescription><![CDATA[labelValueCollectionAtIndex4]]></fieldDescription>
+		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="labelValueCollectionAtIndex5" class="org.cyk.system.root.model.file.report.LabelValueCollectionReport">
-		<fieldDescription><![CDATA[labelValueCollectionAtIndex5]]></fieldDescription>
+		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="labelValueCollectionAtIndex6" class="org.cyk.system.root.model.file.report.LabelValueCollectionReport">
-		<fieldDescription><![CDATA[labelValueCollectionAtIndex6]]></fieldDescription>
+		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="labelValueCollectionAtIndex7" class="org.cyk.system.root.model.file.report.LabelValueCollectionReport">
-		<fieldDescription><![CDATA[labelValueCollectionAtIndex7]]></fieldDescription>
+		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="labelValueCollectionAtIndex8" class="org.cyk.system.root.model.file.report.LabelValueCollectionReport">
-		<fieldDescription><![CDATA[labelValueCollectionAtIndex8]]></fieldDescription>
+		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="labelValueCollectionAtIndex9" class="org.cyk.system.root.model.file.report.LabelValueCollectionReport">
-		<fieldDescription><![CDATA[labelValueCollectionAtIndex9]]></fieldDescription>
+		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="labelValueCollectionAtIndex10" class="org.cyk.system.root.model.file.report.LabelValueCollectionReport">
-		<fieldDescription><![CDATA[labelValueCollectionAtIndex10]]></fieldDescription>
+		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="schoolStampBlockTitle" class="java.lang.String">
 		<fieldDescription><![CDATA[schoolStampBlockTitle]]></fieldDescription>

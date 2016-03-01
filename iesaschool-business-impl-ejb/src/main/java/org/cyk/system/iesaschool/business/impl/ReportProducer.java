@@ -12,6 +12,7 @@ import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.userinterface.style.FontName;
 import org.cyk.system.root.model.userinterface.style.Style;
 import org.cyk.system.school.business.impl.AbstractSchoolReportProducer;
+import org.cyk.system.school.model.IesaSampleData;
 import org.cyk.system.school.model.session.AcademicSession;
 import org.cyk.system.school.model.session.ClassroomSessionDivision;
 import org.cyk.system.school.model.session.StudentClassroomSessionDivision;
@@ -55,7 +56,15 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		
 		String levelNameCode = studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getLevelTimeDivision().getLevel().getName().getCode();
 		String testCoef = null,examCoef = "";
-		if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G1,IesaConstant.LEVEL_NAME_CODE_G2,IesaConstant.LEVEL_NAME_CODE_G3},levelNameCode)){
+		if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_PK},levelNameCode)){
+			name += " LOWER";
+			//r.generate();
+			//debug(r);
+			//return IesaSampleData.createStudentClassroomSessionDivisionReportsForKinderGarten().iterator().next();
+			//r.setLabelValueCollections(IesaSampleData.createStudentClassroomSessionDivisionReportsForKinderGarten().iterator().next().getLabelValueCollections());
+			//System.out
+			//		.println("ReportProducer.produceStudentClassroomSessionDivisionReport() : "+r.getLabelValueCollections().size());
+		}else if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G1,IesaConstant.LEVEL_NAME_CODE_G2,IesaConstant.LEVEL_NAME_CODE_G3},levelNameCode)){
 			name += " LOWER";
 			testCoef = "15";
 			examCoef = "70";
@@ -144,5 +153,7 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		return StringUtils.substringAfter(interval.getCode(), Constant.CHARACTER_SLASH.toString());
 	}
 	
-	
+	private static void pk(StudentClassroomSessionDivisionReport studentClassroomSessionDivisionReport){
+		
+	}
 }

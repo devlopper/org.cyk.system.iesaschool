@@ -11,8 +11,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import lombok.Getter;
-import net.sf.jasperreports.engine.design.JRDesignExpression;
-import net.sf.jasperreports.engine.design.JasperDesign;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.company.business.api.structure.CompanyBusiness;
@@ -26,10 +24,8 @@ import org.cyk.system.root.business.impl.AbstractBusinessLayer;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.RootDataProducerHelper.RootDataProducerHelperListener;
 import org.cyk.system.root.business.impl.RootRandomDataProvider;
-import org.cyk.system.root.business.impl.file.report.jasper.JasperReportBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
-import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollection;
@@ -55,8 +51,6 @@ import org.cyk.system.school.model.session.LevelGroupType;
 import org.cyk.system.school.model.session.LevelName;
 import org.cyk.system.school.model.session.LevelTimeDivision;
 import org.cyk.system.school.model.session.School;
-import org.cyk.system.school.model.session.StudentClassroomSessionDivision;
-import org.cyk.system.school.model.session.StudentClassroomSessionDivisionReport;
 import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubject;
 import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubjectEvaluationType;
 import org.cyk.system.school.model.subject.EvaluationType;
@@ -147,54 +141,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 			}
 		});
 		
-		JasperReportBusinessImpl.Listener.COLLECTION.add(new JasperReportBusinessImpl.Listener.Adapter.Default(){
-    		
-    		@Override
-    		public Boolean isJrxmlProcessable(ReportBasedOnTemplateFile<?> aReport) {
-    			Object object = aReport.getDataSource().iterator().next();
-    			if(object instanceof StudentClassroomSessionDivisionReport){
-    				StudentClassroomSessionDivisionReport studentClassroomSessionDivisionReport = (StudentClassroomSessionDivisionReport) object;
-    				return !Boolean.TRUE.equals(((StudentClassroomSessionDivision)studentClassroomSessionDivisionReport.getSource()).getClassroomSessionDivision().getStudentRankable());
-    			}
-    			return super.isJrxmlProcessable(aReport);
-    		}
-    		
-    		/*@Override
-    		public String processJrxml(ReportBasedOnTemplateFile<?> aReport,String jrxml) {
-    			System.out.println(jrxml);
-    			jrxml = updateTableColumn(jrxml,new Object[]{DETAIL,0,BAND,2,FRAME,0,COMPONENT_ELEMENT,0}, 0, 11, new String[]{WIDTH,"124"});
-    			jrxml = updateTableColumn(jrxml,new Object[]{DETAIL,0,BAND,2,FRAME,0,COMPONENT_ELEMENT,0}, 0, 12, new String[]{WIDTH,"150"});
-    			return jrxml;
-    		}*/
-    		
-			private static final long serialVersionUID = -4233974280078518157L;
-    		@Override
-    		public void processDesign(ReportBasedOnTemplateFile<?> aReport,JasperDesign jasperDesign) {
-    			super.processDesign(aReport,jasperDesign);
-    			Object object = aReport.getDataSource().iterator().next();
-    			if(object instanceof StudentClassroomSessionDivisionReport){
-    				/*
-    				StudentClassroomSessionDivisionReport studentClassroomSessionDivisionReport = (StudentClassroomSessionDivisionReport) object;
-    				ClassroomSession classroomSession = ((StudentClassroomSessionDivision)studentClassroomSessionDivisionReport.getSource()).getClassroomSessionDivision().getClassroomSession();
-    				((JRDesignExpression)jasperDesign.getParametersMap().get(IesaConstant.REPORT_CYK_GLOBAL_RANKABLE).getDefaultValueExpression())
-    					.setText(classroomSession.getStudentClassroomSessionDivisionRankable().toString());
-    				
-    				if(Boolean.TRUE.equals(classroomSession.getStudentClassroomSessionDivisionRankable())){
-    					
-    				}else{
-    					
-    				}
-    				*/
-    				/* Color */
-    				/*if( classroomSession.getLevelTimeDivision().getLevel().getName().getCode().equals("Grade2") ){
-    					jasperDesign.getStylesMap().get("title").setBackcolor(Color.ORANGE);
-        				jasperDesign.getStylesMap().get("block header").setBackcolor(Color.ORANGE);
-        				((JRBaseLineBox)jasperDesign.getStylesMap().get("block header").getLineBox()).getTopPen().setLineColor(Color.GREEN);
-        				((JRBaseLineBox)jasperDesign.getStylesMap().get("block header").getLineBox()).getBottomPen().setLineColor(Color.GREEN);
-    				}*/
-    			}
-    		}
-    	});
+		
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -316,7 +263,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	Integer gradeIndex = 0;
     	
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_PK,"Pre-Kindergarten",levelGroupPrimary,commonNodeInformationsPk,gradeIndex++) ,null,null, null,null,Boolean.TRUE,Boolean.TRUE);
+    			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_PK,"Pre-Kindergarten",levelGroupPrimary,commonNodeInformationsPk,gradeIndex++) ,null,null, null,null,Boolean.FALSE,Boolean.FALSE);
     	/*grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
     			, createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_K1,"Kindergarten 1",levelGroupPrimary,commonNodeInformationsG1G3,gradeIndex++) , null,null,Boolean.TRUE,Boolean.TRUE);
     	grade(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession

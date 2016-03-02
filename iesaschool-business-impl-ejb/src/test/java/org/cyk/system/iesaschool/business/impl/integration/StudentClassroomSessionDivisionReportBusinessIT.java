@@ -29,17 +29,18 @@ public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBus
     	
     	
     	schoolBusinessTestHelper.createActors(Student.class,new String[]{"STUD1","STUD2","STUD3","STUD4","STUD5"});
-    	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"STUD1","STUD2"},pk, new Object[][]{{0},{0},{0}});
+    	//schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"STUD1","STUD2"},pk, new Object[][]{{0},{0},{0}});
     	//schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"STUD1","STUD2"},g1, new Object[][]{{15},{15},{15}}); 
     	
     	//schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"STUD1","STUD2"},g9, new Object[][]{{15},{15},{15}}); 
     	
     	//schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"STUD1","STUD2"},g3, new Object[][]{{15},{15},{15}}); 
-    	
+    	/*
     	schoolBusinessTestHelper.getEvaluationTypes().addAll(rootDataProducerHelper.getEnumerations(EvaluationType.class));
     	
     	ClassroomSessionDivision classroomSessionDivision = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionBusiness().findByClassroomSession(g1).iterator().next();
     	List<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects = new ArrayList<>(SchoolBusinessLayer.getInstance().getClassroomSessionDivisionSubjectBusiness().findByClassroomSessionDivision(classroomSessionDivision));
+    	*/
     	/*
     	schoolBusinessTestHelper.simulateStudentClassroomSessionDivisionReport(classroomSessionDivision, new Object[][]{
     		new Object[]{classroomSessionDivisionSubjects.get(0),new String[][]{
@@ -49,9 +50,11 @@ public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBus
     	}, Boolean.TRUE,Boolean.TRUE);
     	*/
     	
+    	/*
     	classroomSessionDivision = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionBusiness().findByClassroomSession(pk).iterator().next();
     	classroomSessionDivisionSubjects = new ArrayList<>(SchoolBusinessLayer.getInstance().getClassroomSessionDivisionSubjectBusiness().findByClassroomSessionDivision(classroomSessionDivision));
     	schoolBusinessTestHelper.simulateStudentClassroomSessionDivisionReport(classroomSessionDivision, null, Boolean.TRUE,Boolean.TRUE);
+    	*/
     	
     	/*
     	classroomSessionDivision = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionBusiness().findByClassroomSession(g9).iterator().next();

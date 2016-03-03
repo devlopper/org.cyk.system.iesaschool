@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Student Classroom Session Division Report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="de4e9630-bfde-428f-bc68-96e9a465fd5d">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="254"/>
+	<property name="ireport.y" value="284"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -116,9 +116,6 @@
 	<field name="name" class="java.lang.String">
 		<fieldDescription><![CDATA[name]]></fieldDescription>
 	</field>
-	<field name="studentLabelValueCollection" class="org.cyk.system.root.model.file.report.LabelValueCollectionReport">
-		<fieldDescription><![CDATA[studentLabelValueCollection]]></fieldDescription>
-	</field>
 	<field name="commentsBlockTitle" class="java.lang.String">
 		<fieldDescription><![CDATA[commentsBlockTitle]]></fieldDescription>
 	</field>
@@ -160,6 +157,9 @@
 	</field>
 	<field name="labelValueCollectionAtIndex10" class="org.cyk.system.root.model.file.report.LabelValueCollectionReport">
 		<fieldDescription><![CDATA[labelValueCollectionAtIndex10]]></fieldDescription>
+	</field>
+	<field name="labelValueCollectionAtIndex11" class="org.cyk.system.root.model.file.report.LabelValueCollectionReport">
+		<fieldDescription><![CDATA[labelValueCollectionAtIndex11]]></fieldDescription>
 	</field>
 	<field name="schoolStampBlockTitle" class="java.lang.String">
 		<fieldDescription><![CDATA[schoolStampBlockTitle]]></fieldDescription>
@@ -208,7 +208,7 @@
 				<textField>
 					<reportElement style="block header" x="0" y="0" width="194" height="13" uuid="97c5bac7-e1c0-4d7b-8629-33858d604173"/>
 					<textElement markup="styled"/>
-					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{studentLabelValueCollection}.getName()+"</font>"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex0}.getName()+"</font>"]]></textFieldExpression>
 				</textField>
 				<image isUsingCache="false" onErrorType="Blank">
 					<reportElement x="2" y="19" width="64" height="70" uuid="1e10220e-5880-4b76-a166-a93abc111a9b"/>
@@ -217,7 +217,7 @@
 				<componentElement>
 					<reportElement key="table 1" x="66" y="15" width="128" height="74" backcolor="#FF66CC" uuid="711cc9eb-d9e1-40ef-8d1d-c907bf767ba5"/>
 					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-						<datasetRun subDataset="LabelValueDataset" uuid="8679ee7e-164d-4edc-9a19-719ec8341c5d">
+						<datasetRun subDataset="LabelValueDataset" uuid="35feee49-aed0-4954-961e-a89db0ca62d4">
 							<datasetParameter name="CYK_TEXT_STATIC_FONT_NAME">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_STATIC_FONT_NAME}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -233,7 +233,7 @@
 							<datasetParameter name="CYK_LABEL_VALUE_HEIGHT">
 								<datasetParameterExpression><![CDATA[$P{CYK_LABEL_VALUE_HEIGHT}]]></datasetParameterExpression>
 							</datasetParameter>
-							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{studentLabelValueCollection}.getCollection())]]></dataSourceExpression>
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex0}.getCollection())]]></dataSourceExpression>
 						</datasetRun>
 						<jr:column width="55" uuid="d486f9b0-675b-4e4e-ba2b-4fb2c41a735e">
 							<jr:detailCell style="table_td_underline" height="12" rowSpan="1">
@@ -265,12 +265,12 @@
 				<textField>
 					<reportElement style="block header" x="0" y="0" width="170" height="13" uuid="8e5e4903-eb2c-4ca6-bd96-030cc5bd8df6"/>
 					<textElement markup="styled"/>
-					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex8}.getName()+"</font>"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex1}.getName()+"</font>"]]></textFieldExpression>
 				</textField>
 				<componentElement>
 					<reportElement key="table 2" x="0" y="15" width="170" height="34" backcolor="#CC0033" uuid="0ca606c6-7730-4695-912d-234612a0f08d"/>
 					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-						<datasetRun subDataset="LabelValueDataset" uuid="1914d927-9d9f-45af-9063-87442c0059db">
+						<datasetRun subDataset="LabelValueDataset" uuid="43ea1411-c442-49fd-a125-edd1abfefb98">
 							<datasetParameter name="CYK_TEXT_STATIC_FONT_NAME">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_STATIC_FONT_NAME}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -283,7 +283,7 @@
 							<datasetParameter name="CYK_TEXT_DYNAMIC_FONT_SIZE">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_DYNAMIC_FONT_SIZE}]]></datasetParameterExpression>
 							</datasetParameter>
-							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex8}.getCollection())]]></dataSourceExpression>
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex1}.getCollection())]]></dataSourceExpression>
 						</datasetRun>
 						<jr:column width="160" uuid="5b46de09-4581-49fb-8bc7-a145f747a979">
 							<jr:detailCell style="table_td_underline" height="12" rowSpan="1">
@@ -317,12 +317,12 @@
 				<textField>
 					<reportElement style="block header" x="0" y="0" width="180" height="13" uuid="b8fc6e14-637d-4b6d-b607-86077c604b2c"/>
 					<textElement markup="styled"/>
-					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex0}.getName()+"</font>"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex2}.getName()+"</font>"]]></textFieldExpression>
 				</textField>
 				<componentElement>
 					<reportElement key="table 2" x="0" y="15" width="180" height="20" backcolor="#CC0033" uuid="51685db0-98f3-436f-bb95-d65fa5a6a3ff"/>
 					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-						<datasetRun subDataset="LabelValueDataset" uuid="a9b5e1c7-200a-4d41-bc77-409d8cff62f7">
+						<datasetRun subDataset="LabelValueDataset" uuid="3439b309-1854-4229-82a2-a358559d1c7c">
 							<datasetParameter name="CYK_TEXT_STATIC_FONT_NAME">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_STATIC_FONT_NAME}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -335,7 +335,7 @@
 							<datasetParameter name="CYK_TEXT_DYNAMIC_FONT_SIZE">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_DYNAMIC_FONT_SIZE}]]></datasetParameterExpression>
 							</datasetParameter>
-							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex0}.getCollection())]]></dataSourceExpression>
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex2}.getCollection())]]></dataSourceExpression>
 						</datasetRun>
 						<jr:column width="170" uuid="c98b16c3-be07-431d-81e9-3ea760273e5d">
 							<jr:detailCell style="table_td_underline" height="12" rowSpan="1">
@@ -367,12 +367,12 @@
 				<textField>
 					<reportElement style="block header" x="0" y="0" width="180" height="13" uuid="80495d10-2bc2-4b62-a285-3e502028ad1b"/>
 					<textElement markup="styled"/>
-					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex1}.getName()+"</font>"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex3}.getName()+"</font>"]]></textFieldExpression>
 				</textField>
 				<componentElement>
 					<reportElement key="table 3" x="0" y="15" width="180" height="20" backcolor="#CC0033" uuid="c46b59ac-6672-4bef-9e94-783bfe78c9e7"/>
 					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-						<datasetRun subDataset="LabelValueDataset" uuid="c17a0134-bc4a-4806-b5ab-db84a4e1f09e">
+						<datasetRun subDataset="LabelValueDataset" uuid="3aa4e40a-02d7-4468-96ad-d5b28c86eed9">
 							<datasetParameter name="CYK_TEXT_STATIC_FONT_NAME">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_STATIC_FONT_NAME}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -385,7 +385,7 @@
 							<datasetParameter name="CYK_TEXT_DYNAMIC_FONT_SIZE">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_DYNAMIC_FONT_SIZE}]]></datasetParameterExpression>
 							</datasetParameter>
-							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex1}.getCollection())]]></dataSourceExpression>
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex3}.getCollection())]]></dataSourceExpression>
 						</datasetRun>
 						<jr:column width="170" uuid="e44186d8-5dc9-4f6c-91c3-4ccafec19b44">
 							<jr:detailCell style="table_td_underline" height="12" rowSpan="1">
@@ -417,12 +417,12 @@
 				<textField>
 					<reportElement style="block header" x="0" y="0" width="180" height="13" uuid="0e83221d-6d7c-4123-a1e6-69f628fe2498"/>
 					<textElement markup="styled"/>
-					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex2}.getName()+"</font>"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex4}.getName()+"</font>"]]></textFieldExpression>
 				</textField>
 				<componentElement>
 					<reportElement key="table 4" x="0" y="15" width="180" height="205" backcolor="#CC0033" uuid="5c042a24-c9bb-4470-960f-7038cbc6ac52"/>
 					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-						<datasetRun subDataset="LabelValueDataset" uuid="837c1a0c-c6be-4980-abdc-33f2175ed7ad">
+						<datasetRun subDataset="LabelValueDataset" uuid="4f5d9de1-45ba-4700-ab48-d91e4c161000">
 							<datasetParameter name="CYK_TEXT_STATIC_FONT_NAME">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_STATIC_FONT_NAME}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -435,7 +435,7 @@
 							<datasetParameter name="CYK_TEXT_DYNAMIC_FONT_SIZE">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_DYNAMIC_FONT_SIZE}]]></datasetParameterExpression>
 							</datasetParameter>
-							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex2}.getCollection())]]></dataSourceExpression>
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex4}.getCollection())]]></dataSourceExpression>
 						</datasetRun>
 						<jr:column width="170" uuid="876409da-5957-4388-af33-e9f53fd132ed">
 							<jr:detailCell style="table_td_underline" height="12" rowSpan="1">
@@ -467,12 +467,12 @@
 				<textField>
 					<reportElement style="block header" x="0" y="0" width="180" height="13" uuid="792874f5-f4c4-4813-adb5-ca547477bebd"/>
 					<textElement markup="styled"/>
-					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex3}.getName()+"</font>"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex5}.getName()+"</font>"]]></textFieldExpression>
 				</textField>
 				<componentElement>
 					<reportElement key="table 2" x="0" y="15" width="180" height="20" backcolor="#CC0033" uuid="32d0d05d-4871-435f-b018-b8eada3235da"/>
 					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-						<datasetRun subDataset="LabelValueDataset" uuid="b25faf41-129d-4b39-b704-5429f50d67db">
+						<datasetRun subDataset="LabelValueDataset" uuid="5fd4bcf2-f675-46a7-b32a-14aaa6370d5f">
 							<datasetParameter name="CYK_TEXT_STATIC_FONT_NAME">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_STATIC_FONT_NAME}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -485,7 +485,7 @@
 							<datasetParameter name="CYK_TEXT_DYNAMIC_FONT_SIZE">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_DYNAMIC_FONT_SIZE}]]></datasetParameterExpression>
 							</datasetParameter>
-							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex3}.getCollection())]]></dataSourceExpression>
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex5}.getCollection())]]></dataSourceExpression>
 						</datasetRun>
 						<jr:column width="170" uuid="6aad6ea0-d2af-4828-8eb7-1b19bc6630bd">
 							<jr:detailCell style="table_td_underline" height="12" rowSpan="1">
@@ -517,12 +517,12 @@
 				<textField>
 					<reportElement style="block header" x="0" y="0" width="180" height="13" uuid="c2c9cde3-4a04-4786-899b-ba81f7dbb6d5"/>
 					<textElement markup="styled"/>
-					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex4}.getName()+"</font>"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex6}.getName()+"</font>"]]></textFieldExpression>
 				</textField>
 				<componentElement>
 					<reportElement key="table 2" x="0" y="15" width="180" height="20" backcolor="#CC0033" uuid="ae2e7343-58db-40b1-9b59-cc89b9dfc61c"/>
 					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-						<datasetRun subDataset="LabelValueDataset" uuid="2e70ae1e-6982-4c82-be3f-39030c81430f">
+						<datasetRun subDataset="LabelValueDataset" uuid="8f150641-e0c4-4468-8bb1-7284d919ba6a">
 							<datasetParameter name="CYK_TEXT_STATIC_FONT_NAME">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_STATIC_FONT_NAME}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -535,7 +535,7 @@
 							<datasetParameter name="CYK_TEXT_DYNAMIC_FONT_SIZE">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_DYNAMIC_FONT_SIZE}]]></datasetParameterExpression>
 							</datasetParameter>
-							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex4}.getCollection())]]></dataSourceExpression>
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex6}.getCollection())]]></dataSourceExpression>
 						</datasetRun>
 						<jr:column width="170" uuid="a44de86d-27d4-4890-95e5-48e9f8a9fc07">
 							<jr:detailCell style="table_td_underline" height="12" rowSpan="1">
@@ -567,12 +567,12 @@
 				<textField>
 					<reportElement style="block header" x="0" y="0" width="180" height="13" uuid="a3550a9c-3e6f-4ca4-8a7a-38dee346b1b2"/>
 					<textElement markup="styled"/>
-					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex5}.getName()+"</font>"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex7}.getName()+"</font>"]]></textFieldExpression>
 				</textField>
 				<componentElement>
 					<reportElement key="table 2" x="0" y="15" width="180" height="20" backcolor="#CC0033" uuid="3f67374b-39f4-4e73-b599-9a5a621e7b28"/>
 					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-						<datasetRun subDataset="LabelValueDataset" uuid="eae2d4e5-2f21-49c5-a695-30203ea15b0e">
+						<datasetRun subDataset="LabelValueDataset" uuid="85c1c034-81e3-49f0-9a7c-cecff196c5f1">
 							<datasetParameter name="CYK_TEXT_STATIC_FONT_NAME">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_STATIC_FONT_NAME}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -585,7 +585,7 @@
 							<datasetParameter name="CYK_TEXT_DYNAMIC_FONT_SIZE">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_DYNAMIC_FONT_SIZE}]]></datasetParameterExpression>
 							</datasetParameter>
-							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex5}.getCollection())]]></dataSourceExpression>
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex7}.getCollection())]]></dataSourceExpression>
 						</datasetRun>
 						<jr:column width="170" uuid="2f5d06ce-8ac8-457d-9afb-a91bbd7a51a1">
 							<jr:detailCell style="table_td_underline" height="12" rowSpan="1">
@@ -617,12 +617,12 @@
 				<textField>
 					<reportElement style="block header" x="0" y="0" width="180" height="13" uuid="9c5e1ace-3925-4e55-a49b-f3cac56dcd93"/>
 					<textElement markup="styled"/>
-					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex6}.getName()+"</font>"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex8}.getName()+"</font>"]]></textFieldExpression>
 				</textField>
 				<componentElement>
 					<reportElement key="table 2" x="0" y="15" width="180" height="189" backcolor="#CC0033" uuid="9e6f3c97-8685-4b98-8062-5df02fa607dd"/>
 					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-						<datasetRun subDataset="LabelValueDataset" uuid="8b1efb2f-068a-4d8f-86c6-58cd15f2faa7">
+						<datasetRun subDataset="LabelValueDataset" uuid="9cdfb053-96e8-4f38-96ae-7d47f2e68187">
 							<datasetParameter name="CYK_TEXT_STATIC_FONT_NAME">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_STATIC_FONT_NAME}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -635,7 +635,7 @@
 							<datasetParameter name="CYK_TEXT_DYNAMIC_FONT_SIZE">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_DYNAMIC_FONT_SIZE}]]></datasetParameterExpression>
 							</datasetParameter>
-							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex6}.getCollection())]]></dataSourceExpression>
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex8}.getCollection())]]></dataSourceExpression>
 						</datasetRun>
 						<jr:column width="170" uuid="57c95258-c413-477d-bf68-3c2d1efdf966">
 							<jr:detailCell style="table_td_underline" height="12" rowSpan="1">
@@ -667,12 +667,12 @@
 				<textField>
 					<reportElement style="block header" x="0" y="0" width="170" height="13" uuid="70dbe1fb-75a8-4f60-afaa-83d0a5d15d5b"/>
 					<textElement markup="styled"/>
-					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex7}.getName()+"</font>"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex9}.getName()+"</font>"]]></textFieldExpression>
 				</textField>
 				<componentElement>
 					<reportElement key="table 2" x="0" y="15" width="170" height="20" backcolor="#CC0033" uuid="8a53978a-702d-40f8-af1f-219077389a4b"/>
 					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-						<datasetRun subDataset="LabelValueDataset" uuid="1463a207-d0ec-4215-adaa-5a755773e426">
+						<datasetRun subDataset="LabelValueDataset" uuid="82f68989-4adb-498b-8775-e6ee8847515f">
 							<datasetParameter name="CYK_TEXT_STATIC_FONT_NAME">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_STATIC_FONT_NAME}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -685,7 +685,7 @@
 							<datasetParameter name="CYK_TEXT_DYNAMIC_FONT_SIZE">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_DYNAMIC_FONT_SIZE}]]></datasetParameterExpression>
 							</datasetParameter>
-							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex7}.getCollection())]]></dataSourceExpression>
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex9}.getCollection())]]></dataSourceExpression>
 						</datasetRun>
 						<jr:column width="160" uuid="e7b2ab55-efaf-41ee-a5ce-a5d3df4a5690">
 							<jr:detailCell style="table_td_underline" height="12" rowSpan="1">
@@ -833,12 +833,12 @@
 				<textField>
 					<reportElement style="block header" x="0" y="0" width="170" height="13" uuid="a40151f4-3bf6-472c-9b3a-f8b8ae12a681"/>
 					<textElement markup="styled"/>
-					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex9}.getName()+"</font>"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{labelValueCollectionAtIndex11}.getName()+"</font>"]]></textFieldExpression>
 				</textField>
 				<componentElement>
 					<reportElement key="table 2" x="0" y="15" width="170" height="34" backcolor="#CC0033" uuid="beeb1dee-9c4b-46af-aee6-3cd341262b70"/>
 					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-						<datasetRun subDataset="LabelValueDataset" uuid="073a26e5-3b10-413f-af4e-51c4facbb4ca">
+						<datasetRun subDataset="LabelValueDataset" uuid="d73f7c66-e017-4320-806e-d91b6fe67f03">
 							<datasetParameter name="CYK_TEXT_STATIC_FONT_NAME">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_STATIC_FONT_NAME}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -851,7 +851,7 @@
 							<datasetParameter name="CYK_TEXT_DYNAMIC_FONT_SIZE">
 								<datasetParameterExpression><![CDATA[$P{CYK_TEXT_DYNAMIC_FONT_SIZE}]]></datasetParameterExpression>
 							</datasetParameter>
-							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex9}.getCollection())]]></dataSourceExpression>
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{labelValueCollectionAtIndex11}.getCollection())]]></dataSourceExpression>
 						</datasetRun>
 						<jr:column width="100" uuid="4509490b-b915-4343-9da7-5764bc179985">
 							<jr:detailCell style="table_td_underline" height="12" rowSpan="1">

@@ -112,6 +112,7 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		//r.setAverageScale(StringUtils.substringAfter(r.getAverageScale(), Constant.CHARACTER_SLASH.toString()));
 		//r.getOverallResultlLabelValueCollection().getById(LABEL_VALUE_STUDENTCLASSROOMSESSIONDIVISION_BLOCK_OVERALLRESULT_GRADE_ID).setValue(r.getAverageScale());
 		
+		/*
 		r.setInformationLabelValueCollection(labelValueCollection("school.report.studentclassroomsessiondivision.block.informations"));
 		if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==3){
 			labelValue("school.report.studentclassroomsessiondivision.block.informations.annualaverage", "To Compute");
@@ -134,14 +135,14 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		
 		r.setBehaviorLabelValueCollection1(new LabelValueCollectionReport());
 		r.getBehaviorLabelValueCollection1().setName(languageBusiness.findText("school.report.studentclassroomsessiondivision.block.behaviour"));
-		for(int i=0;i<=5;i++)
-			r.getBehaviorLabelValueCollection1().getCollection().add(r.getBehaviorLabelValueCollection().getCollection().get(i));
+		//for(int i=0;i<=5;i++)
+		//	r.getBehaviorLabelValueCollection1().getCollection().add(r.getBehaviorLabelValueCollection().getCollection().get(i));
 		
 		r.setBehaviorLabelValueCollection2(new LabelValueCollectionReport());
 		r.getBehaviorLabelValueCollection2().setName(languageBusiness.findText("school.report.studentclassroomsessiondivision.block.behaviour"));
-		for(int i=6;i<=11;i++)
-			r.getBehaviorLabelValueCollection2().getCollection().add(r.getBehaviorLabelValueCollection().getCollection().get(i));
-		
+		//for(int i=6;i<=11;i++)
+		//	r.getBehaviorLabelValueCollection2().getCollection().add(r.getBehaviorLabelValueCollection().getCollection().get(i));
+		*/
 		
 		return r;
 	}

@@ -170,6 +170,6 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     }
 
     protected Collection<ClassroomSession> getClassroomSessions(Integer index){
-    	return classroomSessionDao.readByLevelTimeDivision(levelTimeDivisionDao.readByIndex(0).iterator().next());
+    	return classroomSessionDao.readByLevelTimeDivision(levelTimeDivisionDao.readByIndex(index).iterator().next());
     }
 }

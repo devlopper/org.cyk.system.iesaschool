@@ -321,7 +321,6 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	classroomSessionBusiness.create(classroomSessions);
     	classroomSessionDivisionBusiness.create(classroomSessionDivisions);
     	classroomSessionDivisionSubjectBusiness.create(classroomSessionDivisionSubjects);
-    	System.out.println("SSS : "+classroomSessionDivisionSubjects);
     	subjectEvaluationTypeBusiness.create(subjectEvaluationTypes);
     	
     	for(AbstractIdentifiable identifiable :  genericDao.use(EvaluationType.class).select().all())

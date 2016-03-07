@@ -3,21 +3,18 @@ package org.cyk.system.iesaschool.business.impl;
 import java.io.Serializable;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.iesaschool.model.IesaConstant;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness.FormatArguments;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness.FormatArguments.CharacterSet;
 import org.cyk.system.root.model.file.report.LabelValueCollectionReport;
-import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.userinterface.style.FontName;
 import org.cyk.system.root.model.userinterface.style.Style;
 import org.cyk.system.school.business.impl.AbstractSchoolReportProducer;
-import org.cyk.system.school.model.IesaSampleData;
+import org.cyk.system.school.business.impl.SchoolBusinessLayer;
 import org.cyk.system.school.model.session.AcademicSession;
 import org.cyk.system.school.model.session.ClassroomSessionDivision;
 import org.cyk.system.school.model.session.StudentClassroomSessionDivision;
 import org.cyk.system.school.model.session.StudentClassroomSessionDivisionReport;
-import org.cyk.utility.common.Constant;
 
 public class ReportProducer extends AbstractSchoolReportProducer implements Serializable{
 	
@@ -42,78 +39,95 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 	@Override
 	public StudentClassroomSessionDivisionReport produceStudentClassroomSessionDivisionReport(StudentClassroomSessionDivision studentClassroomSessionDivision,
 			StudentClassroomSessionDivisionReportParameters parameters) {
+		LabelValueCollectionReport labelValueCollectionReport;
 		StudentClassroomSessionDivisionReport r = super.produceStudentClassroomSessionDivisionReport(studentClassroomSessionDivision,parameters);
 		r.getAcademicSession().getCompany().setName(iesa("INTERNATIONAL ")+iesa("ENGLISH ")+iesa("SCHOOL OF ")+iesa("ABIDJAN"));
 		
 		AcademicSession as = studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getAcademicSession();
 		r.getAcademicSession().setFromDateToDate(timeBusiness.findYear(as.getPeriod().getFromDate())+"/"+timeBusiness.findYear(as.getPeriod().getToDate())+" ACADEMIC SESSION");
 	
+		r.addLabelValueCollection("PUPIL'S DETAILS",new String[][]{
+				{"Formname(s)", r.getStudent().getPerson().getNames()}
+				,{"Surname", r.getStudent().getPerson().getSurname()}
+				,{"Date of birth", r.getStudent().getPerson().getBirthDate()}
+				,{"Place of birth", r.getStudent().getPerson().getBirthLocation()}
+				,{"Admission No", r.getStudent().getRegistrationCode()}
+				,{"Class", r.getClassroomSessionDivision().getClassroomSession().getName()}
+				,{"Gender", r.getStudent().getPerson().getSex()}
+				});
+		
+		r.addLabelValueCollection("SCHOOL ATTENDANCE",new String[][]{
+				{"Number of times school opened",r.getClassroomSessionDivision().getOpenedTime()}
+				,{"Number of times present",r.getAttendedTime()}
+				,{"Number of times absent",r.getMissedTime()}
+				});
+		
 		FormatArguments formatArguments = new FormatArguments();
 		formatArguments.setIsRank(Boolean.TRUE);
 		formatArguments.setType(CharacterSet.LETTER);
-		String name = numberBusiness.format(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()+1, formatArguments);
-		name += " TERM ,";
+		String name = numberBusiness.format(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()+1, formatArguments).toUpperCase();
+		r.setName(name+" TERM , "+studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getLevelTimeDivision().getLevel().getGroup().getName().toUpperCase()
+				+" REPORT");
 		
 		String levelNameCode = studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getLevelTimeDivision().getLevel().getName().getCode();
-		String testCoef = null,examCoef = "";
-		if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_PK},levelNameCode)){
-			name += " LOWER";
-			//r.generate();
-			//debug(r);
-			//return IesaSampleData.createStudentClassroomSessionDivisionReportsForKinderGarten().iterator().next();
-			//r.setLabelValueCollections(IesaSampleData.createStudentClassroomSessionDivisionReportsForKinderGarten().iterator().next().getLabelValueCollections());
-			//System.out
-			//		.println("ReportProducer.produceStudentClassroomSessionDivisionReport() : "+r.getLabelValueCollections().size());
-		}else if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G1,IesaConstant.LEVEL_NAME_CODE_G2,IesaConstant.LEVEL_NAME_CODE_G3},levelNameCode)){
-			name += " LOWER";
-			testCoef = "15";
-			examCoef = "70";
-		}else if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G4,IesaConstant.LEVEL_NAME_CODE_G5,IesaConstant.LEVEL_NAME_CODE_G6},levelNameCode)){
-			name += " UPPER";
-			testCoef = "15";
-			examCoef = "70";
-		}else if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G7,IesaConstant.LEVEL_NAME_CODE_G8,IesaConstant.LEVEL_NAME_CODE_G9},levelNameCode)){
-			name += " JUNIOR HIGH SCHOOL";
-			testCoef = "20";
-			examCoef = "60";
+		if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_PK,IesaConstant.LEVEL_NAME_CODE_K1,IesaConstant.LEVEL_NAME_CODE_K2,IesaConstant.LEVEL_NAME_CODE_K3},levelNameCode)){
+			r.setName(r.getName()+" SHEET");
+			addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), IesaConstant.MERIC_COLLECTION_PK_STUDENT_EXPRESSIVE_LANGUAGE);
+			addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), IesaConstant.MERIC_COLLECTION_PK_STUDENT_RECEPTIVE_LANGUAGE);
+			addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), IesaConstant.MERIC_COLLECTION_PK_STUDENT_READING_READNESS);
+			addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), IesaConstant.MERIC_COLLECTION_PK_STUDENT_NUMERACY_DEVELOPMENT);
+			addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), IesaConstant.MERIC_COLLECTION_PK_STUDENT_ARTS_MUSIC);
+			addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), IesaConstant.MERIC_COLLECTION_PK_STUDENT_SOCIAL_EMOTIONAL_DEVELOPMENT);
+			addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), IesaConstant.MERIC_COLLECTION_PK_STUDENT_GROSS_MOTOR_SKILLS);
+			addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), IesaConstant.MERIC_COLLECTION_PK_STUDENT_FINE_MOTOR_SKILLS);
+			
+			labelValueCollectionReport = addIntervalCollectionLabelValueCollection(r,rootBusinessLayer.getMetricCollectionDao().read(IesaConstant.MERIC_COLLECTION_PK_STUDENT_EXPRESSIVE_LANGUAGE).getValueIntervalCollection()
+					,Boolean.TRUE,Boolean.FALSE,null);
+			labelValueCollectionReport.add("NA", "Not Assessed");
+		}else{
+			r.setName(r.getName()+" CARD");
+			String testCoef = null,examCoef = "";	
+			if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G1,IesaConstant.LEVEL_NAME_CODE_G2,IesaConstant.LEVEL_NAME_CODE_G3},levelNameCode)){
+				name += " LOWER";
+				testCoef = "15";
+				examCoef = "70";
+			}else if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G4,IesaConstant.LEVEL_NAME_CODE_G5,IesaConstant.LEVEL_NAME_CODE_G6},levelNameCode)){
+				name += " UPPER";
+				testCoef = "15";
+				examCoef = "70";
+			}else if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G7,IesaConstant.LEVEL_NAME_CODE_G8,IesaConstant.LEVEL_NAME_CODE_G9},levelNameCode)){
+				name += " JUNIOR HIGH SCHOOL";
+				testCoef = "20";
+				examCoef = "60";
+			}
+			
+			r.addSubjectsTableColumnNames("No.","SUBJECTS","Test 1 "+testCoef+"%","Test 2 "+testCoef+"%","Exam "+examCoef+"%","TOTAL 100%","GRADE","RANK","OUT OF","MAX","CLASS AVERAGE","REMARKS","TEACHER");
+			
+			labelValueCollectionReport = new LabelValueCollectionReport();
+			labelValueCollectionReport.setName("OVERALL RESULT");
+			labelValueCollectionReport.add("AVERAGE",r.getAverage());
+			labelValueCollectionReport.add("GRADE",r.getAverageScale());
+			if(Boolean.TRUE.equals(studentClassroomSessionDivision.getClassroomSessionDivision().getStudentRankable()))
+				labelValueCollectionReport.add("RANK",r.getRank());
+			r.addLabelValueCollection(labelValueCollectionReport);
+			
+			addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), IesaConstant.MERIC_COLLECTION_G1_G6_STUDENT_BEHAVIOUR);
+			labelValueCollectionReport = new LabelValueCollectionReport();
+			labelValueCollectionReport.setName(r.getCurrentLabelValueCollection().getName());
+			labelValueCollectionReport.setCollection(r.getCurrentLabelValueCollection().getCollection().subList(6, 12));
+			r.getCurrentLabelValueCollection().setCollection(r.getCurrentLabelValueCollection().getCollection().subList(0, 6));
+			
+			r.addLabelValueCollection(labelValueCollectionReport);
+			
+			addIntervalCollectionLabelValueCollection(r,SchoolBusinessLayer.getInstance().getClassroomSessionBusiness().findCommonNodeInformations(
+				((StudentClassroomSessionDivision)r.getSource()).getClassroomSessionDivision().getClassroomSession()).getStudentClassroomSessionDivisionAverageScale()
+				,Boolean.FALSE,Boolean.TRUE,new Integer[][]{{1,2}});
+			
+			addIntervalCollectionLabelValueCollection(r,rootBusinessLayer.getMetricCollectionDao().read(IesaConstant.MERIC_COLLECTION_G1_G6_STUDENT_BEHAVIOUR).getValueIntervalCollection()
+					,Boolean.TRUE,Boolean.FALSE,null);
+			
 		}
-		/*
-		if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G1,IesaConstant.LEVEL_NAME_CODE_G2,IesaConstant.LEVEL_NAME_CODE_G3},levelNameCode)){
-			name += " LOWER";
-			testCoef = "15";
-			examCoef = "70";
-		}else if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G4,IesaConstant.LEVEL_NAME_CODE_G5,IesaConstant.LEVEL_NAME_CODE_G6},levelNameCode)){
-			name += " UPPER";
-			testCoef = "15";
-			examCoef = "70";
-		}else if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G7,IesaConstant.LEVEL_NAME_CODE_G8,IesaConstant.LEVEL_NAME_CODE_G9},levelNameCode)){
-			name += " JUNIOR HIGH SCHOOL";
-			testCoef = "20";
-			examCoef = "60";
-		}
-		*/
-		r.setName(name+" "+studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getLevelTimeDivision().getLevel().getGroup().getName().toUpperCase()
-				+" REPORT CARD");
 		
-		r.getSubjectsTableColumnNames().add("No.");
-		r.getSubjectsTableColumnNames().add("SUBJECTS");
-		r.getSubjectsTableColumnNames().add("TEST 1 "+testCoef+"%");
-		r.getSubjectsTableColumnNames().add("TEST 2 "+testCoef+"%");
-		r.getSubjectsTableColumnNames().add("EXAM "+examCoef+"%");
-		r.getSubjectsTableColumnNames().add("TOTAL 100%");
-		r.getSubjectsTableColumnNames().add("GRADE");
-		r.getSubjectsTableColumnNames().add("RANK");
-		r.getSubjectsTableColumnNames().add("OUT OF");
-		r.getSubjectsTableColumnNames().add("MAX");
-		r.getSubjectsTableColumnNames().add("CLASS AVERAGE");
-		r.getSubjectsTableColumnNames().add("REMARKS");
-		r.getSubjectsTableColumnNames().add("TEACHER");
-		
-		//r.setAverageScale(StringUtils.substringAfter(r.getAverageScale(), Constant.CHARACTER_SLASH.toString()));
-		//r.getOverallResultlLabelValueCollection().getById(LABEL_VALUE_STUDENTCLASSROOMSESSIONDIVISION_BLOCK_OVERALLRESULT_GRADE_ID).setValue(r.getAverageScale());
-		
-		/*
-		r.setInformationLabelValueCollection(labelValueCollection("school.report.studentclassroomsessiondivision.block.informations"));
 		if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==3){
 			labelValue("school.report.studentclassroomsessiondivision.block.informations.annualaverage", "To Compute");
 			labelValue("school.report.studentclassroomsessiondivision.block.informations.annualgrade", "To Compute");
@@ -123,38 +137,21 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 			labelValue("school.report.studentclassroomsessiondivision.block.informations.nextacademicsession", 
 					format(studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getAcademicSession().getNextStartingDate()));
 		}else{
-			ClassroomSessionDivision nextClassroomSessionDivision = studentClassroomSessionDivision.getClassroomSessionDivision();
-			labelValue("school.report.studentclassroomsessiondivision.block.informations.conferencerequested", 
-					studentClassroomSessionDivision.getResults().getConferenceRequested()==null?"NO"
-							:studentClassroomSessionDivision.getResults().getConferenceRequested()?"YES":"NO");
-			labelValue("school.report.studentclassroomsessiondivision.block.informations.nextopening", 
-					format(nextClassroomSessionDivision.getPeriod().getFromDate()));
-			labelValue("school.report.studentclassroomsessiondivision.block.informations.nexttermexamination", 
-					format(nextClassroomSessionDivision.getPeriod().getToDate()));
+			ClassroomSessionDivision nextClassroomSessionDivision = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionDao()
+					.readByClassroomSessionByIndex(studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession()
+							,new Byte((byte) (studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()+1)));
+		
+			r.addLabelValueCollection("HOME/SCHOOL COMMUNICATIONS",new String[][]{
+				{"CONFERENCE REQUESTED",studentClassroomSessionDivision.getResults().getConferenceRequested()==null?"NO"
+						:studentClassroomSessionDivision.getResults().getConferenceRequested()?"YES":"NO"}
+				,{"NEXT OPENING",format(nextClassroomSessionDivision.getPeriod().getFromDate())}
+				,{"NEXT TERM EXAMINATION",format(nextClassroomSessionDivision.getPeriod().getToDate())}
+				});
 		}
+	
 		
-		r.setBehaviorLabelValueCollection1(new LabelValueCollectionReport());
-		r.getBehaviorLabelValueCollection1().setName(languageBusiness.findText("school.report.studentclassroomsessiondivision.block.behaviour"));
-		//for(int i=0;i<=5;i++)
-		//	r.getBehaviorLabelValueCollection1().getCollection().add(r.getBehaviorLabelValueCollection().getCollection().get(i));
-		
-		r.setBehaviorLabelValueCollection2(new LabelValueCollectionReport());
-		r.getBehaviorLabelValueCollection2().setName(languageBusiness.findText("school.report.studentclassroomsessiondivision.block.behaviour"));
-		//for(int i=6;i<=11;i++)
-		//	r.getBehaviorLabelValueCollection2().getCollection().add(r.getBehaviorLabelValueCollection().getCollection().get(i));
-		*/
 		
 		return r;
 	}
-	
-	@Override
-	protected String getGradeScaleCode(Interval interval) {
-		if(interval==null)
-			return "NUUL";
-		return StringUtils.substringAfter(interval.getCode(), Constant.CHARACTER_SLASH.toString());
-	}
-	
-	private static void pk(StudentClassroomSessionDivisionReport studentClassroomSessionDivisionReport){
 		
-	}
 }

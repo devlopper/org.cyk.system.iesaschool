@@ -25,6 +25,7 @@ import org.cyk.system.root.business.impl.RootRandomDataProvider;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.ReportTemplate;
+import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricValueType;
 import org.cyk.system.root.model.time.TimeDivisionType;
@@ -158,29 +159,46 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	createMetricCollections();
     	
     	File reportHeaderFile = createFile("image/document_header.png");
+    	File reportBackgroundFile = createFile("image/studentclassroomsessiondivisionreport_background.jpg");
+    	
+    	/*
+		File reportFilePkg = createFile("report/studentclassroomsessiondivision/pkg.jrxml", "studentclassroomsessiondivisionreport_pkg.jrxml");
+		ReportTemplate reportTemplatePkg = new ReportTemplate("SCSDRTPK",reportFilePkg,reportHeaderFile,createFile("image/studentclassroomsessiondivisionreport_background.jpg"));
+		create(reportTemplatePkg);
+		CommonNodeInformations commonNodeInformationsPk = schoolDataProducerHelper.instanciateOneCommonNodeInformations(null, reportTemplatePkg, TimeDivisionType.DAY, TimeDivisionType.TRIMESTER, "1");
+		*/
+    	
+    	CommonNodeInformations commonNodeInformationsPkg = instanciateCommonNodeInformations(null, reportHeaderFile, reportBackgroundFile, "pkg.jrxml", "1");
+    	CommonNodeInformations commonNodeInformationsKg1 = instanciateCommonNodeInformations(null, reportHeaderFile, reportBackgroundFile, "kg1.jrxml", "1");
+    	CommonNodeInformations commonNodeInformationsKg2Kg3 = instanciateCommonNodeInformations(null, reportHeaderFile, reportBackgroundFile, "kg2kg3.jrxml", "1");
+    	
+    	/*
+		File reportFileKg1 = createFile("report/studentclassroomsessiondivision/kg1.jrxml", "studentclassroomsessiondivisionreport_kg1.jrxml");
+		ReportTemplate reportTemplateKg1 = new ReportTemplate("SCSDRTPK",reportFilePkg,reportHeaderFile,createFile("image/studentclassroomsessiondivisionreport_background.jpg"));
+		create(reportTemplatePkg);
+		CommonNodeInformations commonNodeInformationsPk = schoolDataProducerHelper.instanciateOneCommonNodeInformations(null, reportTemplatePkg, TimeDivisionType.DAY, TimeDivisionType.TRIMESTER, "1");
+		*/
     	
 		File reportFile = createFile("report/studentclassroomsessiondivision/g1g12.jrxml", "studentclassroomsessiondivisionreport_g1g12.jrxml");
 		ReportTemplate reportTemplate = new ReportTemplate("SCSDRT",reportFile,reportHeaderFile,createFile("image/studentclassroomsessiondivisionreport_background.jpg"));
 		create(reportTemplate);
-		
-		File reportFilePk = createFile("report/studentclassroomsessiondivision/pkg.jrxml", "studentclassroomsessiondivisionreport_pkg.jrxml");
-		ReportTemplate reportTemplatePk = new ReportTemplate("SCSDRTPK",reportFilePk,reportHeaderFile,createFile("image/studentclassroomsessiondivisionreport_background.jpg"));
-		create(reportTemplatePk);
-		
-		CommonNodeInformations commonNodeInformationsPk = schoolDataProducerHelper.instanciateOneCommonNodeInformations(null, reportTemplatePk, TimeDivisionType.DAY, TimeDivisionType.TRIMESTER, "1");
-		
+		/*
 		CommonNodeInformations commonNodeInformationsG1G3 = schoolDataProducerHelper.instanciateOneCommonNodeInformations(create(rootBusinessLayer.getIntervalCollectionBusiness()
 				.instanciateOne("ICEV1", "ICEV1", new String[][]{
 						{"A+", "Excellent", "90", "100"},{"A", "Very good", "80", "89.99"},{"B+", "Good", "70", "79.99"},{"B", "Fair", "60", "69.99"}
 						,{"C+", "Satisfactory", "55", "59.99"},{"C", "Barely satisfactory", "50", "54.99"},{"E", "Fail", "0", "49.99"}})), reportTemplate
 						, TimeDivisionType.DAY, TimeDivisionType.TRIMESTER, "1");	
+		*/
+		CommonNodeInformations commonNodeInformationsG1G3 = instanciateCommonNodeInformations(create(rootBusinessLayer.getIntervalCollectionBusiness()
+				.instanciateOne("ICEV1", "ICEV1", new String[][]{
+						{"A+", "Excellent", "90", "100"},{"A", "Very good", "80", "89.99"},{"B+", "Good", "70", "79.99"},{"B", "Fair", "60", "69.99"}
+						,{"C+", "Satisfactory", "55", "59.99"},{"C", "Barely satisfactory", "50", "54.99"},{"E", "Fail", "0", "49.99"}})), reportTemplate, "1");
 		CommonNodeInformations commonNodeInformationsG4G6 = commonNodeInformationsG1G3;
 		
-		CommonNodeInformations commonNodeInformationsG7G9 = schoolDataProducerHelper.instanciateOneCommonNodeInformations(create(rootBusinessLayer.getIntervalCollectionBusiness()
+		CommonNodeInformations commonNodeInformationsG7G9 = instanciateCommonNodeInformations(create(rootBusinessLayer.getIntervalCollectionBusiness()
 				.instanciateOne("ICEV2", "ICEV2", new String[][]{
 						{"A*", "Outstanding", "90", "100"},{"A", "Excellent", "80", "89.99"},{"B", "Very Good", "70", "79.99"},{"C", "Good", "60", "69.99"}
-						,{"D", "Satisfactory", "50", "59.99"},{"E", "Fail", "0", "49.99"}})), reportTemplate
-						, TimeDivisionType.DAY, TimeDivisionType.TRIMESTER, "1");	
+						,{"D", "Satisfactory", "50", "59.99"},{"E", "Fail", "0", "49.99"}})), reportTemplate, "1");	
 		CommonNodeInformations commonNodeInformationsG10G12 = commonNodeInformationsG7G9;
 		
 		School school = new School(ownedCompanyBusiness.findDefaultOwnedCompany(),commonNodeInformationsG1G3);
@@ -237,16 +255,16 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	Integer gradeIndex = 0;
     	
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, schoolDataProducerHelper.createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_PK,"Pre-Kindergarten",levelGroupKindergarten,commonNodeInformationsPk,gradeIndex++) 
+    			, schoolDataProducerHelper.createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_PK,"Pre-Kindergarten",levelGroupKindergarten,commonNodeInformationsPkg,gradeIndex++) 
     			,null, null,classroomSessionDivisionStudentsMetricCollections,pkMetricCollections,null,Boolean.FALSE,Boolean.FALSE);
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, schoolDataProducerHelper.createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_K1,"Kindergarten 1",levelGroupKindergarten,commonNodeInformationsPk,gradeIndex++) 
+    			, schoolDataProducerHelper.createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_K1,"Kindergarten 1",levelGroupKindergarten,commonNodeInformationsKg1,gradeIndex++) 
     			, null,null,classroomSessionDivisionStudentsMetricCollections,k1MetricCollections,null,Boolean.FALSE,Boolean.FALSE);
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, schoolDataProducerHelper.createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_K2,"Kindergarten 2",levelGroupKindergarten,commonNodeInformationsPk,gradeIndex++) 
+    			, schoolDataProducerHelper.createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_K2,"Kindergarten 2",levelGroupKindergarten,commonNodeInformationsKg2Kg3,gradeIndex++) 
     			, null,null,classroomSessionDivisionStudentsMetricCollections,k2MetricCollections,null,Boolean.FALSE,Boolean.FALSE);
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
-    			, schoolDataProducerHelper.createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_K3,"Kindergarten 3",levelGroupKindergarten,commonNodeInformationsPk,gradeIndex++) 
+    			, schoolDataProducerHelper.createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_K3,"Kindergarten 3",levelGroupKindergarten,commonNodeInformationsKg2Kg3,gradeIndex++) 
     			, null,null,classroomSessionDivisionStudentsMetricCollections,k3MetricCollections,null,Boolean.FALSE,Boolean.FALSE);
     	
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
@@ -409,6 +427,79 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
     	};		
     	
+		k1MetricCollections = new MetricCollection[]{ create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_K1_STUDENT_ENGLISH_LANGUAGE_ARTS_READING,"English language Arts and Reading",MetricValueType.NUMBER
+    			, new String[]{"Participates actively during circle time","Participates in singing rhymes","Can say her name and name of classmates"
+    			,"Can respond appropriately to “how are you?”","Can say his/her age","Can say the name of her school","Names objects in the classroom and school environment"
+    			,"Uses at least one of the following words “me”,“I”, “he”, “she”, “you”","Talks in two or three word phrases and longer sentences"
+    			,"Can use “and” to connect words/phrases","Talks with words in correct order","Can be engaged in conversations"}
+    	,"Skills Performance levels", new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_RECEPTIVE_LANGUAGE,"Receptive language",MetricValueType.NUMBER
+    			, new String[]{"Responds to her name when called",
+    			"Retrieves named objects",
+    			"Follows simple instructions (across the classroom) – stand, sit, bring your cup",
+    			"Understands facial expressions and tone of voice",
+    			"Understands 2-3 step instructions",
+    			"Understands positional words – In and out - Up and down - On and under - Forward and backward",
+    			"Understands the concept “Give and Take”",
+    			"Talks about feelings"}
+    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_READING_READNESS,"Reading readness",MetricValueType.NUMBER
+    			, new String[]{"Shows interest in books/stories",
+    			"Names familiar objects in pictures/books – vegetables, fruits, animals",
+    			"Tells what action is going on in pictures",
+    			"Handling books – carrying a book, turning the pages of a book, placing a book back in the shelf",
+    			"Listening for different sounds in the environment",
+    			"Identifying objects that begin with a particular sound",
+    			"Identifying pictures that begin with a particular sound",
+    			"Recognizes the written letters of the alphabet"}
+    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_NUMERACY_DEVELOPMENT,"Numeracy development",MetricValueType.NUMBER
+    			, new String[]{"Sorts objects by shape",
+    			"Sorts objects by size",
+    			"Participates in reciting different counting rhymes, songs, stories and games",
+    			"Verbally count forward to 10",
+    			"Can count 1-10 objects",
+    			"Identifies the written numerals 1-10",
+    			"Reproducing Patterns",
+    			"Identifies the 3 basic geometric shapes ( circle, triangle and square)",
+    			"Identifies more shapes ( Star, diamond, heart, cross ,crescent)"}
+    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_ARTS_MUSIC,"Arts and music",MetricValueType.NUMBER
+    			, new String[]{"Moves expressively to sounds and music – nodding, clapping, movement of body",
+    			"Participates in musical activities",
+    			"Hums or sing words of songs",
+    			"Participates in role play",
+    			"Shows satisfaction with completed work"}
+    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_SOCIAL_EMOTIONAL_DEVELOPMENT,"Social and emotional development",MetricValueType.NUMBER
+    			, new String[]{"Initiates interaction with adults",
+    			"Initiates interaction with classmates",
+    			"Participates in group activities",
+    			"Takes turns during group activities",
+    			"Greets people – hello and goodbye",
+    			"Says “please” and “thank you”",
+    			"Asks for help in doing things when needed",
+    			"Shows sympathy, offers to help or helps others",
+    			"Can express dissatisfaction and other emotions – body language or words",
+    			"Responds to correction – stops the misbehaviour"}
+    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_GROSS_MOTOR_SKILLS,"Gross motor skills",MetricValueType.NUMBER
+    			, new String[]{"Can run well without falling",
+    			"Can kick a ball",
+    			"Climbs up ladder and slides down slide without help",
+    			"Walks up and down stairs unassisted",
+    			"Can stand on one foot for a few seconds without support",
+    			"Throws a ball into a basket from a short distance"}
+    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_FINE_MOTOR_SKILLS,"Fine motor skills",MetricValueType.NUMBER
+    			, new String[]{"Scribbles spontaneously",
+    			"Can scribble to and from, in circular motions and in lines",
+    			"Can place simple pieces in a puzzle board",
+    			"Can build a tower of at least 3-5 blocks",
+    			"Develops good pencil grip and control"}
+    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
+    	};		
+		
 		g1g6MetricCollections = new MetricCollection[]{ create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne("BSWHG1G6","Behaviour,Study and Work Habits",MetricValueType.NUMBER
     			, new String[]{"Respect authority","Works independently and neatly","Completes homework and class work on time","Shows social courtesies","Demonstrates self-control"
     					,"Takes care of school and others materials","Game/Sport","Handwriting","Drawing/Painting","Punctionality/Regularity","Works cooperatively in groups"
@@ -424,6 +515,19 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	, new String[][]{ {"E", "Excellent", "1", "1"},{"G", "Good", "2", "2"}
     	,{"S", "Satisfactory", "3", "3"},{"N", "Needs Improvement", "4", "4"}
     	,{"H", "Has no regard", "5", "5"} }))};
+	}
+	
+	private CommonNodeInformations instanciateCommonNodeInformations(IntervalCollection intervalCollection,ReportTemplate reportTemplate,String classroomsessionDivisionIndex){
+		CommonNodeInformations commonNodeInformations = schoolDataProducerHelper.instanciateOneCommonNodeInformations(intervalCollection, reportTemplate
+				, TimeDivisionType.DAY, TimeDivisionType.TRIMESTER, classroomsessionDivisionIndex);
+		return commonNodeInformations;
+	}
+	
+	private CommonNodeInformations instanciateCommonNodeInformations(IntervalCollection intervalCollection,File reportHeaderFile,File backgroundFile,String studentClassroomsessionDivisionReportTemplateFileName,String classroomsessionDivisionIndex){
+		String fileName = "studentclassroomsessiondivisionreport_"+studentClassroomsessionDivisionReportTemplateFileName;
+		File reportFile = createFile("report/studentclassroomsessiondivision/"+studentClassroomsessionDivisionReportTemplateFileName, fileName);
+		ReportTemplate reportTemplate = new ReportTemplate(studentClassroomsessionDivisionReportTemplateFileName,reportFile,reportHeaderFile,backgroundFile);
+		return instanciateCommonNodeInformations(intervalCollection,create(reportTemplate),classroomsessionDivisionIndex);
 	}
 	
 }

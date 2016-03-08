@@ -72,16 +72,45 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		String levelNameCode = studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getLevelTimeDivision().getLevel().getName().getCode();
 		if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_PK,IesaConstant.LEVEL_NAME_CODE_K1,IesaConstant.LEVEL_NAME_CODE_K2,IesaConstant.LEVEL_NAME_CODE_K3},levelNameCode)){
 			r.setName(r.getName()+" SHEET");
-			addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), IesaConstant.MERIC_COLLECTION_PK_STUDENT_EXPRESSIVE_LANGUAGE);
-			addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), IesaConstant.MERIC_COLLECTION_PK_STUDENT_RECEPTIVE_LANGUAGE);
-			addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), IesaConstant.MERIC_COLLECTION_PK_STUDENT_READING_READNESS);
-			addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), IesaConstant.MERIC_COLLECTION_PK_STUDENT_NUMERACY_DEVELOPMENT);
-			addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), IesaConstant.MERIC_COLLECTION_PK_STUDENT_ARTS_MUSIC);
-			addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), IesaConstant.MERIC_COLLECTION_PK_STUDENT_SOCIAL_EMOTIONAL_DEVELOPMENT);
-			addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), IesaConstant.MERIC_COLLECTION_PK_STUDENT_GROSS_MOTOR_SKILLS);
-			addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), IesaConstant.MERIC_COLLECTION_PK_STUDENT_FINE_MOTOR_SKILLS);
+			String performanceCodeMetricCollectionCode = null;
+			if(IesaConstant.LEVEL_NAME_CODE_PK.equals(levelNameCode)){
+				addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), new String[]{
+						performanceCodeMetricCollectionCode = IesaConstant.MERIC_COLLECTION_PK_STUDENT_EXPRESSIVE_LANGUAGE
+						, IesaConstant.MERIC_COLLECTION_PK_STUDENT_RECEPTIVE_LANGUAGE
+						, IesaConstant.MERIC_COLLECTION_PK_STUDENT_READING_READNESS
+						, IesaConstant.MERIC_COLLECTION_PK_STUDENT_NUMERACY_DEVELOPMENT
+						, IesaConstant.MERIC_COLLECTION_PK_STUDENT_ARTS_MUSIC
+						, IesaConstant.MERIC_COLLECTION_PK_STUDENT_SOCIAL_EMOTIONAL_DEVELOPMENT
+						, IesaConstant.MERIC_COLLECTION_PK_STUDENT_GROSS_MOTOR_SKILLS
+						, IesaConstant.MERIC_COLLECTION_PK_STUDENT_FINE_MOTOR_SKILLS
+					});
+			}else if(IesaConstant.LEVEL_NAME_CODE_K1.equals(levelNameCode)){
+				addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), new String[]{
+						performanceCodeMetricCollectionCode = IesaConstant.MERIC_COLLECTION_K1_STUDENT_ENGLISH_LANGUAGE_ARTS_READING
+						, IesaConstant.MERIC_COLLECTION_K1_STUDENT_COMMUNICATION_SKILLS
+						, IesaConstant.MERIC_COLLECTION_K1_STUDENT_SCIENCE
+						, IesaConstant.MERIC_COLLECTION_K1_STUDENT_SOCIAL_STUDIES
+						, IesaConstant.MERIC_COLLECTION_K1_STUDENT_MATHEMATICS
+						, IesaConstant.MERIC_COLLECTION_K1_STUDENT_WORK_HABITS
+						, IesaConstant.MERIC_COLLECTION_K1_STUDENT_SOCIAL_SKILLS
+					});
+			}else if(IesaConstant.LEVEL_NAME_CODE_K2.equals(levelNameCode) || IesaConstant.LEVEL_NAME_CODE_K3.equals(levelNameCode)){
+				addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), new String[]{
+						performanceCodeMetricCollectionCode = IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_READING_READINESS
+						, IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_READING
+						, IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_WRITING
+						, IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_LISTENING_SPEAKING_VIEWING
+						, IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_ALPHABET_IDENTIFICATION
+						, IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_MATHEMATICS
+						, IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_SCIENCE_SOCIAL_STUDIES_MORAL_EDUCATION
+						, IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_ART_CRAFT
+						, IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_MUSIC
+						, IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_PHYSICAL_EDUCATION
+						, IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_WORK_BEHAVIOUR_HABITS
+					});
+			}
 			
-			labelValueCollectionReport = addIntervalCollectionLabelValueCollection(r,rootBusinessLayer.getMetricCollectionDao().read(IesaConstant.MERIC_COLLECTION_PK_STUDENT_EXPRESSIVE_LANGUAGE).getValueIntervalCollection()
+			labelValueCollectionReport = addIntervalCollectionLabelValueCollection(r,rootBusinessLayer.getMetricCollectionDao().read(performanceCodeMetricCollectionCode).getValueIntervalCollection()
 					,Boolean.TRUE,Boolean.FALSE,null);
 			labelValueCollectionReport.add("NA", "Not Assessed");
 		}else{

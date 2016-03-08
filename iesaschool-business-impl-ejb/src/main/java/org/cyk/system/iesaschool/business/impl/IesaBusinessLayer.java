@@ -9,8 +9,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import lombok.Getter;
-
 import org.cyk.system.company.business.api.structure.CompanyBusiness;
 import org.cyk.system.company.business.api.structure.OwnedCompanyBusiness;
 import org.cyk.system.company.business.impl.CompanyBusinessLayer;
@@ -20,13 +18,13 @@ import org.cyk.system.iesaschool.model.IesaConstant;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessLayer;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
-import org.cyk.system.root.business.impl.RootDataProducerHelper.RootDataProducerHelperListener;
 import org.cyk.system.root.business.impl.RootRandomDataProvider;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollection;
+import org.cyk.system.root.model.mathematics.MetricValueInputted;
 import org.cyk.system.root.model.mathematics.MetricValueType;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.GenericDao;
@@ -46,7 +44,6 @@ import org.cyk.system.school.model.session.ClassroomSessionDivisionStudentsMetri
 import org.cyk.system.school.model.session.CommonNodeInformations;
 import org.cyk.system.school.model.session.LevelGroup;
 import org.cyk.system.school.model.session.LevelGroupType;
-import org.cyk.system.school.model.session.LevelName;
 import org.cyk.system.school.model.session.School;
 import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubject;
 import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubjectEvaluationType;
@@ -55,6 +52,8 @@ import org.cyk.system.school.model.subject.Subject;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.joda.time.DateTimeConstants;
+
+import lombok.Getter;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=IesaBusinessLayer.DEPLOYMENT_ORDER) @Getter
 public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -87,7 +86,6 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	private ArrayList<Subject> subjectsG1G3 = new ArrayList<>(),subjectsG4G6 = new ArrayList<>()
 			,subjectsG7G9 = new ArrayList<>(),subjectsG10G12 = new ArrayList<>(); 
-	private LevelGroupType levelGroupType;
 	
 	@Override
 	protected void initialisation() {
@@ -126,23 +124,12 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		
 		schoolBusinessLayer.setReportProducer(new ReportProducer());
     	
-		rootDataProducerHelper.getRootDataProducerHelperListeners().add(new RootDataProducerHelperListener.Adapter.Default(){
-			private static final long serialVersionUID = 1L;
-			@Override
-			public void set(Object object) {
-				super.set(object);
-				if(object instanceof LevelName){
-					;//((LevelName)object).setNodeInformations(commonNodeInformations);
-				}else if(object instanceof LevelGroup){
-					((LevelGroup)object).setType(levelGroupType);
-				}
-			}
-		});
+		
 	}
 	
 	@SuppressWarnings("unchecked")
 	private void structure(){
-		levelGroupType = create(schoolBusinessLayer.getLevelGroupTypeBusiness().instanciateOne("LevelGroupTypeDummy"));
+		LevelGroupType levelGroupType = create(schoolBusinessLayer.getLevelGroupTypeBusiness().instanciateOne("LevelGroupTypeDummy"));
 		LevelGroup levelGroupKindergarten = (LevelGroup) create(schoolBusinessLayer.getLevelGroupBusiness().instanciateOne(SchoolConstant.LEVEL_GROUP_KINDERGARTEN)
 				.setType(levelGroupType));
 		LevelGroup levelGroupPrimary = (LevelGroup) create(schoolBusinessLayer.getLevelGroupBusiness().instanciateOne(SchoolConstant.LEVEL_GROUP_PRIMARY)
@@ -491,7 +478,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     					,"Takes care of school and others materials","Game/Sport","Handwriting","Drawing/Painting","Punctionality/Regularity","Works cooperatively in groups"
     					,"Listens and follows directions"}
     	,"Effort Levels", new String[][]{ {"E", "Excellent", "1", "1"},{"G", "Good", "2", "2"},{"S", "Satisfactory", "3", "3"},{"N", "Needs Improvement", "4", "4"}
-    	,{"H", "Has no regard", "5", "5"} }))};
+    	,{"H", "Has no regard", "5", "5"} }).setMetricValueInputted(MetricValueInputted.VALUE_INTERVAL_CODE))};
 	}
 	
 	private CommonNodeInformations instanciateCommonNodeInformations(IntervalCollection intervalCollection,ReportTemplate reportTemplate,String classroomsessionDivisionIndex){

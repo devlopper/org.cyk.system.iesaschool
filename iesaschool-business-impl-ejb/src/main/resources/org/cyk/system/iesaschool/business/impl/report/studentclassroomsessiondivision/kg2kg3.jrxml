@@ -986,7 +986,7 @@
 						</jr:column>
 						<jr:column width="155" uuid="7f950ab5-8968-48f4-8a5d-7ce9504384ed">
 							<jr:detailCell style="table_td_underline" height="12" rowSpan="1">
-								<textField>
+								<textField isStretchWithOverflow="true">
 									<reportElement x="0" y="0" width="155" height="12" uuid="e6cd9e03-5af8-427a-8c61-85aaab469fb6"/>
 									<textElement markup="styled">
 										<font fontName="Batang"/>

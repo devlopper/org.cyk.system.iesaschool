@@ -114,20 +114,29 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 					,Boolean.TRUE,Boolean.FALSE,null);
 			labelValueCollectionReport.add("NA", "Not Assessed");
 		}else{
+			String studentBehaviourMetricCollectionCode = null;
 			r.setName(r.getName()+" CARD");
 			String testCoef = null,examCoef = "";	
 			if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G1,IesaConstant.LEVEL_NAME_CODE_G2,IesaConstant.LEVEL_NAME_CODE_G3},levelNameCode)){
 				name += " LOWER";
 				testCoef = "15";
 				examCoef = "70";
+				studentBehaviourMetricCollectionCode = IesaConstant.MERIC_COLLECTION_G1_G6_STUDENT_BEHAVIOUR;
 			}else if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G4,IesaConstant.LEVEL_NAME_CODE_G5,IesaConstant.LEVEL_NAME_CODE_G6},levelNameCode)){
 				name += " UPPER";
 				testCoef = "15";
 				examCoef = "70";
+				studentBehaviourMetricCollectionCode = IesaConstant.MERIC_COLLECTION_G1_G6_STUDENT_BEHAVIOUR;
 			}else if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G7,IesaConstant.LEVEL_NAME_CODE_G8,IesaConstant.LEVEL_NAME_CODE_G9},levelNameCode)){
 				name += " JUNIOR HIGH SCHOOL";
 				testCoef = "20";
 				examCoef = "60";
+				studentBehaviourMetricCollectionCode = IesaConstant.MERIC_COLLECTION_G7_G12_STUDENT_BEHAVIOUR;
+			}else if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G10,IesaConstant.LEVEL_NAME_CODE_G11,IesaConstant.LEVEL_NAME_CODE_G12},levelNameCode)){
+				name += " SENIOR HIGH SCHOOL";
+				testCoef = "20";
+				examCoef = "60";
+				studentBehaviourMetricCollectionCode = IesaConstant.MERIC_COLLECTION_G7_G12_STUDENT_BEHAVIOUR;
 			}
 			
 			r.addSubjectsTableColumnNames("No.","SUBJECTS","Test 1 "+testCoef+"%","Test 2 "+testCoef+"%","Exam "+examCoef+"%","TOTAL 100%","GRADE","RANK","OUT OF","MAX","CLASS AVERAGE","REMARKS","TEACHER");
@@ -140,7 +149,7 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 				labelValueCollectionReport.add("RANK",r.getRank());
 			r.addLabelValueCollection(labelValueCollectionReport);
 			
-			addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), IesaConstant.MERIC_COLLECTION_G1_G6_STUDENT_BEHAVIOUR);
+			addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), studentBehaviourMetricCollectionCode);
 			labelValueCollectionReport = new LabelValueCollectionReport();
 			labelValueCollectionReport.setName(r.getCurrentLabelValueCollection().getName());
 			labelValueCollectionReport.setCollection(r.getCurrentLabelValueCollection().getCollection().subList(6, 12));

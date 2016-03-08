@@ -138,8 +138,6 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 				}
 			}
 		});
-		
-		
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -161,42 +159,22 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	File reportHeaderFile = createFile("image/document_header.png");
     	File reportBackgroundFile = createFile("image/studentclassroomsessiondivisionreport_background.jpg");
     	
-    	/*
-		File reportFilePkg = createFile("report/studentclassroomsessiondivision/pkg.jrxml", "studentclassroomsessiondivisionreport_pkg.jrxml");
-		ReportTemplate reportTemplatePkg = new ReportTemplate("SCSDRTPK",reportFilePkg,reportHeaderFile,createFile("image/studentclassroomsessiondivisionreport_background.jpg"));
-		create(reportTemplatePkg);
-		CommonNodeInformations commonNodeInformationsPk = schoolDataProducerHelper.instanciateOneCommonNodeInformations(null, reportTemplatePkg, TimeDivisionType.DAY, TimeDivisionType.TRIMESTER, "1");
-		*/
-    	
     	CommonNodeInformations commonNodeInformationsPkg = instanciateCommonNodeInformations(null, reportHeaderFile, reportBackgroundFile, "pkg.jrxml", "1");
     	CommonNodeInformations commonNodeInformationsKg1 = instanciateCommonNodeInformations(null, reportHeaderFile, reportBackgroundFile, "kg1.jrxml", "1");
     	CommonNodeInformations commonNodeInformationsKg2Kg3 = instanciateCommonNodeInformations(null, reportHeaderFile, reportBackgroundFile, "kg2kg3.jrxml", "1");
     	
-    	/*
-		File reportFileKg1 = createFile("report/studentclassroomsessiondivision/kg1.jrxml", "studentclassroomsessiondivisionreport_kg1.jrxml");
-		ReportTemplate reportTemplateKg1 = new ReportTemplate("SCSDRTPK",reportFilePkg,reportHeaderFile,createFile("image/studentclassroomsessiondivisionreport_background.jpg"));
-		create(reportTemplatePkg);
-		CommonNodeInformations commonNodeInformationsPk = schoolDataProducerHelper.instanciateOneCommonNodeInformations(null, reportTemplatePkg, TimeDivisionType.DAY, TimeDivisionType.TRIMESTER, "1");
-		*/
-    	
 		File reportFile = createFile("report/studentclassroomsessiondivision/g1g12.jrxml", "studentclassroomsessiondivisionreport_g1g12.jrxml");
 		ReportTemplate reportTemplate = new ReportTemplate("SCSDRT",reportFile,reportHeaderFile,createFile("image/studentclassroomsessiondivisionreport_background.jpg"));
 		create(reportTemplate);
-		/*
-		CommonNodeInformations commonNodeInformationsG1G3 = schoolDataProducerHelper.instanciateOneCommonNodeInformations(create(rootBusinessLayer.getIntervalCollectionBusiness()
-				.instanciateOne("ICEV1", "ICEV1", new String[][]{
-						{"A+", "Excellent", "90", "100"},{"A", "Very good", "80", "89.99"},{"B+", "Good", "70", "79.99"},{"B", "Fair", "60", "69.99"}
-						,{"C+", "Satisfactory", "55", "59.99"},{"C", "Barely satisfactory", "50", "54.99"},{"E", "Fail", "0", "49.99"}})), reportTemplate
-						, TimeDivisionType.DAY, TimeDivisionType.TRIMESTER, "1");	
-		*/
+		
 		CommonNodeInformations commonNodeInformationsG1G3 = instanciateCommonNodeInformations(create(rootBusinessLayer.getIntervalCollectionBusiness()
-				.instanciateOne("ICEV1", "ICEV1", new String[][]{
+				.instanciateOne("ICEV1", "Grading Scale", new String[][]{
 						{"A+", "Excellent", "90", "100"},{"A", "Very good", "80", "89.99"},{"B+", "Good", "70", "79.99"},{"B", "Fair", "60", "69.99"}
 						,{"C+", "Satisfactory", "55", "59.99"},{"C", "Barely satisfactory", "50", "54.99"},{"E", "Fail", "0", "49.99"}})), reportTemplate, "1");
 		CommonNodeInformations commonNodeInformationsG4G6 = commonNodeInformationsG1G3;
 		
 		CommonNodeInformations commonNodeInformationsG7G9 = instanciateCommonNodeInformations(create(rootBusinessLayer.getIntervalCollectionBusiness()
-				.instanciateOne("ICEV2", "ICEV2", new String[][]{
+				.instanciateOne("ICEV2", "Grading Scale", new String[][]{
 						{"A*", "Outstanding", "90", "100"},{"A", "Excellent", "80", "89.99"},{"B", "Very Good", "70", "79.99"},{"C", "Good", "60", "69.99"}
 						,{"D", "Satisfactory", "50", "59.99"},{"E", "Fail", "0", "49.99"}})), reportTemplate, "1");	
 		CommonNodeInformations commonNodeInformationsG10G12 = commonNodeInformationsG7G9;
@@ -500,20 +478,19 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	, valueIntervals))
     	};
 		
-		g1g6MetricCollections = new MetricCollection[]{ create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne("BSWHG1G6","Behaviour,Study and Work Habits",MetricValueType.NUMBER
+		g1g6MetricCollections = new MetricCollection[]{ create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_G1_G6_STUDENT_BEHAVIOUR,"Behaviour,Study and Work Habits",MetricValueType.NUMBER
     			, new String[]{"Respect authority","Works independently and neatly","Completes homework and class work on time","Shows social courtesies","Demonstrates self-control"
     					,"Takes care of school and others materials","Game/Sport","Handwriting","Drawing/Painting","Punctionality/Regularity","Works cooperatively in groups"
     					,"Listens and follows directions"}
-    	, new String[][]{ {"1", "Has no regard for the observable traits", "1", "1"},{"2", "Shows minimal regard for the observable traits", "2", "2"}
+    	,"Effort Levels", new String[][]{ {"1", "Has no regard for the observable traits", "1", "1"},{"2", "Shows minimal regard for the observable traits", "2", "2"}
     	,{"3", "Acceptable level of observable traits", "3", "3"},{"4", "Maintains high level of observable traits", "4", "4"}
     	,{"5", "Maintains an excellent degree of observable traits", "5", "5"} }))};
    
-		g7g12MetricCollections = new MetricCollection[]{ create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne("BSWHG7G12","Behaviour,Study and Work Habits",MetricValueType.STRING
+		g7g12MetricCollections = new MetricCollection[]{ create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_G7_G12_STUDENT_BEHAVIOUR,"Behaviour,Study and Work Habits",MetricValueType.STRING
     			, new String[]{"Respect authority","Works independently and neatly","Completes homework and class work on time","Shows social courtesies","Demonstrates self-control"
     					,"Takes care of school and others materials","Game/Sport","Handwriting","Drawing/Painting","Punctionality/Regularity","Works cooperatively in groups"
     					,"Listens and follows directions"}
-    	, new String[][]{ {"E", "Excellent", "1", "1"},{"G", "Good", "2", "2"}
-    	,{"S", "Satisfactory", "3", "3"},{"N", "Needs Improvement", "4", "4"}
+    	,"Effort Levels", new String[][]{ {"E", "Excellent", "1", "1"},{"G", "Good", "2", "2"},{"S", "Satisfactory", "3", "3"},{"N", "Needs Improvement", "4", "4"}
     	,{"H", "Has no regard", "5", "5"} }))};
 	}
 	

@@ -82,7 +82,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	private EvaluationType evaluationTypeTest1,evaluationTypeTest2,evaluationTypeExam;
 	
-	private MetricCollection[] pkMetricCollections,k1MetricCollections,k2MetricCollections,k3MetricCollections
+	private MetricCollection[] pkMetricCollections,k1MetricCollections,k2k3MetricCollections
 		,g1g6MetricCollections,g7g12MetricCollections;
 	
 	private ArrayList<Subject> subjectsG1G3 = new ArrayList<>(),subjectsG4G6 = new ArrayList<>()
@@ -262,10 +262,10 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     			, null,null,classroomSessionDivisionStudentsMetricCollections,k1MetricCollections,null,Boolean.FALSE,Boolean.FALSE);
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
     			, schoolDataProducerHelper.createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_K2,"Kindergarten 2",levelGroupKindergarten,commonNodeInformationsKg2Kg3,gradeIndex++) 
-    			, null,null,classroomSessionDivisionStudentsMetricCollections,k2MetricCollections,null,Boolean.FALSE,Boolean.FALSE);
+    			, null,null,classroomSessionDivisionStudentsMetricCollections,k2k3MetricCollections,null,Boolean.FALSE,Boolean.FALSE);
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
     			, schoolDataProducerHelper.createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_K3,"Kindergarten 3",levelGroupKindergarten,commonNodeInformationsKg2Kg3,gradeIndex++) 
-    			, null,null,classroomSessionDivisionStudentsMetricCollections,k3MetricCollections,null,Boolean.FALSE,Boolean.FALSE);
+    			, null,null,classroomSessionDivisionStudentsMetricCollections,k2k3MetricCollections,null,Boolean.FALSE,Boolean.FALSE);
     	
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
     			, schoolDataProducerHelper.createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_G1,"Grade 1",levelGroupPrimary,commonNodeInformationsG1G3,gradeIndex++) 
@@ -354,12 +354,13 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	/**/
 	
 	private void createMetricCollections(){
+		String[][] valueIntervals = new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} };
 		pkMetricCollections = new MetricCollection[]{ create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_EXPRESSIVE_LANGUAGE,"Expressive language",MetricValueType.NUMBER
     			, new String[]{"Participates actively during circle time","Participates in singing rhymes","Can say her name and name of classmates"
     			,"Can respond appropriately to “how are you?”","Can say his/her age","Can say the name of her school","Names objects in the classroom and school environment"
     			,"Uses at least one of the following words “me”,“I”, “he”, “she”, “you”","Talks in two or three word phrases and longer sentences"
     			,"Can use “and” to connect words/phrases","Talks with words in correct order","Can be engaged in conversations"}
-    	,"Skills Performance levels", new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
+    	,"Skills Performance levels", valueIntervals))
     	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_RECEPTIVE_LANGUAGE,"Receptive language",MetricValueType.NUMBER
     			, new String[]{"Responds to her name when called",
     			"Retrieves named objects",
@@ -369,7 +370,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     			"Understands positional words – In and out - Up and down - On and under - Forward and backward",
     			"Understands the concept “Give and Take”",
     			"Talks about feelings"}
-    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
+    	, valueIntervals))
     	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_READING_READNESS,"Reading readness",MetricValueType.NUMBER
     			, new String[]{"Shows interest in books/stories",
     			"Names familiar objects in pictures/books – vegetables, fruits, animals",
@@ -379,7 +380,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     			"Identifying objects that begin with a particular sound",
     			"Identifying pictures that begin with a particular sound",
     			"Recognizes the written letters of the alphabet"}
-    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
+    	, valueIntervals))
     	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_NUMERACY_DEVELOPMENT,"Numeracy development",MetricValueType.NUMBER
     			, new String[]{"Sorts objects by shape",
     			"Sorts objects by size",
@@ -390,14 +391,14 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     			"Reproducing Patterns",
     			"Identifies the 3 basic geometric shapes ( circle, triangle and square)",
     			"Identifies more shapes ( Star, diamond, heart, cross ,crescent)"}
-    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
+    	, valueIntervals))
     	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_ARTS_MUSIC,"Arts and music",MetricValueType.NUMBER
     			, new String[]{"Moves expressively to sounds and music – nodding, clapping, movement of body",
     			"Participates in musical activities",
     			"Hums or sing words of songs",
     			"Participates in role play",
     			"Shows satisfaction with completed work"}
-    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
+    	, valueIntervals))
     	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_SOCIAL_EMOTIONAL_DEVELOPMENT,"Social and emotional development",MetricValueType.NUMBER
     			, new String[]{"Initiates interaction with adults",
     			"Initiates interaction with classmates",
@@ -409,7 +410,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     			"Shows sympathy, offers to help or helps others",
     			"Can express dissatisfaction and other emotions – body language or words",
     			"Responds to correction – stops the misbehaviour"}
-    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
+    	, valueIntervals))
     	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_GROSS_MOTOR_SKILLS,"Gross motor skills",MetricValueType.NUMBER
     			, new String[]{"Can run well without falling",
     			"Can kick a ball",
@@ -417,88 +418,87 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     			"Walks up and down stairs unassisted",
     			"Can stand on one foot for a few seconds without support",
     			"Throws a ball into a basket from a short distance"}
-    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
+    	, valueIntervals))
     	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_FINE_MOTOR_SKILLS,"Fine motor skills",MetricValueType.NUMBER
     			, new String[]{"Scribbles spontaneously",
     			"Can scribble to and from, in circular motions and in lines",
     			"Can place simple pieces in a puzzle board",
     			"Can build a tower of at least 3-5 blocks",
     			"Develops good pencil grip and control"}
-    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
+    	, valueIntervals))
     	};		
     	
-		k1MetricCollections = new MetricCollection[]{ create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_K1_STUDENT_ENGLISH_LANGUAGE_ARTS_READING,"English language Arts and Reading",MetricValueType.NUMBER
-    			, new String[]{"Participates actively during circle time","Participates in singing rhymes","Can say her name and name of classmates"
-    			,"Can respond appropriately to “how are you?”","Can say his/her age","Can say the name of her school","Names objects in the classroom and school environment"
-    			,"Uses at least one of the following words “me”,“I”, “he”, “she”, “you”","Talks in two or three word phrases and longer sentences"
-    			,"Can use “and” to connect words/phrases","Talks with words in correct order","Can be engaged in conversations"}
-    	,"Skills Performance levels", new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
-    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_RECEPTIVE_LANGUAGE,"Receptive language",MetricValueType.NUMBER
-    			, new String[]{"Responds to her name when called",
-    			"Retrieves named objects",
-    			"Follows simple instructions (across the classroom) – stand, sit, bring your cup",
-    			"Understands facial expressions and tone of voice",
-    			"Understands 2-3 step instructions",
-    			"Understands positional words – In and out - Up and down - On and under - Forward and backward",
-    			"Understands the concept “Give and Take”",
-    			"Talks about feelings"}
-    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
-    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_READING_READNESS,"Reading readness",MetricValueType.NUMBER
-    			, new String[]{"Shows interest in books/stories",
-    			"Names familiar objects in pictures/books – vegetables, fruits, animals",
-    			"Tells what action is going on in pictures",
-    			"Handling books – carrying a book, turning the pages of a book, placing a book back in the shelf",
-    			"Listening for different sounds in the environment",
-    			"Identifying objects that begin with a particular sound",
-    			"Identifying pictures that begin with a particular sound",
-    			"Recognizes the written letters of the alphabet"}
-    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
-    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_NUMERACY_DEVELOPMENT,"Numeracy development",MetricValueType.NUMBER
-    			, new String[]{"Sorts objects by shape",
-    			"Sorts objects by size",
-    			"Participates in reciting different counting rhymes, songs, stories and games",
-    			"Verbally count forward to 10",
-    			"Can count 1-10 objects",
-    			"Identifies the written numerals 1-10",
-    			"Reproducing Patterns",
-    			"Identifies the 3 basic geometric shapes ( circle, triangle and square)",
-    			"Identifies more shapes ( Star, diamond, heart, cross ,crescent)"}
-    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
-    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_ARTS_MUSIC,"Arts and music",MetricValueType.NUMBER
-    			, new String[]{"Moves expressively to sounds and music – nodding, clapping, movement of body",
-    			"Participates in musical activities",
-    			"Hums or sing words of songs",
-    			"Participates in role play",
-    			"Shows satisfaction with completed work"}
-    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
-    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_SOCIAL_EMOTIONAL_DEVELOPMENT,"Social and emotional development",MetricValueType.NUMBER
-    			, new String[]{"Initiates interaction with adults",
-    			"Initiates interaction with classmates",
-    			"Participates in group activities",
-    			"Takes turns during group activities",
-    			"Greets people – hello and goodbye",
-    			"Says “please” and “thank you”",
-    			"Asks for help in doing things when needed",
-    			"Shows sympathy, offers to help or helps others",
-    			"Can express dissatisfaction and other emotions – body language or words",
-    			"Responds to correction – stops the misbehaviour"}
-    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
-    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_GROSS_MOTOR_SKILLS,"Gross motor skills",MetricValueType.NUMBER
-    			, new String[]{"Can run well without falling",
-    			"Can kick a ball",
-    			"Climbs up ladder and slides down slide without help",
-    			"Walks up and down stairs unassisted",
-    			"Can stand on one foot for a few seconds without support",
-    			"Throws a ball into a basket from a short distance"}
-    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
-    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_PK_STUDENT_FINE_MOTOR_SKILLS,"Fine motor skills",MetricValueType.NUMBER
-    			, new String[]{"Scribbles spontaneously",
-    			"Can scribble to and from, in circular motions and in lines",
-    			"Can place simple pieces in a puzzle board",
-    			"Can build a tower of at least 3-5 blocks",
-    			"Develops good pencil grip and control"}
-    	, new String[][]{ {"1", "Learning to do", "1", "1"},{"2", "Does sometimes", "2", "2"} ,{"3", "Does regularly", "3", "3"} }))
-    	};		
+		valueIntervals = new String[][]{ {"1", "Emerging", "1", "1"}
+    	,{"2", "Developing", "2", "2"} 
+    	,{"3", "Proficient", "3", "3"},{"4", "Exemplary", "4", "4"} };
+		k1MetricCollections = new MetricCollection[]{ create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_K1_STUDENT_ENGLISH_LANGUAGE_ARTS_READING,"English/language/Arts/Reading",MetricValueType.NUMBER
+    			, new String[]{"Reads independently with understanding","Comprehends a variety of texts","Applies a variety of strategies to comprehend printed text"
+    					,"Reads to access and utilize information from written and electronic sources","Demonstrates understanding of letter-sound associations"}
+    	,"Skills Performance levels", valueIntervals))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_K1_STUDENT_COMMUNICATION_SKILLS,"Communication skills",MetricValueType.NUMBER
+    			, new String[]{"Contributes ideas to discussions","Communicates ideas effectively","Write for a variety of purposes","Writes well-organized compositions"
+    					,"Uses appropriate writing skills","Write legibly","Revises, edits and proofreads work"}
+    	, valueIntervals))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_K1_STUDENT_SCIENCE,"Science",MetricValueType.NUMBER
+    			, new String[]{"Understands and applies scientific process","Understands and applies knowledge of key concepts"}
+    	, valueIntervals))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_K1_STUDENT_SOCIAL_STUDIES,"Social Studies",MetricValueType.NUMBER
+    			, new String[]{"Gathers and organizes information","Understands and applies knowledge of key concepts"}
+    	, valueIntervals))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_K1_STUDENT_MATHEMATICS,"Mathematics",MetricValueType.NUMBER
+    			, new String[]{"Demonstrates understanding of number sense","Reads and interprets data","Applies problem-solving strategies","Communicates mathematically"}
+    	, valueIntervals))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_K1_STUDENT_WORK_HABITS,"Work habits",MetricValueType.NUMBER
+    			, new String[]{"Follows directions","Uses time and materials constructively ","Works independently","Completes class assignments","Completes homework assignments",
+    			"Listens attentively"}
+    	, valueIntervals))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_K1_STUDENT_SOCIAL_SKILLS,"Social Skills",MetricValueType.NUMBER
+    			, new String[]{"Cooperates with others","Shows respect for others","Participates in classroom activities","Follows classroom/school rules"}
+    	, valueIntervals))
+    	};
+		
+		valueIntervals = new String[][]{ {"1", "Does not meets and applies expectations/standards; shows no growth even with support", "1", "1"}
+    	,{"2", "Does not meets and applies expectations/standards; but shows growth with support", "2", "2"} 
+    	,{"3", "Meets and applies expectations/standards with support", "3", "3"},{"4", "Meets and applies expectations/standards with support", "4", "4"} };
+    	
+		k2k3MetricCollections = new MetricCollection[]{ create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_READING_READINESS,"Reading Readiness",MetricValueType.NUMBER
+    			, new String[]{"Demonstrates concepts of print","Identifies and produces rhyming words","Segments and blends sounds"}
+    	,"Performance Codes", valueIntervals))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_READING,"Reading",MetricValueType.NUMBER
+    			, new String[]{"Answers questions about essential narrative elements","Reads high frequency words","Blends sounds to read words","Reads simple text"
+    					,"Developmental Reading assessment"}
+    	, valueIntervals))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_WRITING,"Writing",MetricValueType.NUMBER
+    			, new String[]{"Writes first and last name","Expresses ideas through independent writing"}
+    	, valueIntervals))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_LISTENING_SPEAKING_VIEWING,"Listening,Speaking and Viewing",MetricValueType.NUMBER
+    			, new String[]{"Uses oral language to communicate effectively","Recites short poems and songs","Follows two-step oral directions"
+    					,"Makes predictions and retells","Comprehends information through listening","Demonstrates comprehension of information through speaking"}
+    	, valueIntervals))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_ALPHABET_IDENTIFICATION,"Alphabet identification",MetricValueType.NUMBER
+    			, new String[]{"Identifies Upper-Case","Identifies Lower-Case","Produces Letter Sounds","Prints Letters Correctly"}
+    	, valueIntervals))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_MATHEMATICS,"Mathematics",MetricValueType.NUMBER
+    			, new String[]{"Number and Operations","Geometry","Measurement","Algebraic Thinking"}
+    	, valueIntervals))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_SCIENCE_SOCIAL_STUDIES_MORAL_EDUCATION,"Science, Social Studies and Moral Education",MetricValueType.NUMBER
+    			, new String[]{"Science","Social Studies","Moral Education"}
+    	, valueIntervals))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_ART_CRAFT,"Art and Craft",MetricValueType.NUMBER
+    			, new String[]{"Performance","Initiative"}
+    	, valueIntervals))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_MUSIC,"Music",MetricValueType.NUMBER
+    			, new String[]{"Performance","Initiative"}
+    	, valueIntervals))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_PHYSICAL_EDUCATION,"Physical Education",MetricValueType.NUMBER
+    			, new String[]{"Performance","Initiative"}
+    	, valueIntervals))
+    	,create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne(IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_WORK_BEHAVIOUR_HABITS,"Work and Behaviour Habits",MetricValueType.NUMBER
+    			, new String[]{"Follows directions","Uses time and materials constructively","Works independently","Completes class assignments"
+    					,"Completes homework assignments","Listens attentively","Cooperates with others","Shows respect for others","Participates in classroom activities"
+    					,"Follows classroom/school rules"}
+    	, valueIntervals))
+    	};
 		
 		g1g6MetricCollections = new MetricCollection[]{ create(rootBusinessLayer.getMetricCollectionBusiness().instanciateOne("BSWHG1G6","Behaviour,Study and Work Habits",MetricValueType.NUMBER
     			, new String[]{"Respect authority","Works independently and neatly","Completes homework and class work on time","Shows social courtesies","Demonstrates self-control"

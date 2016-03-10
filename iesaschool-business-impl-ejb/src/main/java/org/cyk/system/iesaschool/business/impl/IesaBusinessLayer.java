@@ -19,6 +19,7 @@ import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessLayer;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.RootRandomDataProvider;
+import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.ReportTemplate;
@@ -26,6 +27,7 @@ import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricValueInputted;
 import org.cyk.system.root.model.mathematics.MetricValueType;
+import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.school.business.api.session.ClassroomSessionBusiness;
@@ -293,6 +295,8 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	for(AbstractIdentifiable identifiable :  genericDao.use(EvaluationType.class).select().all())
     		SchoolReportProducer.DEFAULT_STUDENT_CLASSROOM_SESSION_DIVISION_REPORT_PARAMETERS.getEvaluationTypeCodes().add(((EvaluationType)identifiable).getCode());
     	SchoolReportProducer.DEFAULT_STUDENT_CLASSROOM_SESSION_DIVISION_REPORT_PARAMETERS.setSumMarks(Boolean.TRUE);
+    	
+    	/* reading data from excel files */
 	}
 		
 	@Override
@@ -494,4 +498,18 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		return instanciateCommonNodeInformations(intervalCollection,create(reportTemplate),classroomsessionDivisionIndex);
 	}
 	
+	@Override
+	public void installApplication(Boolean fake) {
+		ApplicationBusinessImpl.Listener.COLLECTION.add(new ApplicationBusinessImpl.Listener.Adapter.Default(){
+			private static final long serialVersionUID = -7737204312141333272L;
+    		@Override
+    		public void installationStarted(Installation installation) {
+    			installation.getApplication().setUniformResourceLocatorFilteringEnabled(Boolean.TRUE);
+    			installation.getApplication().setWebContext("iesaschool");
+    			installation.getApplication().setName("IESA Management System");
+    			super.installationStarted(installation);
+    		}
+    	});
+		super.installApplication(fake);
+	}
 }

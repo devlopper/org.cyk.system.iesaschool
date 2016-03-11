@@ -13,18 +13,17 @@ import org.cyk.system.school.business.impl.SchoolBusinessLayer;
 import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.actor.Teacher;
 import org.cyk.utility.common.CommonUtils;
-import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 
-public class CreateLiveDatabaseBusinessIT extends AbstractBusinessIT {
+
+public class PopulateWithLiveDataBusinessIT extends AbstractBusinessIT {
 
     private static final long serialVersionUID = -6691092648665798471L;
     
     @Override
     protected void businesses() {
     	installApplication();
-		//rootDataProducerHelper.exportDatabase(Boolean.FALSE,Constant.EMPTY_STRING);
-    	
+
     	Collection<Teacher> teachers = new ArrayList<>();
     	Collection<Student> students = new ArrayList<>();
     	
@@ -53,7 +52,6 @@ public class CreateLiveDatabaseBusinessIT extends AbstractBusinessIT {
 					teacher.getPerson().getExtendedInformations().getTitle().setCode(PersonTitle.MISTER);
 				teachers.add(teacher);
 			}
-			SchoolBusinessLayer.getInstance().getTeacherBusiness().completeInstanciationOfMany(teachers);
 			SchoolBusinessLayer.getInstance().getTeacherBusiness().create(teachers);
 			/*
 			arguments.setWorkbookInputStream(new FileInputStream(new File(directory, "data.xlsx")));
@@ -69,8 +67,6 @@ public class CreateLiveDatabaseBusinessIT extends AbstractBusinessIT {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    	
-    	System.exit(0);
     }
-
+    
 }

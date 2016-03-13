@@ -24,6 +24,7 @@ import org.cyk.system.root.business.impl.validation.ValidatorMap;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.system.root.persistence.impl.PersistenceIntegrationTestHelper;
+import org.cyk.system.school.business.impl.SchoolBusinessLayer;
 import org.cyk.system.school.business.impl.SchoolBusinessTestHelper;
 import org.cyk.system.school.model.session.ClassroomSession;
 import org.cyk.system.school.model.subject.Evaluation;
@@ -67,8 +68,9 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 	@Inject protected RootDataProducerHelper rootDataProducerHelper;
 	
 	@Inject protected SchoolBusinessTestHelper schoolBusinessTestHelper;
-	@Inject protected IesaBusinessLayer iesaschoolBusinessLayer;
-	@Inject protected IesaBusinessTestHelper iesaschoolBusinessTestHelper;
+	@Inject protected SchoolBusinessLayer schoolBusinessLayer;
+	@Inject protected IesaBusinessLayer iesaBusinessLayer;
+	@Inject protected IesaBusinessTestHelper iesaBusinessTestHelper;
 	
 	@Inject protected ClassroomSessionDao classroomSessionDao;
 	@Inject protected LevelTimeDivisionDao levelTimeDivisionDao;
@@ -82,7 +84,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     }
 	
 	protected void installApplication(Boolean fake){
-    	iesaschoolBusinessLayer.installApplication(fake);
+		iesaBusinessLayer.installApplication(fake);
     }
     
     protected void installApplication(){

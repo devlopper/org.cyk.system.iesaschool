@@ -30,6 +30,7 @@ import org.cyk.system.school.model.session.ClassroomSession;
 import org.cyk.system.school.model.subject.Evaluation;
 import org.cyk.system.school.persistence.api.session.ClassroomSessionDao;
 import org.cyk.system.school.persistence.api.session.LevelTimeDivisionDao;
+import org.cyk.system.school.persistence.api.subject.ClassroomSessionDivisionSubjectDao;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.test.ArchiveBuilder;
 import org.cyk.utility.test.Transaction;
@@ -73,6 +74,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 	@Inject protected IesaBusinessTestHelper iesaBusinessTestHelper;
 	
 	@Inject protected ClassroomSessionDao classroomSessionDao;
+	@Inject protected ClassroomSessionDivisionSubjectDao classroomSessionDivisionSubjectDao;
 	@Inject protected LevelTimeDivisionDao levelTimeDivisionDao;
 	
 	@Inject protected UserTransaction userTransaction;

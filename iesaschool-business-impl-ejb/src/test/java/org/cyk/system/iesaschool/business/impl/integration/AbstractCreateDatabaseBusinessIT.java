@@ -8,16 +8,21 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.iesaschool.model.IesaConstant;
 import org.cyk.system.root.business.api.IdentifiableBusinessService.CompleteInstanciationOfOneFromValuesListener;
 import org.cyk.system.root.business.api.party.person.AbstractActorBusiness.CompleteActorInstanciationOfManyFromValuesArguments;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
+import org.cyk.system.school.business.impl.SchoolBusinessLayer;
 import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.actor.Teacher;
 import org.cyk.system.school.model.session.ClassroomSession;
 import org.cyk.system.school.model.session.StudentClassroomSession;
+import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubject;
+import org.cyk.system.school.model.subject.Subject;
 import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
+import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.Constant;
 
 public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessIT {
@@ -29,6 +34,11 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     @Override
     protected void businesses() {
     	installApplication();
+    	File directory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data");
+		File excelWorkbookFile = new File(directory, "data.xlsx")
+			,teachersSignatureDirectory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature")
+			,studentsPhotoDirectory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\photo");
+		
     	for(ClassroomSession classroomSession : classroomSessionDao.readAll())
     		if(classroomSession.getLevelTimeDivision().getIndex() == 0)
     			pkg = classroomSession;
@@ -75,33 +85,35 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     		else if(classroomSession.getLevelTimeDivision().getIndex() == 15)
     			g12 = classroomSession;
     	
-    	File directory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data");
-		File file = new File(directory, "data.xlsx");
-		try {
-			processTeachersSheet(file,new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature"));
+    	try {
+			processTeachersSheet(excelWorkbookFile,teachersSignatureDirectory);
+			processCoordinatorsSheet(excelWorkbookFile);
+			processClassroomSessionDivisionSubjectTeachersSheet(excelWorkbookFile);
 			
-			processStudentsSheet(file,new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature"),1,2,3);
-			processStudentsSheet(file,new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature"),1,40,3);
-			processStudentsSheet(file,new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature"),1,78,3);
+			processStudentsSheet(pkg,excelWorkbookFile,studentsPhotoDirectory,1,2,34);
+			processStudentsSheet(kg1,excelWorkbookFile,studentsPhotoDirectory,1,38,38);
+			processStudentsSheet(kg2,excelWorkbookFile,studentsPhotoDirectory,1,78,38);
+			processStudentsSheet(kg3,excelWorkbookFile,studentsPhotoDirectory,1,118,26);
 
-			processStudentsSheet(file,new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature"),2,2,3);
-			processStudentsSheet(file,new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature"),2,24,3);
-			processStudentsSheet(file,new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature"),2,43,3);
-			processStudentsSheet(file,new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature"),2,69,3);
-			processStudentsSheet(file,new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature"),2,85,3);
+			processStudentsSheet(g1A,excelWorkbookFile,studentsPhotoDirectory,2,2,20);
+			processStudentsSheet(g1B,excelWorkbookFile,studentsPhotoDirectory,2,24,18);
+			processStudentsSheet(g2,excelWorkbookFile,studentsPhotoDirectory,2,43,25);
+			processStudentsSheet(g3A,excelWorkbookFile,studentsPhotoDirectory,2,69,14);
+			processStudentsSheet(g3B,excelWorkbookFile,studentsPhotoDirectory,2,85,14);
 			
-			processStudentsSheet(file,new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature"),3,2,3);
-			processStudentsSheet(file,new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature"),3,23,3);
-			processStudentsSheet(file,new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature"),3,38,3);
-			processStudentsSheet(file,new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature"),3,52,3);
-			processStudentsSheet(file,new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature"),3,63,3);
+			processStudentsSheet(g4A,excelWorkbookFile,studentsPhotoDirectory,3,2,19);
+			processStudentsSheet(g4B,excelWorkbookFile,studentsPhotoDirectory,3,23,13);
+			processStudentsSheet(g5A,excelWorkbookFile,studentsPhotoDirectory,3,38,12);
+			processStudentsSheet(g5B,excelWorkbookFile,studentsPhotoDirectory,3,52,9);
+			processStudentsSheet(g6,excelWorkbookFile,studentsPhotoDirectory,3,63,18);
 			
-			processStudentsSheet(file,new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature"),4,2,3);
-			processStudentsSheet(file,new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature"),4,20,3);
-			processStudentsSheet(file,new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature"),4,44,3);
-			processStudentsSheet(file,new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature"),4,69,3);
-			processStudentsSheet(file,new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature"),4,84,3);
-			processStudentsSheet(file,new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature"),4,95,3);
+			processStudentsSheet(g7,excelWorkbookFile,studentsPhotoDirectory,4,2,16);
+			processStudentsSheet(g8,excelWorkbookFile,studentsPhotoDirectory,4,20,22);
+			processStudentsSheet(g9,excelWorkbookFile,studentsPhotoDirectory,4,44,23);
+			processStudentsSheet(g10,excelWorkbookFile,studentsPhotoDirectory,4,69,13);
+			processStudentsSheet(g11,excelWorkbookFile,studentsPhotoDirectory,4,84,9);
+			processStudentsSheet(g12,excelWorkbookFile,studentsPhotoDirectory,4,95,1);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -141,13 +153,50 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 			}
 		});
     
-    	System.out.println("Instanciating teachers");
+    	System.out.print("Instanciating teachers");
     	List<Teacher> teachers = schoolBusinessLayer.getTeacherBusiness().instanciateMany(readExcelSheetArguments, completeActorInstanciationOfManyFromValuesArguments);
-    	System.out.println("Creating teachers");
+    	System.out.println(" - Creating "+teachers.size()+" teachers");
     	schoolBusinessLayer.getTeacherBusiness().create(teachers);
     }
     
-    private void processStudentsSheet(File file,final File imageDirectory,Integer sheetIndex,Integer fromRowIndex,Integer count) throws Exception{
+    private void processCoordinatorsSheet(File file) throws Exception{
+    	ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
+    	readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
+    	readExcelSheetArguments.setSheetIndex(5);
+    	readExcelSheetArguments.setFromRowIndex(2);
+		List<String[]> list = CommonUtils.getInstance().readExcelSheet(readExcelSheetArguments);
+    	Collection<ClassroomSession> classroomSessions = new ArrayList<>();
+		for(String[] values : list){
+    		ClassroomSession classroomSession = getClassroomSession(values[0]);
+    		classroomSession.setCoordinator(SchoolBusinessLayer.getInstance().getTeacherBusiness().findByRegistrationCode(values[2]));
+    		classroomSessions.add(classroomSession);
+    	}
+		System.out.println("Updating "+classroomSessions.size()+" class room sessions");
+		SchoolBusinessLayer.getInstance().getClassroomSessionBusiness().update(classroomSessions);
+    }
+    
+    private void processClassroomSessionDivisionSubjectTeachersSheet(File file) throws Exception{
+    	ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
+    	readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
+    	readExcelSheetArguments.setSheetIndex(8);
+    	readExcelSheetArguments.setFromRowIndex(1);
+		List<String[]> list = CommonUtils.getInstance().readExcelSheet(readExcelSheetArguments);
+    	Collection<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects = new ArrayList<>();
+		for(String[] values : list){
+			//System.out.println("V : "+getClassroomSession(values[0])+" , "+getSubject(values[1])+" : "+classroomSessionDivisionSubjectDao
+    		//		.readByClassroomSessionBySubject(getClassroomSession(values[0]),getSubject(values[1])));
+			for(ClassroomSessionDivisionSubject classroomSessionDivisionSubject : classroomSessionDivisionSubjectDao
+    				.readByClassroomSessionBySubject(getClassroomSession(values[0]),getSubject(values[1]))){
+    			
+    			classroomSessionDivisionSubject.setTeacher(SchoolBusinessLayer.getInstance().getTeacherBusiness().findByRegistrationCode(values[2]));
+    			classroomSessionDivisionSubjects.add(classroomSessionDivisionSubject);
+    		}
+    	}
+		System.out.println("Updating "+classroomSessionDivisionSubjects.size()+" class room session division subjects");
+		SchoolBusinessLayer.getInstance().getClassroomSessionDivisionSubjectBusiness().update(classroomSessionDivisionSubjects);
+    }
+    
+    private void processStudentsSheet(ClassroomSession classroomSession,File file,final File imageDirectory,Integer sheetIndex,Integer fromRowIndex,Integer count) throws Exception{
     	final Collection<StudentClassroomSession> studentClassroomSessions = new ArrayList<>();
     	ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
     	readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
@@ -172,7 +221,8 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 			}
     		@Override
 			public void afterProcessing(Student student,String[] values) {
-    			student.getPerson().getSex().setCode(getSexCode(student.getPerson().getSex().getCode()));
+    			if(student.getPerson().getSex()!=null)
+    				student.getPerson().getSex().setCode(getSexCode(student.getPerson().getSex().getCode()));
     			File signatureFile = new File(imageDirectory,StringUtils.replace(student.getRegistration().getCode(),"/","")+".png");
 				if(signatureFile.exists())
 					try {
@@ -183,12 +233,14 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 					}
 			}
 		});
-    	System.out.println("Instanciating students");
+    	System.out.print(classroomSession);
+    	System.out.print(" - Instanciating students");
     	List<Student> students = schoolBusinessLayer.getStudentBusiness().instanciateMany(readExcelSheetArguments, completeActorInstanciationOfManyFromValuesArguments);
-    	System.out.println("Creating "+students.size()+" students");
+    	System.out.print(" - Creating "+students.size()+" students");
     	schoolBusinessLayer.getStudentBusiness().create(students);
-    	System.out.println("Creating "+studentClassroomSessions.size()+" student classroom sessions");
+    	System.out.println(" - Creating "+studentClassroomSessions.size()+" student classroom sessions");
     	schoolBusinessLayer.getStudentClassroomSessionBusiness().create(studentClassroomSessions);
+    	genericBusiness.flushEntityManager();
     }
     
     private String getPersonTitleCode(String code){
@@ -252,6 +304,15 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	if(code.equals("g12"))
 			return g12;
     	return null;
+    }
+    
+    private Subject getSubject(String code){
+    	if(code.equals("S17"))
+    		code = IesaConstant.SUBJECT_GRAMMAR_CODE;
+    	else if(code.equals("S21"))
+    		code = IesaConstant.SUBJECT_FRENCH_CODE;
+    	
+    	return SchoolBusinessLayer.getInstance().getSubjectBusiness().find(code);
     }
 
 }

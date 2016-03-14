@@ -47,8 +47,8 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		r.getAcademicSession().setFromDateToDate(timeBusiness.findYear(as.getPeriod().getFromDate())+"/"+timeBusiness.findYear(as.getPeriod().getToDate())+" ACADEMIC SESSION");
 	
 		r.addLabelValueCollection("PUPIL'S DETAILS",new String[][]{
-				{"Formname(s)", r.getStudent().getPerson().getNames()}
-				,{"Surname", r.getStudent().getPerson().getSurname()}
+				{"Formname(s)", r.getStudent().getPerson().getLastName()}
+				,{"Surname", r.getStudent().getPerson().getName()}
 				,{"Date of birth", r.getStudent().getPerson().getBirthDate()}
 				,{"Place of birth", r.getStudent().getPerson().getBirthLocation()}
 				,{"Admission No", r.getStudent().getRegistrationCode()}
@@ -74,39 +74,39 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 			r.setName(r.getName()+" SHEET");
 			String performanceCodeMetricCollectionCode = null;
 			if(IesaConstant.LEVEL_NAME_CODE_PK.equals(levelNameCode)){
-				addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), new String[]{
-						performanceCodeMetricCollectionCode = IesaConstant.MERIC_COLLECTION_PK_STUDENT_EXPRESSIVE_LANGUAGE
-						, IesaConstant.MERIC_COLLECTION_PK_STUDENT_RECEPTIVE_LANGUAGE
-						, IesaConstant.MERIC_COLLECTION_PK_STUDENT_READING_READNESS
-						, IesaConstant.MERIC_COLLECTION_PK_STUDENT_NUMERACY_DEVELOPMENT
-						, IesaConstant.MERIC_COLLECTION_PK_STUDENT_ARTS_MUSIC
-						, IesaConstant.MERIC_COLLECTION_PK_STUDENT_SOCIAL_EMOTIONAL_DEVELOPMENT
-						, IesaConstant.MERIC_COLLECTION_PK_STUDENT_GROSS_MOTOR_SKILLS
-						, IesaConstant.MERIC_COLLECTION_PK_STUDENT_FINE_MOTOR_SKILLS
+				addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), new String[][]{
+						{performanceCodeMetricCollectionCode = IesaConstant.MERIC_COLLECTION_PK_STUDENT_EXPRESSIVE_LANGUAGE,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_PK_STUDENT_RECEPTIVE_LANGUAGE,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_PK_STUDENT_READING_READNESS,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_PK_STUDENT_NUMERACY_DEVELOPMENT,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_PK_STUDENT_ARTS_MUSIC,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_PK_STUDENT_SOCIAL_EMOTIONAL_DEVELOPMENT,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_PK_STUDENT_GROSS_MOTOR_SKILLS,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_PK_STUDENT_FINE_MOTOR_SKILLS,NOT_APPLICABLE}
 					});
 			}else if(IesaConstant.LEVEL_NAME_CODE_K1.equals(levelNameCode)){
-				addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), new String[]{
-						performanceCodeMetricCollectionCode = IesaConstant.MERIC_COLLECTION_K1_STUDENT_ENGLISH_LANGUAGE_ARTS_READING
-						, IesaConstant.MERIC_COLLECTION_K1_STUDENT_COMMUNICATION_SKILLS
-						, IesaConstant.MERIC_COLLECTION_K1_STUDENT_SCIENCE
-						, IesaConstant.MERIC_COLLECTION_K1_STUDENT_SOCIAL_STUDIES
-						, IesaConstant.MERIC_COLLECTION_K1_STUDENT_MATHEMATICS
-						, IesaConstant.MERIC_COLLECTION_K1_STUDENT_WORK_HABITS
-						, IesaConstant.MERIC_COLLECTION_K1_STUDENT_SOCIAL_SKILLS
+				addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), new String[][]{
+						{performanceCodeMetricCollectionCode = IesaConstant.MERIC_COLLECTION_K1_STUDENT_ENGLISH_LANGUAGE_ARTS_READING,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_K1_STUDENT_COMMUNICATION_SKILLS,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_K1_STUDENT_SCIENCE,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_K1_STUDENT_SOCIAL_STUDIES,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_K1_STUDENT_MATHEMATICS,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_K1_STUDENT_WORK_HABITS,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_K1_STUDENT_SOCIAL_SKILLS,NOT_APPLICABLE}
 					});
 			}else if(IesaConstant.LEVEL_NAME_CODE_K2.equals(levelNameCode) || IesaConstant.LEVEL_NAME_CODE_K3.equals(levelNameCode)){
-				addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), new String[]{
-						performanceCodeMetricCollectionCode = IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_READING_READINESS
-						, IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_READING
-						, IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_WRITING
-						, IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_LISTENING_SPEAKING_VIEWING
-						, IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_ALPHABET_IDENTIFICATION
-						, IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_MATHEMATICS
-						, IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_SCIENCE_SOCIAL_STUDIES_MORAL_EDUCATION
-						, IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_ART_CRAFT
-						, IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_MUSIC
-						, IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_PHYSICAL_EDUCATION
-						, IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_WORK_BEHAVIOUR_HABITS
+				addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), new String[][]{
+						{performanceCodeMetricCollectionCode = IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_READING_READINESS,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_READING,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_WRITING,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_LISTENING_SPEAKING_VIEWING,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_ALPHABET_IDENTIFICATION,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_MATHEMATICS,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_SCIENCE_SOCIAL_STUDIES_MORAL_EDUCATION,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_ART_CRAFT,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_MUSIC,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_PHYSICAL_EDUCATION,NOT_APPLICABLE}
+						, {IesaConstant.MERIC_COLLECTION_K2_K3_STUDENT_WORK_BEHAVIOUR_HABITS,NOT_APPLICABLE}
 					});
 			}
 			
@@ -166,7 +166,7 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 			
 		}
 		
-		if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==3){
+		if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==2){
 			labelValue("school.report.studentclassroomsessiondivision.block.informations.annualaverage", "To Compute");
 			labelValue("school.report.studentclassroomsessiondivision.block.informations.annualgrade", "To Compute");
 			labelValue("school.report.studentclassroomsessiondivision.block.informations.annualrank", "To Compute");

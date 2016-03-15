@@ -241,6 +241,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	System.out.println(" - Creating "+studentClassroomSessions.size()+" student classroom sessions");
     	schoolBusinessLayer.getStudentClassroomSessionBusiness().create(studentClassroomSessions);
     	genericBusiness.flushEntityManager();
+    	//System.out.println("Number of students : "+ classroomSessionDao.read(classroomSession.getIdentifier()).getNumberOfStudents());
     }
     
     private String getPersonTitleCode(String code){
@@ -250,7 +251,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 			return PersonTitle.MADAM;
 		else if(code.equals("Mr."))
 			return PersonTitle.MISTER;
-    	return null;
+    	return code;
     }
     
     private String getSexCode(String code){
@@ -294,7 +295,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	if(code.equals("g7"))
 			return g7;
     	if(code.equals("g8"))
-			return pkg;
+			return g8;
     	if(code.equals("g9"))
 			return g9;
     	if(code.equals("g10"))

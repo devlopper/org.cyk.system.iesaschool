@@ -9,6 +9,8 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import lombok.Getter;
+
 import org.cyk.system.company.business.api.structure.CompanyBusiness;
 import org.cyk.system.company.business.api.structure.OwnedCompanyBusiness;
 import org.cyk.system.company.business.impl.CompanyBusinessLayer;
@@ -27,6 +29,11 @@ import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricValueInputted;
 import org.cyk.system.root.model.mathematics.MetricValueType;
+import org.cyk.system.root.model.party.person.JobInformations;
+import org.cyk.system.root.model.party.person.JobTitle;
+import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.person.PersonExtendedInformations;
+import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.GenericDao;
@@ -54,8 +61,6 @@ import org.cyk.system.school.model.subject.Subject;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.joda.time.DateTimeConstants;
-
-import lombok.Getter;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=IesaBusinessLayer.DEPLOYMENT_ORDER) @Getter
 public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -131,6 +136,10 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	@SuppressWarnings("unchecked")
 	private void structure(){
+		//updateEnumeration(PersonTitle.class, PersonTitle.MISTER, "Mr.");
+		//updateEnumeration(PersonTitle.class, PersonTitle.MISS, "Ms.");
+		//updateEnumeration(PersonTitle.class, PersonTitle.MADAM, "Mrs.");
+		
 		LevelGroupType levelGroupType = create(schoolBusinessLayer.getLevelGroupTypeBusiness().instanciateOne("LevelGroupTypeDummy"));
 		LevelGroup levelGroupKindergarten = (LevelGroup) create(schoolBusinessLayer.getLevelGroupBusiness().instanciateOne(SchoolConstant.LEVEL_GROUP_KINDERGARTEN)
 				.setType(levelGroupType));
@@ -168,11 +177,23 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 						,{"D", "Satisfactory", "50", "59.99"},{"E", "Fail", "0", "49.99"}})), reportTemplate, "1");	
 		CommonNodeInformations commonNodeInformationsG10G12 = commonNodeInformationsG7G9;
 		
+		JobTitle jobTitle = createEnumeration(JobTitle.class, "Director of studies");
+		
+		Person signer = new Person();
+		signer.setName("O.");
+		signer.setLastName("Olatunji");
+		signer.setExtendedInformations(new PersonExtendedInformations(signer));
+		signer.getExtendedInformations().setTitle(getEnumeration(PersonTitle.class,PersonTitle.MADAM));
+		signer.getExtendedInformations().setSignatureSpecimen(createFile(IesaBusinessLayer.class.getPackage(),"image/signature/o_olatunji.png", "signature_o_olatunji.png"));
+		signer.setJobInformations(new JobInformations(signer));
+		signer.getJobInformations().setTitle(jobTitle);
+		rootBusinessLayer.getPersonBusiness().create(signer);
+		
 		School school = new School(ownedCompanyBusiness.findDefaultOwnedCompany(),commonNodeInformationsG1G3);
-    	create(school);
+		create(school);
     	
-    	//school.getOwnedCompany().getCompany().setManager(rootRandomDataProvider.oneFromDatabase(Person.class));
-    	//companyBusiness.update(school.getOwnedCompany().getCompany());
+    	school.getOwnedCompany().getCompany().setSigner(signer);
+    	companyBusiness.update(school.getOwnedCompany().getCompany());
     	
     	AcademicSession academicSession = new AcademicSession(school,commonNodeInformationsG1G3,new Date());
     	academicSession.getPeriod().setFromDate(new Date());

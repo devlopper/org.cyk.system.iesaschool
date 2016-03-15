@@ -136,9 +136,9 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	@SuppressWarnings("unchecked")
 	private void structure(){
-		//updateEnumeration(PersonTitle.class, PersonTitle.MISTER, "Mr.");
-		//updateEnumeration(PersonTitle.class, PersonTitle.MISS, "Ms.");
-		//updateEnumeration(PersonTitle.class, PersonTitle.MADAM, "Mrs.");
+		updateEnumeration(PersonTitle.class, PersonTitle.MISTER, "Mr.");
+		updateEnumeration(PersonTitle.class, PersonTitle.MISS, "Ms.");
+		updateEnumeration(PersonTitle.class, PersonTitle.MADAM, "Mrs.");
 		
 		LevelGroupType levelGroupType = create(schoolBusinessLayer.getLevelGroupTypeBusiness().instanciateOne("LevelGroupTypeDummy"));
 		LevelGroup levelGroupKindergarten = (LevelGroup) create(schoolBusinessLayer.getLevelGroupBusiness().instanciateOne(SchoolConstant.LEVEL_GROUP_KINDERGARTEN)

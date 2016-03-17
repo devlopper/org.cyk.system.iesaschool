@@ -131,10 +131,10 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 			e.printStackTrace();
 		}
     	
-    	if(Boolean.TRUE.equals(isSimulated())){
+    	/*if(Boolean.TRUE.equals(isSimulated())){
     		schoolBusinessTestHelper.createSubjectEvaluations(Boolean.FALSE);
-    		schoolBusinessTestHelper.randomValues(Boolean.TRUE, Boolean.TRUE, Boolean.TRUE);
-    	}
+    		schoolBusinessTestHelper.randomValues(Boolean.FALSE, Boolean.TRUE, Boolean.TRUE);
+    	}*/
     	
     	System.exit(0);
     }
@@ -260,6 +260,12 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	schoolBusinessLayer.getStudentClassroomSessionBusiness().create(studentClassroomSessions);
     	genericBusiness.flushEntityManager();
     	//System.out.println("Number of students : "+ classroomSessionDao.read(classroomSession.getIdentifier()).getNumberOfStudents());
+    	
+    	if(Boolean.TRUE.equals(isSimulated())){
+    		schoolBusinessTestHelper.createSubjectEvaluations(classroomSessionDivisionSubjectDao.readByClassroomSession(classroomSession),Boolean.FALSE);
+    		schoolBusinessTestHelper.randomValues(Boolean.FALSE, Boolean.TRUE, Boolean.TRUE);
+    		genericBusiness.flushEntityManager();
+    	}
     }
     
     private String getPersonTitleCode(String code){

@@ -60,6 +60,7 @@ import org.cyk.system.school.model.subject.EvaluationType;
 import org.cyk.system.school.model.subject.Subject;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
+import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=IesaBusinessLayer.DEPLOYMENT_ORDER) @Getter
@@ -195,7 +196,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	school.getOwnedCompany().getCompany().setSigner(signer);
     	companyBusiness.update(school.getOwnedCompany().getCompany());
     	
-    	AcademicSession academicSession = new AcademicSession(school,commonNodeInformationsG1G3,new Date());
+    	AcademicSession academicSession = new AcademicSession(school,commonNodeInformationsG1G3,new DateTime(2016, 4, 4, 0, 0).toDate());
     	academicSession.getPeriod().setFromDate(new Date());
     	academicSession.getPeriod().setToDate(new Date(academicSession.getPeriod().getFromDate().getTime()+DateTimeConstants.MILLIS_PER_DAY*355));
     	academicSession = create(academicSession);

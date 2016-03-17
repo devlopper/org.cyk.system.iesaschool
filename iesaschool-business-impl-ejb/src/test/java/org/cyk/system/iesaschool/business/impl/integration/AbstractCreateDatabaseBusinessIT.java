@@ -15,15 +15,18 @@ import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.school.business.impl.SchoolBusinessLayer;
+import org.cyk.system.school.business.impl.SchoolDataProducerHelper;
 import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.actor.Teacher;
 import org.cyk.system.school.model.session.ClassroomSession;
+import org.cyk.system.school.model.session.ClassroomSessionDivision;
 import org.cyk.system.school.model.session.StudentClassroomSession;
 import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubject;
 import org.cyk.system.school.model.subject.Subject;
 import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.Constant;
+import org.joda.time.DateTime;
 
 public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessIT {
 
@@ -33,6 +36,16 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     
     @Override
     protected void businesses() {
+    	SchoolDataProducerHelper.Listener.COLLECTION.add(new SchoolDataProducerHelper.Listener.Adapter.Default(){
+			private static final long serialVersionUID = -5301917191935456060L;
+
+			@Override
+    		public void classroomSessionDivisionCreated(ClassroomSessionDivision classroomSessionDivision) {
+    			super.classroomSessionDivisionCreated(classroomSessionDivision);
+    			classroomSessionDivision.getPeriod().setFromDate(new DateTime(2016, 4, 4, 0, 0).toDate());
+    			classroomSessionDivision.getPeriod().setToDate(new DateTime(2016, 6, 13, 0, 0).toDate());
+    		}
+    	});
     	installApplication();
     	File directory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data");
 		File excelWorkbookFile = new File(directory, "data.xlsx")
@@ -117,6 +130,11 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+    	
+    	if(Boolean.TRUE.equals(isSimulated())){
+    		schoolBusinessTestHelper.createSubjectEvaluations(Boolean.FALSE);
+    		schoolBusinessTestHelper.randomValues(Boolean.TRUE, Boolean.TRUE, Boolean.TRUE);
+    	}
     	
     	System.exit(0);
     }
@@ -316,4 +334,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	return SchoolBusinessLayer.getInstance().getSubjectBusiness().find(code);
     }
 
+    protected Boolean isSimulated(){
+    	return Boolean.FALSE;
+    }
 }

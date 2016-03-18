@@ -2,6 +2,7 @@ package org.cyk.system.iesaschool.business.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -11,6 +12,7 @@ import javax.inject.Singleton;
 
 import lombok.Getter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.company.business.api.structure.CompanyBusiness;
 import org.cyk.system.company.business.api.structure.OwnedCompanyBusiness;
 import org.cyk.system.company.business.impl.CompanyBusinessLayer;
@@ -29,12 +31,17 @@ import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricValueInputted;
 import org.cyk.system.root.model.mathematics.MetricValueType;
+import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.party.person.JobInformations;
 import org.cyk.system.root.model.party.person.JobTitle;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonTitle;
+import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Installation;
+import org.cyk.system.root.model.security.Role;
+import org.cyk.system.root.model.security.RoleUniformResourceLocator;
+import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.school.business.api.session.ClassroomSessionBusiness;
@@ -46,6 +53,7 @@ import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjec
 import org.cyk.system.school.business.impl.SchoolBusinessLayer;
 import org.cyk.system.school.business.impl.SchoolDataProducerHelper;
 import org.cyk.system.school.model.SchoolConstant;
+import org.cyk.system.school.model.actor.Teacher;
 import org.cyk.system.school.model.session.AcademicSession;
 import org.cyk.system.school.model.session.ClassroomSession;
 import org.cyk.system.school.model.session.ClassroomSessionDivision;
@@ -58,6 +66,7 @@ import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubject;
 import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubjectEvaluationType;
 import org.cyk.system.school.model.subject.EvaluationType;
 import org.cyk.system.school.model.subject.Subject;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.joda.time.DateTime;
@@ -320,10 +329,114 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	
     	/* reading data from excel files */
 	}
+	
+	private void security(){
+		UniformResourceLocator index = new UniformResourceLocator("/private/index.jsf");
+		
+		UniformResourceLocator studentList = new UniformResourceLocator("/private/__tools__/crud/crudmany.jsf");
+		studentList.setCode("List of students");
+		studentList.addParameter("clazz", "Student");
+		UniformResourceLocator studentCrudOne = new UniformResourceLocator("/private/__tools__/crud/crudone.jsf");
+		studentCrudOne.setCode("Crud one of Student");
+		studentList.addParameter("clazz", "Student");
+		
+		UniformResourceLocator teacherList = new UniformResourceLocator("/private/__tools__/crud/crudmany.jsf");
+		teacherList.setCode("List of teachers");
+		teacherList.addParameter("clazz", "Teacher");
+		UniformResourceLocator teacherCrudOne = new UniformResourceLocator("/private/__tools__/crud/crudone.jsf");
+		teacherCrudOne.setCode("Crud one of Teacher");
+		teacherList.addParameter("clazz", "Teacher");
+		
+		UniformResourceLocator employeeList = new UniformResourceLocator("/private/__tools__/crud/crudmany.jsf");
+		employeeList.setCode("List of employees");
+		employeeList.addParameter("clazz", "Employee");
+		UniformResourceLocator employeeCrudOne = new UniformResourceLocator("/private/__tools__/crud/crudone.jsf");
+		employeeCrudOne.setCode("Crud one of Employee");
+		employeeList.addParameter("clazz", "Employee");
+		
+		UniformResourceLocator classroomSessionList = new UniformResourceLocator("/private/classroomsession/list.jsf");
+		UniformResourceLocator classroomSessionEdit = new UniformResourceLocator("/private/classroomsession/edit.jsf");
+		UniformResourceLocator classroomSessionConsult = new UniformResourceLocator("/private/classroomsession/consult.jsf");
+		
+		UniformResourceLocator classroomSessionDivisionList = new UniformResourceLocator("/private/classroomsessiondivision/list.jsf");
+		UniformResourceLocator classroomSessionDivisionEdit = new UniformResourceLocator("/private/classroomsessiondivision/edit.jsf");
+		UniformResourceLocator classroomSessionDivisionConsult = new UniformResourceLocator("/private/classroomsessiondivision/consult.jsf");
+		UniformResourceLocator classroomSessionDivisionUpdateStudentResults = new UniformResourceLocator("/private/classroomsessiondivision/updatestudentresults.jsf");
+		UniformResourceLocator classroomSessionDivisionUpdateStudentReport = new UniformResourceLocator("/private/classroomsessiondivision/updatestudentreport.jsf");
+		
+		UniformResourceLocator studentClassroomSessionDivisionList = new UniformResourceLocator("/private/studentclassroomsessiondivision/list.jsf");
+		UniformResourceLocator studentClassroomSessionDivisionEdit = new UniformResourceLocator("/private/studentclassroomsessiondivision/edit.jsf");
+		UniformResourceLocator studentClassroomSessionDivisionConsult = new UniformResourceLocator("/private/studentclassroomsessiondivision/consult.jsf");
+		
+		UniformResourceLocator evaluationEdit = new UniformResourceLocator("/private/evaluation/edit.jsf");
+		UniformResourceLocator evaluationConsult = new UniformResourceLocator("/private/evaluation/consult.jsf");
+		
+		UniformResourceLocator studentClassroomSessionCreateMany = new UniformResourceLocator("/private/studentclassroomsession/createmany.jsf");
+		
+		UniformResourceLocator studentSubjectCreateMany = new UniformResourceLocator("/private/studentsubject/createmany.jsf");
+		
+		UniformResourceLocator classroomSessionDivisionEvaluationTypeSelectOneForCreation = new UniformResourceLocator("/private/__tools__/selectone.jsf");
+		classroomSessionDivisionEvaluationTypeSelectOneForCreation.addParameter("clazz", "ClassroomSessionDivisionSubjectEvaluationType");
+		classroomSessionDivisionEvaluationTypeSelectOneForCreation.addParameter("actid", "acse");
+		
+		UniformResourceLocator classroomSessionDivisionEvaluationTypeSelectOneForAppreciation = new UniformResourceLocator("/private/__tools__/selectone.jsf");
+		classroomSessionDivisionEvaluationTypeSelectOneForAppreciation.setCode("auscsdr");
+		classroomSessionDivisionEvaluationTypeSelectOneForAppreciation.addParameter("clazz", "ClassroomSessionDivision");
+		classroomSessionDivisionEvaluationTypeSelectOneForAppreciation.addParameter("actid", "auscsdr");
+		
+		UniformResourceLocator classroomSessionSelectManyForReportCreation = new UniformResourceLocator("/private/__tools__/selectone.jsf");
+		classroomSessionSelectManyForReportCreation.setCode("auscsdrf");
+		classroomSessionSelectManyForReportCreation.addParameter("clazz", "ClassroomSession");
+		classroomSessionSelectManyForReportCreation.addParameter("actid", "auscsdrf");
+		
+		UniformResourceLocator classroomSessionSelectManyForReportConsult = new UniformResourceLocator("/private/__tools__/selectone.jsf");
+		classroomSessionSelectManyForReportConsult.setCode("acscsdrf");
+		classroomSessionSelectManyForReportConsult.addParameter("clazz", "ClassroomSessionDivision");
+		classroomSessionSelectManyForReportConsult.addParameter("actid", "acscsdrf");
+		
+		UniformResourceLocator fileConsultMany = new UniformResourceLocator("/private/file/consultmany.jsf");
+		
+		RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().create(Arrays.asList(new UniformResourceLocator[]{index,studentList,studentCrudOne
+				,teacherList,teacherCrudOne,employeeList,employeeCrudOne,classroomSessionList,classroomSessionEdit,classroomSessionConsult,classroomSessionDivisionList
+				,classroomSessionDivisionEdit,classroomSessionDivisionConsult,classroomSessionDivisionUpdateStudentResults,classroomSessionDivisionUpdateStudentReport
+				,studentClassroomSessionDivisionList,studentClassroomSessionDivisionEdit,studentClassroomSessionDivisionConsult,studentClassroomSessionCreateMany
+				,studentSubjectCreateMany,classroomSessionDivisionEvaluationTypeSelectOneForCreation,classroomSessionDivisionEvaluationTypeSelectOneForAppreciation
+				,classroomSessionSelectManyForReportCreation,classroomSessionSelectManyForReportConsult,fileConsultMany,evaluationConsult,evaluationEdit}));
+		
+		Collection<RoleUniformResourceLocator> roleUniformResourceLocators = new ArrayList<>();
+		
+		Role userRole = rootBusinessLayer.getRoleBusiness().find(Role.USER);
+		for(UniformResourceLocator uniformResourceLocator : new UniformResourceLocator[]{index,fileConsultMany})
+			roleUniformResourceLocators.add(new RoleUniformResourceLocator(userRole, uniformResourceLocator));
+		
+		Role managerRole = rootBusinessLayer.getRoleBusiness().find(Role.MANAGER);
+		for(UniformResourceLocator uniformResourceLocator : new UniformResourceLocator[]{studentList,studentCrudOne,teacherList,teacherCrudOne,employeeList,employeeCrudOne
+				,classroomSessionEdit,classroomSessionDivisionEdit,classroomSessionDivisionUpdateStudentReport,studentClassroomSessionCreateMany,studentSubjectCreateMany
+				,classroomSessionSelectManyForReportCreation,classroomSessionSelectManyForReportConsult})
+			roleUniformResourceLocators.add(new RoleUniformResourceLocator(managerRole, uniformResourceLocator));
+		
+		Role teacherRole = create(new Role("TEACHER", "Teacher"));
+		for(UniformResourceLocator uniformResourceLocator : new UniformResourceLocator[]{classroomSessionList,classroomSessionConsult,classroomSessionDivisionList
+				,classroomSessionDivisionConsult,classroomSessionDivisionUpdateStudentResults,evaluationConsult,evaluationConsult
+				,studentClassroomSessionDivisionList,studentClassroomSessionDivisionEdit,studentClassroomSessionDivisionConsult
+				,classroomSessionDivisionEvaluationTypeSelectOneForCreation,classroomSessionDivisionEvaluationTypeSelectOneForAppreciation
+				})
+			roleUniformResourceLocators.add(new RoleUniformResourceLocator(teacherRole, uniformResourceLocator));
+		
+		rootBusinessLayer.getRoleUniformResourceLocatorBusiness().create(roleUniformResourceLocators);
+		
+		Collection<UserAccount> userAccounts = new ArrayList<>();
+		for(Teacher teacher : SchoolBusinessLayer.getInstance().getTeacherBusiness().findAll()){
+			String username = StringUtils.replace(teacher.getPerson().getName(), Constant.CHARACTER_SPACE.toString(), Constant.EMPTY_STRING.toString());
+			userAccounts.add(new UserAccount(teacher.getPerson(), new Credentials(username, "123"), null, userRole,teacherRole));
+		}
+		rootBusinessLayer.getUserAccountBusiness().create(userAccounts);
+	}
 		
 	@Override
 	protected void persistData() {
 		structure();
+		//security();
 	}
 	
 	@Override

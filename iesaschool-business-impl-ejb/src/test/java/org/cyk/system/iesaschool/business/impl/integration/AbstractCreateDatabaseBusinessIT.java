@@ -23,10 +23,11 @@ import org.cyk.system.school.model.session.ClassroomSessionDivision;
 import org.cyk.system.school.model.session.StudentClassroomSession;
 import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubject;
 import org.cyk.system.school.model.subject.Subject;
-import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.CommonUtils;
+import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.Constant;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 
 public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessIT {
 
@@ -44,6 +45,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     			super.classroomSessionDivisionCreated(classroomSessionDivision);
     			classroomSessionDivision.getPeriod().setFromDate(new DateTime(2016, 4, 4, 0, 0).toDate());
     			classroomSessionDivision.getPeriod().setToDate(new DateTime(2016, 6, 13, 0, 0).toDate());
+    			classroomSessionDivision.setDuration(48l * DateTimeConstants.MILLIS_PER_DAY);
     		}
     	});
     	installApplication();
@@ -263,7 +265,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	
     	if(Boolean.TRUE.equals(isSimulated())){
     		schoolBusinessTestHelper.createSubjectEvaluations(classroomSessionDivisionSubjectDao.readByClassroomSession(classroomSession),Boolean.FALSE);
-    		schoolBusinessTestHelper.randomValues(Boolean.FALSE, Boolean.TRUE, Boolean.TRUE);
+    		schoolBusinessTestHelper.randomValues(Boolean.TRUE, Boolean.TRUE, Boolean.TRUE);
     		genericBusiness.flushEntityManager();
     	}
     }

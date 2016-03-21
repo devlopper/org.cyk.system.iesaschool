@@ -17,7 +17,7 @@ public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBus
     private static final long serialVersionUID = -6691092648665798471L;
     
     @Override
-    protected void businesses() {
+    protected void businesses() {  
     	installApplication();
     	
     	ClassroomSession pk=getClassroomSessions(0).iterator().next(),k1=getClassroomSessions(1).iterator().next(),k2=getClassroomSessions(2).iterator().next()

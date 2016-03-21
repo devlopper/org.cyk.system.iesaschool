@@ -2,11 +2,14 @@ package org.cyk.system.iesaschool.business.impl.integration;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.iesaschool.model.IesaConstant;
 import org.cyk.system.root.business.api.IdentifiableBusinessService.CompleteInstanciationOfOneFromValuesListener;
@@ -22,6 +25,7 @@ import org.cyk.system.school.model.session.ClassroomSession;
 import org.cyk.system.school.model.session.ClassroomSessionDivision;
 import org.cyk.system.school.model.session.StudentClassroomSession;
 import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubject;
+import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubjectEvaluationType;
 import org.cyk.system.school.model.subject.Subject;
 import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
@@ -47,6 +51,13 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     			classroomSessionDivision.getPeriod().setToDate(new DateTime(2016, 6, 13, 0, 0).toDate());
     			classroomSessionDivision.setDuration(48l * DateTimeConstants.MILLIS_PER_DAY);
     		}
+			
+			@Override
+			public void classroomSessionDivisionSubjectEvaluationTypeCreated(ClassroomSessionDivisionSubjectEvaluationType classroomSessionDivisionSubjectEvaluationType) {
+				super.classroomSessionDivisionSubjectEvaluationTypeCreated(classroomSessionDivisionSubjectEvaluationType);
+				classroomSessionDivisionSubjectEvaluationType.setCountInterval(rootBusinessLayer.getIntervalBusiness().instanciateOne(null
+						, RandomStringUtils.randomAlphanumeric(6), "1", "1"));
+			}
     	});
     	installApplication();
     	File directory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data");
@@ -133,11 +144,6 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 			e.printStackTrace();
 		}
     	
-    	/*if(Boolean.TRUE.equals(isSimulated())){
-    		schoolBusinessTestHelper.createSubjectEvaluations(Boolean.FALSE);
-    		schoolBusinessTestHelper.randomValues(Boolean.FALSE, Boolean.TRUE, Boolean.TRUE);
-    	}*/
-    	
     	System.exit(0);
     }
     
@@ -222,35 +228,37 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
     	readExcelSheetArguments.setSheetIndex(sheetIndex);
     	readExcelSheetArguments.setFromRowIndex(fromRowIndex);
-    	readExcelSheetArguments.setFromColumnIndex(1);
+    	readExcelSheetArguments.setFromColumnIndex(0);
     	readExcelSheetArguments.setRowCount(count);
     	
 		CompleteActorInstanciationOfManyFromValuesArguments<Student> completeActorInstanciationOfManyFromValuesArguments = new CompleteActorInstanciationOfManyFromValuesArguments<>();
 		
-		completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setRegistrationCodeIndex(0);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().getPartyInstanciationOfOneFromValuesArguments().setNameIndex(1);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setLastnameIndex(2);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().getPartyInstanciationOfOneFromValuesArguments().setBirthDateIndex(3);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setBirthLocationOtherDetailsIndex(4);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setSexCodeIndex(5);
+		completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setRegistrationCodeIndex(1);
+    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().getPartyInstanciationOfOneFromValuesArguments().setNameIndex(2);
+    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setLastnameIndex(3);
+    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().getPartyInstanciationOfOneFromValuesArguments().setBirthDateIndex(4);
+    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setBirthLocationOtherDetailsIndex(5);
+    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setSexCodeIndex(6);
     	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setListener(new CompleteInstanciationOfOneFromValuesListener<Student>() {
 			@Override
 			public void beforeProcessing(Student student,String[] values) {
-				studentClassroomSessions.add(new StudentClassroomSession(student, getClassroomSession(values[6])));
-				
+				if(!ArrayUtils.contains(new String[]{"g9","g10","g11","g12"}, values[7].toLowerCase()));
+					studentClassroomSessions.add(new StudentClassroomSession(student, getClassroomSession(values[7])));
 			}
     		@Override
 			public void afterProcessing(Student student,String[] values) {
     			if(student.getPerson().getSex()!=null)
     				student.getPerson().getSex().setCode(getSexCode(student.getPerson().getSex().getCode()));
-    			File signatureFile = new File(imageDirectory,StringUtils.replace(student.getRegistration().getCode(),"/","")+".png");
-				if(signatureFile.exists())
+    			File photoFile = new File(imageDirectory,new BigDecimal(values[0]).intValue()+".jpg");
+				if(photoFile.exists())
 					try {
 						student.getPerson().setImage(RootBusinessLayer.getInstance().getFileBusiness()
-							.process(IOUtils.toByteArray(new FileInputStream(signatureFile)), "photo.png"));
+							.process(IOUtils.toByteArray(new FileInputStream(photoFile)), "photo.jpeg"));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+				else
+					;//System.out.println("Not found : "+photoFile);
 			}
 		});
     	System.out.print(classroomSession);
@@ -258,9 +266,13 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	List<Student> students = schoolBusinessLayer.getStudentBusiness().instanciateMany(readExcelSheetArguments, completeActorInstanciationOfManyFromValuesArguments);
     	System.out.print(" - Creating "+students.size()+" students");
     	schoolBusinessLayer.getStudentBusiness().create(students);
-    	System.out.println(" - Creating "+studentClassroomSessions.size()+" student classroom sessions");
-    	schoolBusinessLayer.getStudentClassroomSessionBusiness().create(studentClassroomSessions);
-    	genericBusiness.flushEntityManager();
+    	if(classroomSession.getLevelTimeDivision().getIndex()<=11){
+    		System.out.println(" - Creating "+studentClassroomSessions.size()+" student classroom sessions");
+    		schoolBusinessLayer.getStudentClassroomSessionBusiness().create(studentClassroomSessions);
+    		genericBusiness.flushEntityManager();
+    	}else
+    		System.out.println();
+    	
     	//System.out.println("Number of students : "+ classroomSessionDao.read(classroomSession.getIdentifier()).getNumberOfStudents());
     	
     	if(Boolean.TRUE.equals(isSimulated())){

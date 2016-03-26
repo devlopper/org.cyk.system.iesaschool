@@ -113,7 +113,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	
     	try {
 			processTeachersSheet(excelWorkbookFile,teachersSignatureDirectory);
-			processCoordinatorsSheet(excelWorkbookFile);
+			/*processCoordinatorsSheet(excelWorkbookFile);
 			processClassroomSessionDivisionSubjectTeachersSheet(excelWorkbookFile);
 			
 			processStudentsSheet(pkg,excelWorkbookFile,studentsPhotoDirectory,1,2,34);
@@ -139,7 +139,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 			processStudentsSheet(g10,excelWorkbookFile,studentsPhotoDirectory,4,69,13);
 			processStudentsSheet(g11,excelWorkbookFile,studentsPhotoDirectory,4,84,9);
 			processStudentsSheet(g12,excelWorkbookFile,studentsPhotoDirectory,4,95,1);
-			
+			*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -161,7 +161,7 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 				((StudentClassroomSessionDivision)r.getSource()).getClassroomSessionDivision().getClassroomSession()).getStudentClassroomSessionDivisionAverageScale()
 				,Boolean.FALSE,Boolean.TRUE,new Integer[][]{{1,2}});
 			
-			addIntervalCollectionLabelValueCollection(r,rootBusinessLayer.getMetricCollectionDao().read(IesaConstant.MERIC_COLLECTION_G1_G6_STUDENT_BEHAVIOUR).getValueIntervalCollection()
+			addIntervalCollectionLabelValueCollection(r,rootBusinessLayer.getMetricCollectionDao().read(studentBehaviourMetricCollectionCode).getValueIntervalCollection()
 					,Boolean.TRUE,Boolean.FALSE,null);
 			
 		}

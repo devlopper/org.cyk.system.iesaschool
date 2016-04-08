@@ -1,10 +1,8 @@
 package org.cyk.system.iesaschool.business.impl.integration;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import org.cyk.system.iesaschool.model.IesaConstant;
 import org.cyk.system.school.business.impl.SchoolBusinessLayer;
 import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.session.ClassroomSession;
@@ -42,19 +40,19 @@ public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBus
     	
     	ClassroomSessionDivision classroomSessionDivision = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionBusiness().findByClassroomSession(pk).iterator().next();
     	List<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects = new ArrayList<>(SchoolBusinessLayer.getInstance().getClassroomSessionDivisionSubjectBusiness().findByClassroomSessionDivision(classroomSessionDivision));
-    	schoolBusinessTestHelper.simulateStudentClassroomSessionDivisionReport(classroomSessionDivision, null, Boolean.TRUE,Boolean.TRUE);
+    	schoolBusinessTestHelper.simulateStudentClassroomSessionDivisionReport(classroomSessionDivision, null, Boolean.TRUE,Boolean.TRUE, Boolean.TRUE,Boolean.TRUE);
     	
     	classroomSessionDivision = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionBusiness().findByClassroomSession(k1).iterator().next();
     	classroomSessionDivisionSubjects = new ArrayList<>(SchoolBusinessLayer.getInstance().getClassroomSessionDivisionSubjectBusiness().findByClassroomSessionDivision(classroomSessionDivision));
-    	schoolBusinessTestHelper.simulateStudentClassroomSessionDivisionReport(classroomSessionDivision, null, Boolean.TRUE,Boolean.TRUE);
+    	schoolBusinessTestHelper.simulateStudentClassroomSessionDivisionReport(classroomSessionDivision, null, Boolean.TRUE,Boolean.TRUE, Boolean.TRUE,Boolean.TRUE);
     	
     	classroomSessionDivision = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionBusiness().findByClassroomSession(k2).iterator().next();
     	classroomSessionDivisionSubjects = new ArrayList<>(SchoolBusinessLayer.getInstance().getClassroomSessionDivisionSubjectBusiness().findByClassroomSessionDivision(classroomSessionDivision));
-    	schoolBusinessTestHelper.simulateStudentClassroomSessionDivisionReport(classroomSessionDivision, null, Boolean.TRUE,Boolean.TRUE);
+    	schoolBusinessTestHelper.simulateStudentClassroomSessionDivisionReport(classroomSessionDivision, null, Boolean.TRUE,Boolean.TRUE, Boolean.TRUE,Boolean.TRUE);
     	
     	classroomSessionDivision = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionBusiness().findByClassroomSession(k3).iterator().next();
     	classroomSessionDivisionSubjects = new ArrayList<>(SchoolBusinessLayer.getInstance().getClassroomSessionDivisionSubjectBusiness().findByClassroomSessionDivision(classroomSessionDivision));
-    	schoolBusinessTestHelper.simulateStudentClassroomSessionDivisionReport(classroomSessionDivision, null, Boolean.TRUE,Boolean.TRUE);
+    	schoolBusinessTestHelper.simulateStudentClassroomSessionDivisionReport(classroomSessionDivision, null, Boolean.TRUE,Boolean.TRUE, Boolean.TRUE,Boolean.TRUE);
     	
     	classroomSessionDivision = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionBusiness().findByClassroomSession(g1).iterator().next();
     	classroomSessionDivisionSubjects = new ArrayList<>(SchoolBusinessLayer.getInstance().getClassroomSessionDivisionSubjectBusiness().findByClassroomSessionDivision(classroomSessionDivision));
@@ -63,7 +61,7 @@ public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBus
     	    		{"STUD1","90","30","60"}
     	    		,{"STUD2","70","50","60"}
     	    	}}
-    	}, Boolean.TRUE,Boolean.TRUE);
+    	}, Boolean.TRUE,Boolean.TRUE, Boolean.TRUE,Boolean.TRUE);
     	
     	classroomSessionDivision = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionBusiness().findByClassroomSession(g4).iterator().next();
     	classroomSessionDivisionSubjects = new ArrayList<>(SchoolBusinessLayer.getInstance().getClassroomSessionDivisionSubjectBusiness().findByClassroomSessionDivision(classroomSessionDivision));
@@ -72,7 +70,7 @@ public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBus
     	    		{"STUD1","90","30","60"}
     	    		,{"STUD2","70","50","60"}
     	    	}}
-    	}, Boolean.TRUE,Boolean.TRUE);
+    	}, Boolean.TRUE,Boolean.TRUE, Boolean.TRUE,Boolean.TRUE);
     	
     	classroomSessionDivision = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionBusiness().findByClassroomSession(g7).iterator().next();
     	classroomSessionDivisionSubjects = new ArrayList<>(SchoolBusinessLayer.getInstance().getClassroomSessionDivisionSubjectBusiness().findByClassroomSessionDivision(classroomSessionDivision));
@@ -81,7 +79,7 @@ public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBus
     	    		{"STUD1","90","30","60"}
     	    		,{"STUD2","70","50","60"}
     	    	}}
-    	}, Boolean.TRUE,Boolean.TRUE);
+    	}, Boolean.TRUE,Boolean.TRUE, Boolean.TRUE,Boolean.TRUE);
     	
     	classroomSessionDivision = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionBusiness().findByClassroomSession(g12).iterator().next();
     	classroomSessionDivisionSubjects = new ArrayList<>(SchoolBusinessLayer.getInstance().getClassroomSessionDivisionSubjectBusiness().findByClassroomSessionDivision(classroomSessionDivision));
@@ -90,7 +88,7 @@ public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBus
     	    		{"STUD1","90","30","60"}
     	    		,{"STUD2","70","50","60"}
     	    	}}
-    	}, Boolean.TRUE,Boolean.TRUE);
+    	}, Boolean.TRUE,Boolean.TRUE, Boolean.TRUE,Boolean.TRUE);
     }
         
 }

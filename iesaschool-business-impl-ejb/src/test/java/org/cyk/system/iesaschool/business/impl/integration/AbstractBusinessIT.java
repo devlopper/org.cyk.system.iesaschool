@@ -13,7 +13,6 @@ import org.cyk.system.iesaschool.business.impl.IesaBusinessTestHelper;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.AbstractFakedDataProducer;
-import org.cyk.system.root.business.impl.AbstractFakedDataProducer.FakedDataProducerAdapter;
 import org.cyk.system.root.business.impl.BusinessIntegrationTestHelper;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.RootBusinessTestHelper;
@@ -151,9 +150,10 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     @Override protected void read() {}
     @Override protected void update() {}
 
-    protected FakedDataProducerAdapter fakedDataProducerAdapter(){
-    	return new FakedDataProducerAdapter(){
-    		@Override
+    protected AbstractFakedDataProducer.Listener fakedDataProducerAdapter(){
+    	return new AbstractFakedDataProducer.Listener.Adapter.Default(){
+			private static final long serialVersionUID = 1L;
+			@Override
     		public void flush() {
     			super.flush();
     			getEntityManager().flush();

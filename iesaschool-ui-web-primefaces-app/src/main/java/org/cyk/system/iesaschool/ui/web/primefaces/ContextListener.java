@@ -15,7 +15,6 @@ import org.cyk.system.root.ui.web.primefaces.api.RootWebManager;
 import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.actor.Teacher;
 import org.cyk.system.school.ui.web.primefaces.AbstractSchoolContextListener;
-import org.cyk.ui.api.AbstractUserSession;
 import org.cyk.ui.api.command.UICommandable;
 import org.cyk.ui.api.command.menu.AbstractMenu;
 import org.cyk.ui.api.command.menu.MenuManager;
@@ -24,6 +23,7 @@ import org.cyk.ui.api.command.menu.UIMenu;
 import org.cyk.ui.api.data.collector.form.FormConfiguration;
 import org.cyk.ui.api.model.party.AbstractActorEditFormModel;
 import org.cyk.ui.api.model.party.DefaultPersonEditFormModel;
+import org.cyk.ui.web.primefaces.UserSession;
 import org.cyk.ui.web.primefaces.page.BusinessEntityFormOnePageListener;
 import org.cyk.ui.web.primefaces.page.tools.AbstractActorConsultPageAdapter;
 
@@ -49,12 +49,12 @@ public class ContextListener extends AbstractSchoolContextListener implements Se
 	/**/
 	
 	@Override
-	public Boolean moduleGroupCreateable(AbstractUserSession userSession,ModuleGroup group) {
+	public Boolean moduleGroupCreateable(UserSession userSession,ModuleGroup group) {
 		return !(ModuleGroup.CONTROL_PANEL.equals(group) || ModuleGroup.TOOLS.equals(group));
 	}
 	
 	@Override
-	public void moduleGroupCreated(AbstractUserSession userSession,ModuleGroup group, UICommandable commandable) {
+	public void moduleGroupCreated(UserSession userSession,ModuleGroup group, UICommandable commandable) {
 		super.moduleGroupCreated(userSession, group, commandable);
 		if(ModuleGroup.USER_ACCOUNT.equals(group)){
 			AbstractMenu.__remove__(MenuManager.COMMANDABLE_NOTIFICATIONS_IDENTIFIER, (List<UICommandable>) commandable.getChildren());
@@ -63,7 +63,7 @@ public class ContextListener extends AbstractSchoolContextListener implements Se
 	}
 	
 	@Override
-	public void sessionContextualMenuCreated(AbstractUserSession userSession,UIMenu menu) {
+	public void sessionContextualMenuCreated(UserSession userSession,UIMenu menu) {
 		super.sessionContextualMenuCreated(userSession, menu);
 		menu.remove(MenuManager.COMMANDABLE_EVENT_CALENDAR_IDENTIFIER);
 		menu.remove(MenuManager.COMMANDABLE_NOTIFICATIONS_IDENTIFIER);

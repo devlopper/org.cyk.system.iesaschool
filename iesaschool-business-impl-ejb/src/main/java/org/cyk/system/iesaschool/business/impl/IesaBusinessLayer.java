@@ -3,10 +3,13 @@ package org.cyk.system.iesaschool.business.impl;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import lombok.Getter;
 
 import org.cyk.system.company.business.api.structure.CompanyBusiness;
 import org.cyk.system.company.business.api.structure.OwnedCompanyBusiness;
@@ -15,7 +18,9 @@ import org.cyk.system.company.business.impl.CompanyBusinessLayerAdapter;
 import org.cyk.system.company.model.structure.Company;
 import org.cyk.system.company.model.structure.Employee;
 import org.cyk.system.iesaschool.model.IesaConstant;
+import org.cyk.system.root.business.api.BusinessService.BusinessServiceCallArguments;
 import org.cyk.system.root.business.api.TypedBusiness;
+import org.cyk.system.root.business.api.mathematics.MathematicsBusiness.RankOptions;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessLayer;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
@@ -37,6 +42,7 @@ import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.GenericDao;
+import org.cyk.system.school.business.api.SortableStudentResults;
 import org.cyk.system.school.business.api.session.ClassroomSessionBusiness;
 import org.cyk.system.school.business.api.session.ClassroomSessionDivisionBusiness;
 import org.cyk.system.school.business.api.session.ClassroomSessionDivisionStudentsMetricCollectionBusiness;
@@ -45,6 +51,7 @@ import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjec
 import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjectEvaluationTypeBusiness;
 import org.cyk.system.school.business.impl.SchoolBusinessLayer;
 import org.cyk.system.school.business.impl.SchoolDataProducerHelper;
+import org.cyk.system.school.business.impl.SortableStudentResultsComparator;
 import org.cyk.system.school.model.SchoolConstant;
 import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.actor.Teacher;
@@ -68,8 +75,6 @@ import org.cyk.system.school.persistence.api.actor.TeacherDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.joda.time.DateTime;
-
-import lombok.Getter;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=IesaBusinessLayer.DEPLOYMENT_ORDER) @Getter
 public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -145,6 +150,30 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 				classroomSessionDivision.setStudentSubjectAttendanceAggregated(Boolean.FALSE);
 			}
 		});
+		
+		org.cyk.system.school.business.impl.session.StudentClassroomSessionDivisionBusinessImpl.Listener.COLLECTION.add(
+				new org.cyk.system.school.business.impl.session.StudentClassroomSessionDivisionBusinessImpl.Listener.Adapter.Default(){
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void processOnEvaluationAverageUpdated(Collection<ClassroomSessionDivision> classroomSessionDivisions,BusinessServiceCallArguments<StudentClassroomSessionDivision> callArguments) {
+						super.processOnEvaluationAverageUpdated(classroomSessionDivisions,callArguments);
+						if(classroomSessionDivisions.iterator().next().getClassroomSession().getAcademicSession().getNodeInformations().getCurrentClassroomSessionDivisionIndex().intValue()==2){
+							Collection<ClassroomSession> classroomSessions = new HashSet<>();
+							for(ClassroomSessionDivision classroomSessionDivision : classroomSessionDivisions)
+								classroomSessions.add(classroomSessionDivision.getClassroomSession());
+							
+							SchoolBusinessLayer.getInstance().getStudentClassroomSessionBusiness().updateAverage(classroomSessions, new BusinessServiceCallArguments<StudentClassroomSession>());
+						
+							RankOptions<SortableStudentResults> rankOptions = new RankOptions<>();
+					    	 rankOptions.getSortOptions().setComparator(new SortableStudentResultsComparator(Boolean.TRUE));
+					    	SchoolBusinessLayer.getInstance().getStudentClassroomSessionBusiness().updateRank(classroomSessions, rankOptions, new BusinessServiceCallArguments<StudentClassroomSession>());
+						}else{
+							
+						}
+					}
+				});
+		
 		schoolBusinessLayer.setReportProducer(new ReportProducer());
 	}
 	
@@ -171,9 +200,9 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	File reportHeaderFile = createFile("image/document_header.png");
     	File reportBackgroundFile = createFile("image/studentclassroomsessiondivisionreport_background.jpg");
     	
-    	CommonNodeInformations commonNodeInformationsPkg = instanciateCommonNodeInformations(null, reportHeaderFile, reportBackgroundFile, "pkg.jrxml", "1");
-    	CommonNodeInformations commonNodeInformationsKg1 = instanciateCommonNodeInformations(null, reportHeaderFile, reportBackgroundFile, "kg1.jrxml", "1");
-    	CommonNodeInformations commonNodeInformationsKg2Kg3 = instanciateCommonNodeInformations(null, reportHeaderFile, reportBackgroundFile, "kg2kg3.jrxml", "1");
+    	CommonNodeInformations commonNodeInformationsPkg = instanciateCommonNodeInformations(null, reportHeaderFile, reportBackgroundFile, "pkg.jrxml", "2");
+    	CommonNodeInformations commonNodeInformationsKg1 = instanciateCommonNodeInformations(null, reportHeaderFile, reportBackgroundFile, "kg1.jrxml", "2");
+    	CommonNodeInformations commonNodeInformationsKg2Kg3 = instanciateCommonNodeInformations(null, reportHeaderFile, reportBackgroundFile, "kg2kg3.jrxml", "2");
     	
 		File reportFile = createFile("report/studentclassroomsessiondivision/g1g12.jrxml", "studentclassroomsessiondivisionreport_g1g12.jrxml");
 		ReportTemplate reportTemplate = new ReportTemplate("SCSDRT",reportFile,reportHeaderFile,createFile("image/studentclassroomsessiondivisionreport_background.jpg"));
@@ -182,13 +211,13 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		CommonNodeInformations commonNodeInformationsG1G3 = instanciateCommonNodeInformations(create(rootBusinessLayer.getIntervalCollectionBusiness()
 				.instanciateOne("ICEV1", "Grading Scale", new String[][]{
 						{"A+", "Excellent", "90", "100"},{"A", "Very good", "80", "89.99"},{"B+", "Good", "70", "79.99"},{"B", "Fair", "60", "69.99"}
-						,{"C+", "Satisfactory", "55", "59.99"},{"C", "Barely satisfactory", "50", "54.99"},{"E", "Fail", "0", "49.99"}})), reportTemplate, "1");
+						,{"C+", "Satisfactory", "55", "59.99"},{"C", "Barely satisfactory", "50", "54.99"},{"E", "Fail", "0", "49.99"}})), reportTemplate, "2");
 		CommonNodeInformations commonNodeInformationsG4G6 = commonNodeInformationsG1G3;
 		
 		CommonNodeInformations commonNodeInformationsG7G9 = instanciateCommonNodeInformations(create(rootBusinessLayer.getIntervalCollectionBusiness()
 				.instanciateOne("ICEV2", "Grading Scale", new String[][]{
 						{"A*", "Outstanding", "90", "100"},{"A", "Excellent", "80", "89.99"},{"B", "Very Good", "70", "79.99"},{"C", "Good", "60", "69.99"}
-						,{"D", "Satisfactory", "50", "59.99"},{"E", "Fail", "0", "49.99"}})), reportTemplate, "1");	
+						,{"D", "Satisfactory", "50", "59.99"},{"E", "Fail", "0", "49.99"}})), reportTemplate, "2");	
 		CommonNodeInformations commonNodeInformationsG10G12 = commonNodeInformationsG7G9;
 		
 		JobTitle jobTitle = createEnumeration(JobTitle.class, "Director of studies");

@@ -11,6 +11,7 @@ import org.cyk.system.root.model.userinterface.style.FontName;
 import org.cyk.system.root.model.userinterface.style.Style;
 import org.cyk.system.school.business.impl.AbstractSchoolReportProducer;
 import org.cyk.system.school.business.impl.SchoolBusinessLayer;
+import org.cyk.system.school.model.StudentResults;
 import org.cyk.system.school.model.session.AcademicSession;
 import org.cyk.system.school.model.session.ClassroomSessionDivision;
 import org.cyk.system.school.model.session.StudentClassroomSessionDivision;
@@ -167,13 +168,17 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		}
 		
 		if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==2){
-			labelValue("school.report.studentclassroomsessiondivision.block.informations.annualaverage", "To Compute");
-			labelValue("school.report.studentclassroomsessiondivision.block.informations.annualgrade", "To Compute");
-			labelValue("school.report.studentclassroomsessiondivision.block.informations.annualrank", "To Compute");
-			//labelValue("school.report.studentclassroomsessiondivision.block.informations.promotion", 
-			//		studentClassroomSessionDivision.get "To Compute");
-			labelValue("school.report.studentclassroomsessiondivision.block.informations.nextacademicsession", 
-					format(studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getAcademicSession().getNextStartingDate()));
+			StudentResults classroomSessionResults = SchoolBusinessLayer.getInstance().getStudentClassroomSessionDao()
+					.readByStudentByClassroomSession(studentClassroomSessionDivision.getStudent(), studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession()).getResults();
+			
+			r.addLabelValueCollection("HOME/SCHOOL COMMUNICATIONS",new String[][]{
+					{"ANNUAL AVERAGE",format(classroomSessionResults.getEvaluationSort().getAverage().getValue())}
+					,{"ANNUAL GRADE"
+						,classroomSessionResults.getEvaluationSort().getAverageInterval()==null?NULL_VALUE:rootBusinessLayer.getIntervalBusiness().findRelativeCode(classroomSessionResults.getEvaluationSort().getAverageInterval())}
+					,{"ANNUAL RANK",rootBusinessLayer.getMathematicsBusiness().format(classroomSessionResults.getEvaluationSort().getRank())}
+					,{"NEXT ACADEMIC SESSION",format(studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getAcademicSession().getNextStartingDate())}
+					});
+			
 		}else{
 			ClassroomSessionDivision nextClassroomSessionDivision = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionDao()
 					.readByClassroomSessionByIndex(studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession()

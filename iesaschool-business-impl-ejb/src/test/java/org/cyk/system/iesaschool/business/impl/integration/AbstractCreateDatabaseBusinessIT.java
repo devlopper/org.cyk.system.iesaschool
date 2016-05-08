@@ -24,6 +24,7 @@ import org.cyk.system.school.model.actor.Teacher;
 import org.cyk.system.school.model.session.ClassroomSession;
 import org.cyk.system.school.model.session.ClassroomSessionDivision;
 import org.cyk.system.school.model.session.StudentClassroomSession;
+import org.cyk.system.school.model.session.StudentClassroomSessionDivision;
 import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubject;
 import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubjectEvaluationType;
 import org.cyk.system.school.model.subject.Subject;
@@ -63,7 +64,8 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	File directory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data");
 		File excelWorkbookFile = new File(directory, "data.xlsx")
 			,teachersSignatureDirectory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature")
-			,studentsPhotoDirectory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\photo");
+			,studentsPhotoDirectory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\photo")
+			,previousDatabasesFile = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\previousdatabase.xlsx");
 		
     	for(ClassroomSession classroomSession : classroomSessionDao.readAll())
     		if(classroomSession.getLevelTimeDivision().getIndex() == 0)
@@ -140,6 +142,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 			processStudentsSheet(g11,excelWorkbookFile,studentsPhotoDirectory,4,84,9);
 			processStudentsSheet(g12,excelWorkbookFile,studentsPhotoDirectory,4,95,1);
 			
+			processPreviousDatabases(previousDatabasesFile);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -266,7 +269,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	List<Student> students = schoolBusinessLayer.getStudentBusiness().instanciateMany(readExcelSheetArguments, completeActorInstanciationOfManyFromValuesArguments);
     	System.out.print(" - Creating "+students.size()+" students");
     	schoolBusinessLayer.getStudentBusiness().create(students);
-    	if(classroomSession.getLevelTimeDivision().getIndex()<=11){
+    	if(classroomSession.getLevelTimeDivision().getIndex()>3 && classroomSession.getLevelTimeDivision().getIndex()<=11){
     		System.out.println(" - Creating "+studentClassroomSessions.size()+" student classroom sessions");
     		schoolBusinessLayer.getStudentClassroomSessionBusiness().create(studentClassroomSessions);
     		genericBusiness.flushEntityManager();
@@ -280,6 +283,52 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     		schoolBusinessTestHelper.randomValues(Boolean.TRUE, Boolean.TRUE, Boolean.TRUE);
     		genericBusiness.flushEntityManager();
     	}
+    }
+    
+    private void processPreviousDatabases(File file) throws Exception{
+    	List<StudentClassroomSessionDivision> studentClassroomSessionDivisions = new ArrayList<>(schoolBusinessLayer.getStudentClassroomSessionDivisionBusiness().findAll());
+    	Collection<StudentClassroomSessionDivision> updatedStudentClassroomSessionDivisions = new ArrayList<>();
+    	System.out.println(studentClassroomSessionDivisions.size()+" student class room session divisions to update");
+    	for(int divisionIndex = 0; divisionIndex < 2 ; divisionIndex++){
+    		ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
+        	readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
+        	readExcelSheetArguments.setSheetIndex(divisionIndex);
+        	readExcelSheetArguments.setFromRowIndex(1);
+    		List<String[]> list = CommonUtils.getInstance().readExcelSheet(readExcelSheetArguments);
+    		List<String[]> nf = new ArrayList<>();
+    		
+    		for(String[] values : list){
+    			int i=0;
+    			for(;i<studentClassroomSessionDivisions.size();i++){
+    				if(studentClassroomSessionDivisions.get(i).getStudent().getRegistration().getCode().equals(values[0].trim()) 
+    						&& (studentClassroomSessionDivisions.get(i).getClassroomSessionDivision().getIndex().intValue() == divisionIndex)){
+    					break;
+    				}
+    			}
+    			
+    			StudentClassroomSessionDivision studentClassroomSessionDivision = i<studentClassroomSessionDivisions.size() 
+    					? studentClassroomSessionDivisions.remove(i) : null;
+    			if(studentClassroomSessionDivision==null){
+    				nf.add(values);
+    			}else{
+    				studentClassroomSessionDivision.getResults().getEvaluationSort().getAverage().setValue(new BigDecimal(values[1]));
+    				updatedStudentClassroomSessionDivisions.add(studentClassroomSessionDivision);
+    			}
+        		
+        	}
+    		
+    		for(String[] values : nf)
+    			if(StringUtils.isNotBlank(values[1]))
+    				System.out.println("No student class room session division found for "+StringUtils.join(values,Constant.CHARACTER_COMA));
+    	}
+    	
+    	for(StudentClassroomSessionDivision studentClassroomSessionDivision : studentClassroomSessionDivisions)
+    		if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex().intValue()<2)
+    			System.out.println("No student class room session division has been found for : "+studentClassroomSessionDivision);
+    	
+    	System.out.println("Updating "+updatedStudentClassroomSessionDivisions.size()+" student class room session divisions");
+		SchoolBusinessLayer.getInstance().getStudentClassroomSessionDivisionBusiness().update(updatedStudentClassroomSessionDivisions);	
+    	
     }
     
     private String getPersonTitleCode(String code){

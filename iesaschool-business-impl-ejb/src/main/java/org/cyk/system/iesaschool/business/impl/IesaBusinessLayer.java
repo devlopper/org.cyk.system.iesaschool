@@ -22,6 +22,7 @@ import org.cyk.system.root.business.api.BusinessService.BusinessServiceCallArgum
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.mathematics.MathematicsBusiness.RankOptions;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
+import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessLayer;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.RootRandomDataProvider;
@@ -175,6 +176,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 				});
 		
 		schoolBusinessLayer.setReportProducer(new ReportProducer());
+		PersonBusiness.FindNamesOptions.FIRST_NAME_IS_FIRST = Boolean.FALSE;
 	}
 	
 	@Override @SuppressWarnings("unchecked")
@@ -200,9 +202,9 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	File reportHeaderFile = createFile("image/document_header.png");
     	File reportBackgroundFile = createFile("image/studentclassroomsessiondivisionreport_background.jpg");
     	
-    	CommonNodeInformations commonNodeInformationsPkg = instanciateCommonNodeInformations(null, reportHeaderFile, reportBackgroundFile, "pkg.jrxml", "2");
-    	CommonNodeInformations commonNodeInformationsKg1 = instanciateCommonNodeInformations(null, reportHeaderFile, reportBackgroundFile, "kg1.jrxml", "2");
-    	CommonNodeInformations commonNodeInformationsKg2Kg3 = instanciateCommonNodeInformations(null, reportHeaderFile, reportBackgroundFile, "kg2kg3.jrxml", "2");
+    	CommonNodeInformations commonNodeInformationsPkg = instanciateCommonNodeInformations(null,null, reportHeaderFile, reportBackgroundFile, "pkg.jrxml", "2");
+    	CommonNodeInformations commonNodeInformationsKg1 = instanciateCommonNodeInformations(null,null, reportHeaderFile, reportBackgroundFile, "kg1.jrxml", "2");
+    	CommonNodeInformations commonNodeInformationsKg2Kg3 = instanciateCommonNodeInformations(null,null, reportHeaderFile, reportBackgroundFile, "kg2kg3.jrxml", "2");
     	
 		File reportFile = createFile("report/studentclassroomsessiondivision/g1g12.jrxml", "studentclassroomsessiondivisionreport_g1g12.jrxml");
 		ReportTemplate reportTemplate = new ReportTemplate("SCSDRT",reportFile,reportHeaderFile,createFile("image/studentclassroomsessiondivisionreport_background.jpg"));
@@ -211,13 +213,19 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		CommonNodeInformations commonNodeInformationsG1G3 = instanciateCommonNodeInformations(create(rootBusinessLayer.getIntervalCollectionBusiness()
 				.instanciateOne("ICEV1", "Grading Scale", new String[][]{
 						{"A+", "Excellent", "90", "100"},{"A", "Very good", "80", "89.99"},{"B+", "Good", "70", "79.99"},{"B", "Fair", "60", "69.99"}
-						,{"C+", "Satisfactory", "55", "59.99"},{"C", "Barely satisfactory", "50", "54.99"},{"E", "Fail", "0", "49.99"}})), reportTemplate, "2");
+						,{"C+", "Satisfactory", "55", "59.99"},{"C", "Barely satisfactory", "50", "54.99"},{"E", "Fail", "0", "49.99"}})),
+				create(rootBusinessLayer.getIntervalCollectionBusiness()
+						.instanciateOne("ICP1", "Promotion Scale", new String[][]{
+								{"P", "Promoted", "50", "100"},{"PT", "Promoted on trial", "45", "49.99"},{"NP", "Not promoted", "0", "44.99"}})),reportTemplate, "2");
 		CommonNodeInformations commonNodeInformationsG4G6 = commonNodeInformationsG1G3;
 		
 		CommonNodeInformations commonNodeInformationsG7G9 = instanciateCommonNodeInformations(create(rootBusinessLayer.getIntervalCollectionBusiness()
 				.instanciateOne("ICEV2", "Grading Scale", new String[][]{
 						{"A*", "Outstanding", "90", "100"},{"A", "Excellent", "80", "89.99"},{"B", "Very Good", "70", "79.99"},{"C", "Good", "60", "69.99"}
-						,{"D", "Satisfactory", "50", "59.99"},{"E", "Fail", "0", "49.99"}})), reportTemplate, "2");	
+						,{"D", "Satisfactory", "50", "59.99"},{"E", "Fail", "0", "49.99"}})),
+				create(rootBusinessLayer.getIntervalCollectionBusiness()
+						.instanciateOne("ICP2", "Promotion Scale", new String[][]{
+								{"P", "Promoted", "50", "100"},{"PT", "Promoted on trial", "45", "49.99"},{"NP", "Not promoted", "0", "44.99"}})),reportTemplate, "2");	
 		CommonNodeInformations commonNodeInformationsG10G12 = commonNodeInformationsG7G9;
 		
 		JobTitle jobTitle = createEnumeration(JobTitle.class, "Director of studies");
@@ -588,17 +596,17 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	,{"H", "Has no regard", "5", "5"} }).setMetricValueInputted(MetricValueInputted.VALUE_INTERVAL_CODE))};
 	}
 	
-	private CommonNodeInformations instanciateCommonNodeInformations(IntervalCollection intervalCollection,ReportTemplate reportTemplate,String classroomsessionDivisionIndex){
-		CommonNodeInformations commonNodeInformations = schoolDataProducerHelper.instanciateOneCommonNodeInformations(intervalCollection, reportTemplate
+	private CommonNodeInformations instanciateCommonNodeInformations(IntervalCollection intervalCollection,IntervalCollection promotionIntervalCollection,ReportTemplate reportTemplate,String classroomsessionDivisionIndex){
+		CommonNodeInformations commonNodeInformations = schoolDataProducerHelper.instanciateOneCommonNodeInformations(intervalCollection,promotionIntervalCollection, reportTemplate
 				, TimeDivisionType.DAY, TimeDivisionType.TRIMESTER, classroomsessionDivisionIndex);
 		return commonNodeInformations;
 	}
 	
-	private CommonNodeInformations instanciateCommonNodeInformations(IntervalCollection intervalCollection,File reportHeaderFile,File backgroundFile,String studentClassroomsessionDivisionReportTemplateFileName,String classroomsessionDivisionIndex){
+	private CommonNodeInformations instanciateCommonNodeInformations(IntervalCollection intervalCollection,IntervalCollection promotionIntervalCollection,File reportHeaderFile,File backgroundFile,String studentClassroomsessionDivisionReportTemplateFileName,String classroomsessionDivisionIndex){
 		String fileName = "studentclassroomsessiondivisionreport_"+studentClassroomsessionDivisionReportTemplateFileName;
 		File reportFile = createFile("report/studentclassroomsessiondivision/"+studentClassroomsessionDivisionReportTemplateFileName, fileName);
 		ReportTemplate reportTemplate = new ReportTemplate(studentClassroomsessionDivisionReportTemplateFileName,reportFile,reportHeaderFile,backgroundFile);
-		return instanciateCommonNodeInformations(intervalCollection,create(reportTemplate),classroomsessionDivisionIndex);
+		return instanciateCommonNodeInformations(intervalCollection,promotionIntervalCollection,create(reportTemplate),classroomsessionDivisionIndex);
 	}
 	
 	@Override

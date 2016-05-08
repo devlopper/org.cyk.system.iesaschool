@@ -3,6 +3,7 @@ package org.cyk.system.iesaschool.business.impl;
 import java.io.Serializable;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.iesaschool.model.IesaConstant;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness.FormatArguments;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness.FormatArguments.CharacterSet;
@@ -117,6 +118,7 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		}else{
 			String studentBehaviourMetricCollectionCode = null;
 			r.setName(r.getName()+" CARD");
+			//r.setSubjectsBlockTitle("COGNITIVE ASSESSMENT");
 			String testCoef = null,examCoef = "";	
 			if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G1,IesaConstant.LEVEL_NAME_CODE_G2,IesaConstant.LEVEL_NAME_CODE_G3},levelNameCode)){
 				name += " LOWER";
@@ -140,7 +142,7 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 				studentBehaviourMetricCollectionCode = IesaConstant.MERIC_COLLECTION_G7_G12_STUDENT_BEHAVIOUR;
 			}
 			
-			r.addSubjectsTableColumnNames("No.","SUBJECTS","Test 1 "+testCoef+"%","Test 2 "+testCoef+"%","Exam "+examCoef+"%","TOTAL 100%","GRADE","RANK","OUT OF","MAX","CLASS AVERAGE","REMARKS","TEACHER");
+			r.addSubjectsTableColumnNames("No.","SUBJECTS","TEST 1 "+testCoef+"%","TEST 2 "+testCoef+"%","EXAM "+examCoef+"%","TOTAL 100%","GRADE","RANK","OUT OF","MAX","CLASS AVERAGE","REMARKS","TEACHER");
 			
 			labelValueCollectionReport = new LabelValueCollectionReport();
 			labelValueCollectionReport.setName("OVERALL RESULT");
@@ -151,6 +153,7 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 			r.addLabelValueCollection(labelValueCollectionReport);
 			
 			addStudentResultsLabelValueCollection(r, ((StudentClassroomSessionDivision)r.getSource()).getResults(), studentBehaviourMetricCollectionCode);
+			r.getCurrentLabelValueCollection().setName(StringUtils.upperCase(r.getCurrentLabelValueCollection().getName()));
 			labelValueCollectionReport = new LabelValueCollectionReport();
 			labelValueCollectionReport.setName(r.getCurrentLabelValueCollection().getName());
 			labelValueCollectionReport.setCollection(r.getCurrentLabelValueCollection().getCollection().subList(6, 12));
@@ -161,9 +164,11 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 			addIntervalCollectionLabelValueCollection(r,SchoolBusinessLayer.getInstance().getClassroomSessionBusiness().findCommonNodeInformations(
 				((StudentClassroomSessionDivision)r.getSource()).getClassroomSessionDivision().getClassroomSession()).getStudentClassroomSessionDivisionAverageScale()
 				,Boolean.FALSE,Boolean.TRUE,new Integer[][]{{1,2}});
+			r.getCurrentLabelValueCollection().setName(StringUtils.upperCase(r.getCurrentLabelValueCollection().getName()));
 			
 			addIntervalCollectionLabelValueCollection(r,rootBusinessLayer.getMetricCollectionDao().read(studentBehaviourMetricCollectionCode).getValueIntervalCollection()
 					,Boolean.TRUE,Boolean.FALSE,null);
+			r.getCurrentLabelValueCollection().setName(StringUtils.upperCase(r.getCurrentLabelValueCollection().getName()));
 			
 		}
 		
@@ -174,10 +179,13 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 			r.addLabelValueCollection("HOME/SCHOOL COMMUNICATIONS",new String[][]{
 					{"ANNUAL AVERAGE",format(classroomSessionResults.getEvaluationSort().getAverage().getValue())}
 					,{"ANNUAL GRADE"
-						,classroomSessionResults.getEvaluationSort().getAverageInterval()==null?NULL_VALUE:rootBusinessLayer.getIntervalBusiness().findRelativeCode(classroomSessionResults.getEvaluationSort().getAverageInterval())}
+						,classroomSessionResults.getEvaluationSort().getAverageAppreciatedInterval()==null?NULL_VALUE:rootBusinessLayer.getIntervalBusiness().findRelativeCode(classroomSessionResults.getEvaluationSort().getAverageAppreciatedInterval())}
 					,{"ANNUAL RANK",rootBusinessLayer.getMathematicsBusiness().format(classroomSessionResults.getEvaluationSort().getRank())}
+					,{"PROMOTION INFORMATION",
+						classroomSessionResults.getEvaluationSort().getAveragePromotedInterval()==null?NULL_VALUE:classroomSessionResults.getEvaluationSort().getAveragePromotedInterval().getName().toUpperCase()}
 					,{"NEXT ACADEMIC SESSION",format(studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getAcademicSession().getNextStartingDate())}
-					});
+							
+			});
 			
 		}else{
 			ClassroomSessionDivision nextClassroomSessionDivision = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionDao()

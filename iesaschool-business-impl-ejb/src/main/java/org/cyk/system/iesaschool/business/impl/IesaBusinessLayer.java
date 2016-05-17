@@ -207,7 +207,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	CommonNodeInformations commonNodeInformationsKg2Kg3 = instanciateCommonNodeInformations(null,null, reportHeaderFile, reportBackgroundFile, "kg2kg3.jrxml", "2");
     	
 		File reportFile = createFile("report/studentclassroomsessiondivision/g1g12.jrxml", "studentclassroomsessiondivisionreport_g1g12.jrxml");
-		ReportTemplate reportTemplate = new ReportTemplate("SCSDRT",reportFile,reportHeaderFile,createFile("image/studentclassroomsessiondivisionreport_background.jpg"));
+		ReportTemplate reportTemplate = new ReportTemplate("SCSDRT",reportFile,reportHeaderFile,createFile("image/studentclassroomsessiondivisionreport_background.jpg"),null);
 		create(reportTemplate);
 		
 		CommonNodeInformations commonNodeInformationsG1G3 = instanciateCommonNodeInformations(create(rootBusinessLayer.getIntervalCollectionBusiness()
@@ -605,7 +605,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	private CommonNodeInformations instanciateCommonNodeInformations(IntervalCollection intervalCollection,IntervalCollection promotionIntervalCollection,File reportHeaderFile,File backgroundFile,String studentClassroomsessionDivisionReportTemplateFileName,String classroomsessionDivisionIndex){
 		String fileName = "studentclassroomsessiondivisionreport_"+studentClassroomsessionDivisionReportTemplateFileName;
 		File reportFile = createFile("report/studentclassroomsessiondivision/"+studentClassroomsessionDivisionReportTemplateFileName, fileName);
-		ReportTemplate reportTemplate = new ReportTemplate(studentClassroomsessionDivisionReportTemplateFileName,reportFile,reportHeaderFile,backgroundFile);
+		ReportTemplate reportTemplate = new ReportTemplate(studentClassroomsessionDivisionReportTemplateFileName,reportFile,reportHeaderFile,backgroundFile,null);
 		return instanciateCommonNodeInformations(intervalCollection,promotionIntervalCollection,create(reportTemplate),classroomsessionDivisionIndex);
 	}
 	

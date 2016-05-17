@@ -6,9 +6,9 @@ import org.cyk.system.company.model.structure.Company;
 import org.cyk.system.company.ui.web.primefaces.structure.CompanyEditPage;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.ui.api.data.collector.form.FormConfiguration;
-import org.cyk.ui.web.primefaces.page.BusinessEntityFormOnePageListener;
+import org.cyk.ui.web.primefaces.page.AbstractBusinessEntityFormOnePage;
 
-public class CompanyEditPageAdapter extends BusinessEntityFormOnePageListener.Adapter.Default<Company> implements Serializable {
+public class CompanyEditPageAdapter extends AbstractBusinessEntityFormOnePage.BusinessEntityFormOnePageListener.Adapter.Default<Company> implements Serializable {
 
 	private static final long serialVersionUID = 4370361826462886031L;
 

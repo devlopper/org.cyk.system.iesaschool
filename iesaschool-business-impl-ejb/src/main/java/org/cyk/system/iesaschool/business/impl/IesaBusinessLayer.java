@@ -39,6 +39,7 @@ import org.cyk.system.root.model.party.person.JobTitle;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonTitle;
+import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.time.TimeDivisionType;
@@ -184,6 +185,9 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		updateEnumeration(PersonTitle.class, PersonTitle.MISTER, "Mr.");
 		updateEnumeration(PersonTitle.class, PersonTitle.MISS, "Ms.");
 		updateEnumeration(PersonTitle.class, PersonTitle.MADAM, "Mrs.");
+		
+		updateEnumeration(Sex.class, Sex.MALE, "Male");
+		updateEnumeration(Sex.class, Sex.FEMALE, "Female");
 		
 		LevelGroupType levelGroupType = create(schoolBusinessLayer.getLevelGroupTypeBusiness().instanciateOne("LevelGroupTypeDummy"));
 		LevelGroup levelGroupKindergarten = (LevelGroup) create(schoolBusinessLayer.getLevelGroupBusiness().instanciateOne(SchoolConstant.LEVEL_GROUP_KINDERGARTEN)

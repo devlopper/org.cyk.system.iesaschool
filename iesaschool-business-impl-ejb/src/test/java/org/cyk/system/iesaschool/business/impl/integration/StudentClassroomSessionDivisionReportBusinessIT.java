@@ -108,7 +108,7 @@ public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBus
     	}, Boolean.TRUE,Boolean.TRUE, Boolean.TRUE,Boolean.TRUE);
     	
     	/*
-    	classroomSessionDivision = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionBusiness().findByClassroomSessionByIndex(g9,index).iterator().next();
+    	classroomSessionDivision = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionBusiness().findByClassroomSessionByIndex(g9,index);
     	classroomSessionDivisionSubjects = new ArrayList<>(SchoolBusinessLayer.getInstance().getClassroomSessionDivisionSubjectBusiness().findByClassroomSessionDivision(classroomSessionDivision));
     	schoolBusinessTestHelper.simulateStudentClassroomSessionDivisionReport(classroomSessionDivision, new Object[][]{
     		new Object[]{classroomSessionDivisionSubjects.get(0),new String[][]{

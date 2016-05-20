@@ -67,9 +67,10 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		FormatArguments formatArguments = new FormatArguments();
 		formatArguments.setIsRank(Boolean.TRUE);
 		formatArguments.setType(CharacterSet.LETTER);
-		String name = numberBusiness.format(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()+1, formatArguments).toUpperCase();
-		r.setName(name+" TERM , "+studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getLevelTimeDivision().getLevel().getGroup().getName().toUpperCase()
-				+" REPORT");
+		String nameFormat = numberBusiness.format(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()+1, formatArguments).toUpperCase();
+		nameFormat += " TERM , %s REPORT %s";
+		//r.setName(name+" TERM , "+studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getLevelTimeDivision().getLevel().getGroup().getName().toUpperCase()
+		//		+" REPORT");
 		
 		String levelNameCode = studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getLevelTimeDivision().getLevel().getName().getCode();
 		if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_PK,IesaConstant.LEVEL_NAME_CODE_K1,IesaConstant.LEVEL_NAME_CODE_K2,IesaConstant.LEVEL_NAME_CODE_K3},levelNameCode)){
@@ -121,22 +122,22 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 			//r.setSubjectsBlockTitle("COGNITIVE ASSESSMENT");
 			String testCoef = null,examCoef = "";	
 			if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G1,IesaConstant.LEVEL_NAME_CODE_G2,IesaConstant.LEVEL_NAME_CODE_G3},levelNameCode)){
-				name += " LOWER";
+				r.setName(String.format(nameFormat, "LOWER PRIMARY","CARD"));
 				testCoef = "15";
 				examCoef = "70";
 				studentBehaviourMetricCollectionCode = IesaConstant.MERIC_COLLECTION_G1_G6_STUDENT_BEHAVIOUR;
 			}else if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G4,IesaConstant.LEVEL_NAME_CODE_G5,IesaConstant.LEVEL_NAME_CODE_G6},levelNameCode)){
-				name += " UPPER";
+				r.setName(String.format(nameFormat, "UPPER PRIMARY","CARD"));
 				testCoef = "15";
 				examCoef = "70";
 				studentBehaviourMetricCollectionCode = IesaConstant.MERIC_COLLECTION_G1_G6_STUDENT_BEHAVIOUR;
 			}else if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G7,IesaConstant.LEVEL_NAME_CODE_G8,IesaConstant.LEVEL_NAME_CODE_G9},levelNameCode)){
-				name += " JUNIOR HIGH SCHOOL";
+				r.setName(String.format(nameFormat, "JUNIOR HIGH SCHOOL","CARD"));
 				testCoef = "20";
 				examCoef = "60";
 				studentBehaviourMetricCollectionCode = IesaConstant.MERIC_COLLECTION_G7_G12_STUDENT_BEHAVIOUR;
 			}else if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_G10,IesaConstant.LEVEL_NAME_CODE_G11,IesaConstant.LEVEL_NAME_CODE_G12},levelNameCode)){
-				name += " SENIOR HIGH SCHOOL";
+				r.setName(String.format(nameFormat, "SENIOR HIGH SCHOOL","CARD"));
 				testCoef = "20";
 				examCoef = "60";
 				studentBehaviourMetricCollectionCode = IesaConstant.MERIC_COLLECTION_G7_G12_STUDENT_BEHAVIOUR;

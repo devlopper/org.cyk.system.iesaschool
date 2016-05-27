@@ -7,12 +7,14 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.annotation.WebListener;
 
 import org.cyk.system.company.model.structure.Employee;
+import org.cyk.system.company.ui.web.primefaces.CompanyWebManager;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.ui.web.primefaces.api.RootWebManager;
 import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.actor.Teacher;
 import org.cyk.system.school.ui.web.primefaces.AbstractSchoolContextListener;
+import org.cyk.system.school.ui.web.primefaces.SchoolWebManager;
 import org.cyk.ui.api.command.UICommandable;
 import org.cyk.ui.api.command.menu.AbstractMenu;
 import org.cyk.ui.api.command.menu.MenuManager;
@@ -40,7 +42,13 @@ public class ContextListener extends AbstractSchoolContextListener implements Se
 	@Override
 	protected void identifiableConfiguration(ServletContextEvent event) {
 		super.identifiableConfiguration(event);
+		RootWebManager.getInstance().setAutoAddToSystemMenu(Boolean.FALSE);
+		CompanyWebManager.getInstance().setAutoAddToSystemMenu(Boolean.FALSE);
+		SchoolWebManager.getInstance().setAutoAddToSystemMenu(Boolean.FALSE);
+		
 		uiManager.registerApplicationUImanager(RootWebManager.getInstance());
+		uiManager.registerApplicationUImanager(CompanyWebManager.getInstance());
+		uiManager.registerApplicationUImanager(SchoolWebManager.getInstance());
 		uiManager.registerApplicationUImanager(IesaWebManager.getInstance());
 	}
 	

@@ -48,6 +48,8 @@ public class ContextListener extends AbstractSchoolContextListener implements Se
 	
 	@Override
 	public Boolean moduleGroupCreateable(UserSession userSession,ModuleGroup group) {
+		if(Boolean.TRUE.equals(userSession.getIsAdministrator()))
+			return true;
 		return !(ModuleGroup.CONTROL_PANEL.equals(group) || ModuleGroup.TOOLS.equals(group));
 	}
 	

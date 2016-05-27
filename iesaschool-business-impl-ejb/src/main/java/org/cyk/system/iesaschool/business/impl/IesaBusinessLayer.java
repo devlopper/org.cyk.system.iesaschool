@@ -34,6 +34,7 @@ import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricValueInputted;
 import org.cyk.system.root.model.mathematics.MetricValueType;
+import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.model.party.person.JobInformations;
 import org.cyk.system.root.model.party.person.JobTitle;
 import org.cyk.system.root.model.party.person.Person;
@@ -391,7 +392,8 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		Role teacherRole = create(new Role(IesaConstant.ROLE_TEACHER_CODE, "Teacher"));
 		
 		instanciateRoleUniformResourceLocator(userRole, uniformResourceLocatorBusiness.instanciateOne("/private/index.jsf",new String[]{})
-				,uniformResourceLocatorBusiness.instanciateOne("/private/file/consultmany.jsf",new String[]{}));
+				,uniformResourceLocatorBusiness.instanciateOne("/private/file/consultmany.jsf",new String[]{})
+				,uniformResourceLocatorBusiness.instanciateOne("/private/classroomsessiondivision/consult.jsf",new String[]{UniformResourceLocatorParameter.TAB_ID,"school.broadsheet" }));
 		
 		instanciateRoleUniformResourceLocator(managerRole,uniformResourceLocatorBusiness.instanciateManyCrud(Student.class)
 				,uniformResourceLocatorBusiness.instanciateManyCrud(Teacher.class)
@@ -602,7 +604,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	private CommonNodeInformations instanciateCommonNodeInformations(IntervalCollection intervalCollection,IntervalCollection promotionIntervalCollection,ReportTemplate reportTemplate,String classroomsessionDivisionIndex){
 		CommonNodeInformations commonNodeInformations = schoolDataProducerHelper.instanciateOneCommonNodeInformations(intervalCollection,promotionIntervalCollection, reportTemplate
-				, TimeDivisionType.DAY, TimeDivisionType.TRIMESTER, classroomsessionDivisionIndex);
+				, TimeDivisionType.DAY, TimeDivisionType.TRIMESTER,"50", classroomsessionDivisionIndex);
 		return commonNodeInformations;
 	}
 	

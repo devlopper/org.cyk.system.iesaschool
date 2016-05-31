@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 import org.cyk.system.iesaschool.model.IesaConstant;
 import org.cyk.system.school.business.impl.session.AbstractSubjectDetails;
-import org.cyk.system.school.model.subject.StudentSubject;
-import org.cyk.system.school.model.subject.StudentSubjectEvaluation;
+import org.cyk.system.school.model.subject.StudentClassroomSessionDivisionSubject;
+import org.cyk.system.school.model.subject.StudentClassroomSessionDivisionSubjectEvaluation;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 import org.cyk.utility.common.annotation.user.interfaces.Sequence;
@@ -18,9 +18,9 @@ public class SubjectDetails extends AbstractSubjectDetails implements Serializab
 	@Input @InputText @Sequence(direction=Direction.AFTER,field=FILED_SUBJECT) private String test1;
 	@Input @InputText @Sequence(direction=Direction.AFTER,field=FIELD_TEST1) private String test2;
 	@Input @InputText @Sequence(direction=Direction.AFTER,field=FIELD_TEST2) private String exam;
-	public SubjectDetails(StudentSubject studentSubject) {
+	public SubjectDetails(StudentClassroomSessionDivisionSubject studentSubject) {
 		super(studentSubject);
-		for(StudentSubjectEvaluation studentSubjectEvaluation : studentSubject.getDetails()){
+		for(StudentClassroomSessionDivisionSubjectEvaluation studentSubjectEvaluation : studentSubject.getDetails()){
 			if(studentSubjectEvaluation.getStudentSubject().equals(studentSubject)){
 				if(studentSubjectEvaluation.getEvaluation().getClassroomSessionDivisionSubjectEvaluationType().getEvaluationType().getCode().equals(IesaConstant.EVALUATION_TYPE_TEST1))
 					test1 = numberBusiness.format(studentSubjectEvaluation.getValue());

@@ -1,7 +1,10 @@
 package org.cyk.system.iesaschool.ui.web.primefaces;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.annotation.WebListener;
@@ -15,6 +18,8 @@ import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.actor.Teacher;
 import org.cyk.system.school.ui.web.primefaces.AbstractSchoolContextListener;
 import org.cyk.system.school.ui.web.primefaces.SchoolWebManager;
+import org.cyk.ui.api.AbstractUserSession;
+import org.cyk.ui.api.command.AbstractCommandable.Builder;
 import org.cyk.ui.api.command.UICommandable;
 import org.cyk.ui.api.command.menu.AbstractMenu;
 import org.cyk.ui.api.command.menu.MenuManager;
@@ -23,9 +28,11 @@ import org.cyk.ui.api.command.menu.UIMenu;
 import org.cyk.ui.api.data.collector.form.FormConfiguration;
 import org.cyk.ui.api.model.party.AbstractActorEditFormModel;
 import org.cyk.ui.api.model.party.DefaultPersonEditFormModel;
+import org.cyk.ui.web.primefaces.HierarchyNode;
 import org.cyk.ui.web.primefaces.UserSession;
 import org.cyk.ui.web.primefaces.page.tools.AbstractActorConsultPageAdapter;
 import org.cyk.ui.web.primefaces.page.tools.AbstractActorCrudOnePageAdapter;
+import org.primefaces.model.TreeNode;
 
 @WebListener
 public class ContextListener extends AbstractSchoolContextListener implements Serializable {
@@ -35,6 +42,13 @@ public class ContextListener extends AbstractSchoolContextListener implements Se
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		super.contextInitialized(event);
+		SchoolWebManager.getInstance().getListeners().add(new SchoolWebManager.Listener.Adapter(){
+			private static final long serialVersionUID = 2331867191141196758L;
+			/*@Override
+			public Set<String> getInvisibleCommandableIdentifiers(AbstractUserSession<TreeNode, HierarchyNode> userSession) {
+				return new HashSet<>(Arrays.asList(SchoolWebManager.COMMANDABLE_IDENTIFIER_RESULTS));
+			}*/
+		});
 		//registerConsultPageListener(Company.class, new CompanyConsultPageAdapter());
 		//registerBusinessEntityFormOnePageListener(Company.class, new CompanyEditPageAdapter.Default());
 	}
@@ -68,6 +82,15 @@ public class ContextListener extends AbstractSchoolContextListener implements Se
 			AbstractMenu.__remove__(MenuManager.COMMANDABLE_NOTIFICATIONS_IDENTIFIER, (List<UICommandable>) commandable.getChildren());
 			AbstractMenu.__remove__(MenuManager.COMMANDABLE_USER_ACCOUNT_IDENTIFIER, (List<UICommandable>) commandable.getChildren());
 		}
+	}
+	
+	@Override
+	public void applicationMenuCreated(UserSession userSession, UIMenu menu) {
+		super.applicationMenuCreated(userSession, menu);
+		UICommandable commandable = menu.getCommandable(SchoolWebManager.COMMANDABLE_IDENTIFIER_RESULTS);
+		AbstractMenu.__remove__(SchoolWebManager.COMMANDABLE_IDENTIFIER_CONSULT_STUDENTCLASSROOMSESSION_RANKS, (List<UICommandable>) commandable.getChildren());
+		
+		commandable.addChild(Builder.create("MyCommand", null));
 	}
 	
 	@Override

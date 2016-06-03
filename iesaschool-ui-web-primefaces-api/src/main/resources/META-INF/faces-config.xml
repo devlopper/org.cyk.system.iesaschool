@@ -15,6 +15,12 @@
 			<redirect />
 		</navigation-case-->
 		
+		<navigation-case>
+			<from-outcome>studentClassroomSessionCustomConsultManyRankView</from-outcome>
+			<to-view-id>/private/studentclassroomsession/customconsultmanyrank.jsf</to-view-id>
+			<redirect />
+		</navigation-case>
+		
 	</navigation-rule>
 
 </faces-config>

@@ -3,11 +3,12 @@ package org.cyk.system.iesaschool.business.impl;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import lombok.Getter;
 
 import org.cyk.system.company.business.api.structure.CompanyBusiness;
 import org.cyk.system.company.business.api.structure.OwnedCompanyBusiness;
@@ -16,9 +17,7 @@ import org.cyk.system.company.business.impl.CompanyBusinessLayerAdapter;
 import org.cyk.system.company.model.structure.Company;
 import org.cyk.system.company.model.structure.Employee;
 import org.cyk.system.iesaschool.model.IesaConstant;
-import org.cyk.system.root.business.api.BusinessService.BusinessServiceCallArguments;
 import org.cyk.system.root.business.api.TypedBusiness;
-import org.cyk.system.root.business.api.mathematics.MathematicsBusiness.RankOptions;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessLayer;
@@ -43,7 +42,6 @@ import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.GenericDao;
-import org.cyk.system.school.business.api.SortableStudentResults;
 import org.cyk.system.school.business.api.session.ClassroomSessionBusiness;
 import org.cyk.system.school.business.api.session.ClassroomSessionDivisionBusiness;
 import org.cyk.system.school.business.api.session.ClassroomSessionDivisionStudentsMetricCollectionBusiness;
@@ -52,7 +50,6 @@ import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjec
 import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjectEvaluationTypeBusiness;
 import org.cyk.system.school.business.impl.SchoolBusinessLayer;
 import org.cyk.system.school.business.impl.SchoolDataProducerHelper;
-import org.cyk.system.school.business.impl.SortableStudentResultsComparator;
 import org.cyk.system.school.model.SchoolConstant;
 import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.actor.Teacher;
@@ -76,8 +73,6 @@ import org.cyk.system.school.persistence.api.actor.TeacherDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.joda.time.DateTime;
-
-import lombok.Getter;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=IesaBusinessLayer.DEPLOYMENT_ORDER) @Getter
 public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -153,7 +148,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 				classroomSessionDivision.setStudentSubjectAttendanceAggregated(Boolean.FALSE);
 			}
 		});
-		
+		/*
 		org.cyk.system.school.business.impl.session.StudentClassroomSessionDivisionBusinessImpl.Listener.COLLECTION.add(
 				new org.cyk.system.school.business.impl.session.StudentClassroomSessionDivisionBusinessImpl.Listener.Adapter.Default(){
 					private static final long serialVersionUID = 1L;
@@ -176,7 +171,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 						}
 					}
 				});
-		
+		*/
 		schoolBusinessLayer.setReportProducer(new ReportProducer());
 		PersonBusiness.FindNamesOptions.FIRST_NAME_IS_FIRST = Boolean.FALSE;
 	}

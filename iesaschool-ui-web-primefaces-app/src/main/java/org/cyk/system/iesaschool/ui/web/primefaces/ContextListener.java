@@ -44,14 +44,22 @@ public class ContextListener extends AbstractSchoolContextListener implements Se
 		super.contextInitialized(event);
 		SchoolWebManager.getInstance().getListeners().add(new SchoolWebManager.Listener.Adapter(){
 			private static final long serialVersionUID = 2331867191141196758L;
-			/*@Override
+			@Override
 			public Set<String> getInvisibleCommandableIdentifiers(AbstractUserSession<TreeNode, HierarchyNode> userSession) {
-				return new HashSet<>(Arrays.asList(SchoolWebManager.COMMANDABLE_IDENTIFIER_RESULTS));
-			}*/
+				return new HashSet<>(Arrays.asList(SchoolWebManager.COMMANDABLE_IDENTIFIER_CONSULT_STUDENTCLASSROOMSESSION_RANKS));
+			}
+			@Override
+			public void onBusinessMenuPopulateEnded(AbstractUserSession<TreeNode, HierarchyNode> userSession,UICommandable module) {
+				super.onBusinessMenuPopulateEnded(userSession, module);
+				module.addChild(Builder.create("iesaschool.menu.customranks", null,"studentClassroomSessionCustomConsultManyRankView"));
+			}
+			
 		});
 		//registerConsultPageListener(Company.class, new CompanyConsultPageAdapter());
 		//registerBusinessEntityFormOnePageListener(Company.class, new CompanyEditPageAdapter.Default());
 	}
+	
+	
 	
 	@Override
 	protected void identifiableConfiguration(ServletContextEvent event) {

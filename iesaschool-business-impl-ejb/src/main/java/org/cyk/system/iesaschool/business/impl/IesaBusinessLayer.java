@@ -8,8 +8,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import lombok.Getter;
-
 import org.cyk.system.company.business.api.structure.CompanyBusiness;
 import org.cyk.system.company.business.api.structure.OwnedCompanyBusiness;
 import org.cyk.system.company.business.impl.CompanyBusinessLayer;
@@ -73,6 +71,8 @@ import org.cyk.system.school.persistence.api.actor.TeacherDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.joda.time.DateTime;
+
+import lombok.Getter;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=IesaBusinessLayer.DEPLOYMENT_ORDER) @Getter
 public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -623,5 +623,13 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     		}
     	});
 		super.installApplication(fake);
+	}
+	
+	public StudentClassroomSession.SearchCriteria getStudentClassroomSessionSearchCriteria(){
+		StudentClassroomSession.SearchCriteria searchCriteria = new StudentClassroomSession.SearchCriteria();
+		searchCriteria.getDivisionCount().setLowest(2);
+		searchCriteria.getDivisionCount().setHighest(3);
+		searchCriteria.getDivisionIndexesRequired().add(2);
+		return searchCriteria;
 	}
 }

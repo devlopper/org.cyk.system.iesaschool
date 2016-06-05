@@ -9,6 +9,7 @@ import javax.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.cyk.system.iesaschool.business.impl.IesaBusinessLayer;
 import org.cyk.system.school.business.impl.SchoolBusinessLayer;
 import org.cyk.system.school.model.session.StudentClassroomSession;
 import org.cyk.system.school.ui.web.primefaces.session.AbstractStudentClassroomSessionConsultManyRankPage;
@@ -20,11 +21,8 @@ public class StudentClassroomSessionCustomConsultManyRankPage extends AbstractSt
 
 	@Override
 	protected Collection<StudentClassroomSession> getStudentClassroomSessions() {
-		StudentClassroomSession.SearchCriteria searchCriteria = new StudentClassroomSession.SearchCriteria();
-		searchCriteria.getDivisionCount().setLowest(2);
-		searchCriteria.getDivisionCount().setHighest(3);
-		searchCriteria.getDivisionIndexesRequired().add(2);
-		return SchoolBusinessLayer.getInstance().getStudentClassroomSessionBusiness().findByCriteria(searchCriteria);
+		return SchoolBusinessLayer.getInstance().getStudentClassroomSessionBusiness().findByCriteria(
+				IesaBusinessLayer.getInstance().getStudentClassroomSessionSearchCriteria().addClassroomSessions(SchoolBusinessLayer.getInstance().getClassroomSessionBusiness().findAll()));
 	}
 	
 	

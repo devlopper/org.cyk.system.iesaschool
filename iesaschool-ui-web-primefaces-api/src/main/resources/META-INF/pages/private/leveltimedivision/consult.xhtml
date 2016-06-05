@@ -10,10 +10,12 @@
       xmlns:cyk="http://xmlns.jcp.org/jsf/composite/org.cyk.ui.web.primefaces/component">
 
     <ui:decorate template="#{webPageLayoutManager.decoratedTemplate}">
-        <ui:param name="pageController" value="" />
-        <ui:define name="body">
-        	
-        </ui:define>        
-    </ui:decorate>
+ 		<ui:param name="pageController" value="#{levelTimeDivisionCustomConsultPage}" />
+ 		<ui:define name="body">
+ 			<cyk:formOneData value="#{levelTimeDivisionCustomConsultPage.details}" />	
+			<cyk:table value="#{levelTimeDivisionCustomConsultPage.broadsheetTable}" />
+			<cyk:table value="#{levelTimeDivisionCustomConsultPage.customBroadsheetTable}" />
+ 		</ui:define>
+ 	</ui:decorate>
  
 </html>

@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -43,9 +45,11 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     private static final long serialVersionUID = -6691092648665798471L;
     
     private ClassroomSession pkg,kg1,kg2,kg3,g1A,g1B,g2,g3A,g3B,g4A,g4B,g5A,g5B,g6,g7,g8,g9,g10,g11,g12;
+    private Collection<Subject> subjects;
     
     @Override
     protected void businesses() {
+    	subjects = schoolBusinessLayer.getSubjectBusiness().findAll();
     	SchoolDataProducerHelper.Listener.COLLECTION.add(new SchoolDataProducerHelper.Listener.Adapter.Default(){
 			private static final long serialVersionUID = -5301917191935456060L;
 
@@ -129,24 +133,24 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 			*/
 
 			processStudentsSheet(g1A,excelWorkbookFile,studentsPhotoDirectory,2,2,20);
-			/*processStudentsSheet(g1B,excelWorkbookFile,studentsPhotoDirectory,2,24,18);
+			processStudentsSheet(g1B,excelWorkbookFile,studentsPhotoDirectory,2,24,18);
 			processStudentsSheet(g2,excelWorkbookFile,studentsPhotoDirectory,2,43,25);
 			processStudentsSheet(g3A,excelWorkbookFile,studentsPhotoDirectory,2,69,14);
 			processStudentsSheet(g3B,excelWorkbookFile,studentsPhotoDirectory,2,85,14);
 			
 			processStudentsSheet(g4A,excelWorkbookFile,studentsPhotoDirectory,3,2,19);
-			processStudentsSheet(g4B,excelWorkbookFile,studentsPhotoDirectory,3,23,13);
-			processStudentsSheet(g5A,excelWorkbookFile,studentsPhotoDirectory,3,38,12);
-			processStudentsSheet(g5B,excelWorkbookFile,studentsPhotoDirectory,3,52,9);
-			processStudentsSheet(g6,excelWorkbookFile,studentsPhotoDirectory,3,63,18);
+			//processStudentsSheet(g4B,excelWorkbookFile,studentsPhotoDirectory,3,23,13);//0 
+			//processStudentsSheet(g5A,excelWorkbookFile,studentsPhotoDirectory,3,38,12);
+			//processStudentsSheet(g5B,excelWorkbookFile,studentsPhotoDirectory,3,52,9);
+			//processStudentsSheet(g6,excelWorkbookFile,studentsPhotoDirectory,3,63,18);
 			
-			processStudentsSheet(g7,excelWorkbookFile,studentsPhotoDirectory,4,2,16);
+			/*processStudentsSheet(g7,excelWorkbookFile,studentsPhotoDirectory,4,2,16);
 			processStudentsSheet(g8,excelWorkbookFile,studentsPhotoDirectory,4,20,22);
 			processStudentsSheet(g9,excelWorkbookFile,studentsPhotoDirectory,4,44,23);
 			processStudentsSheet(g10,excelWorkbookFile,studentsPhotoDirectory,4,69,13);
 			processStudentsSheet(g11,excelWorkbookFile,studentsPhotoDirectory,4,84,9);
-			processStudentsSheet(g12,excelWorkbookFile,studentsPhotoDirectory,4,95,1);
-			*/
+			processStudentsSheet(g12,excelWorkbookFile,studentsPhotoDirectory,4,95,1);*/
+			
 			//processPreviousDatabases(previousDatabasesFile);
 			processPreviousDatabasesStudentEvaluations(previousDatabasesFile);
 		} catch (Exception e) {
@@ -339,10 +343,14 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     
     private void processPreviousDatabasesStudentEvaluations(File file) throws Exception{
     	Collection<Student> students = schoolBusinessLayer.getStudentBusiness().findAll();
+    	Set<Student> studentsExists = new HashSet<>();
     	Collection<StudentClassroomSessionDivisionSubject> studentClassroomSessionDivisionSubjects = schoolBusinessLayer.getStudentClassroomSessionDivisionSubjectBusiness().findAll();
+    	Set<StudentClassroomSessionDivisionSubject> studentClassroomSessionDivisionSubjectsExists = new HashSet<>();
+    	
+    	System.out.println("Student classroom session division subjects : "+studentClassroomSessionDivisionSubjects.size());
     	//List<StudentClassroomSessionDivisionSubjectEvaluation> studentClassroomSessionDivisionSubjectEvaluations = new ArrayList<>();
     	Collection<Evaluation> evaluations = new ArrayList<>();
-    	for(int divisionIndex = 0; divisionIndex < 1 ; divisionIndex++){
+    	for(byte divisionIndex = 1; divisionIndex < 2 ; divisionIndex++){
     		ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
         	readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
         	readExcelSheetArguments.setSheetIndex(divisionIndex+2);
@@ -350,33 +358,56 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     		List<String[]> list = CommonUtils.getInstance().readExcelSheet(readExcelSheetArguments);
     		
     		Evaluation evaluation = null;
-    		EvaluationType previousEvaluationType = null;
+    		String previousEvaluationTypeCode = null;
     		for(String[] values : list){
     			StudentClassroomSessionDivisionSubjectEvaluation studentClassroomSessionDivisionSubjectEvaluation = new StudentClassroomSessionDivisionSubjectEvaluation();
     			Student student = null;
-    			for(Student index : students)
+    			for(Student index : students){
+    				//System.out
+					//		.println("AbstractCreateDatabaseBusinessIT.processPreviousDatabasesStudentEvaluations() : "+index.getRegistration().getCode()+" , "+values[0]);
     				if(index.getRegistration().getCode().equals(values[0])){
     					student = index;
     					break;
     				}
-    			for(StudentClassroomSessionDivisionSubject index : studentClassroomSessionDivisionSubjects)
-    				if(index.getStudent().equals(student) && index.getClassroomSessionDivisionSubject().getSubject().getCode().equals(getSubject(values[1]))){
+    			}
+    			
+    			if(student==null){
+    				//System.out.println("No student found for registration code "+values[0]);
+    				continue;
+    			}
+    			studentsExists.add(student);
+    			for(StudentClassroomSessionDivisionSubject index : studentClassroomSessionDivisionSubjects){
+    				if(index.getStudent().getRegistration().getCode().equals(student.getRegistration().getCode()) 
+    						&& 	index.getClassroomSessionDivisionSubject().getClassroomSessionDivision().getIndex().equals(divisionIndex)
+    						&& index.getClassroomSessionDivisionSubject().getSubject().equals(getSubject(values[1]))){
     					studentClassroomSessionDivisionSubjectEvaluation.setStudentSubject(index);
     					studentClassroomSessionDivisionSubjectEvaluation.setValue(new BigDecimal(values[3]));
     					break;
     				}
+    			}
     			
-    			if(evaluation == null || !evaluation.getClassroomSessionDivisionSubjectEvaluationType().getEvaluationType().equals(previousEvaluationType))
+    			if(studentClassroomSessionDivisionSubjectEvaluation.getStudentSubject()==null){
+    				//System.out.println("No student subject found for registration code "+values[0]+" and subject "+values[1]);
+    				continue;
+    			}else
+    				studentClassroomSessionDivisionSubjectsExists.add(studentClassroomSessionDivisionSubjectEvaluation.getStudentSubject());
+    			
+    			if(evaluation == null || !values[2].equals(previousEvaluationTypeCode)){
     				evaluations.add(evaluation = new Evaluation());
+    				evaluation.setClassroomSessionDivisionSubjectEvaluationType(schoolBusinessLayer.getClassroomSessionDivisionSubjectEvaluationTypeBusiness()
+        					.findBySubjectByEvaluationType(studentClassroomSessionDivisionSubjectEvaluation.getStudentSubject().getClassroomSessionDivisionSubject(),
+        							schoolBusinessLayer.getEvaluationTypeBusiness().find(previousEvaluationTypeCode = values[2])));
+    			}
     			
+    			studentClassroomSessionDivisionSubjectEvaluation.setEvaluation(evaluation);
     			evaluation.getStudentSubjectEvaluations().add(studentClassroomSessionDivisionSubjectEvaluation);
-				evaluation.setClassroomSessionDivisionSubjectEvaluationType(schoolBusinessLayer.getClassroomSessionDivisionSubjectEvaluationTypeBusiness()
-    					.findBySubjectByEvaluationType(studentClassroomSessionDivisionSubjectEvaluation.getStudentSubject().getClassroomSessionDivisionSubject(),
-    							previousEvaluationType = schoolBusinessLayer.getEvaluationTypeBusiness().find(values[2])));
-        	}
+				
+    		}
     		
     	}
     	
+    	//System.out.println("Number of students : "+students.size());
+    	//System.out.println("Number of students subjects : "+studentClassroomSessionDivisionSubjectsExists.size());
     	System.out.println("Number of evaluations : "+evaluations.size());
     	/*
     	for(StudentClassroomSessionDivision studentClassroomSessionDivision : studentClassroomSessionDivisions)
@@ -386,7 +417,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	System.out.println("Updating "+updatedStudentClassroomSessionDivisions.size()+" student class room session divisions");
 		SchoolBusinessLayer.getInstance().getStudentClassroomSessionDivisionBusiness().update(updatedStudentClassroomSessionDivisions);	
 		*/
-    	
+    	schoolBusinessLayer.getEvaluationBusiness().create(evaluations);
     }
     
     private String getPersonTitleCode(String code){
@@ -453,12 +484,137 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     }
     
     private Subject getSubject(String code){
+    	code = StringUtils.trim(code);
+    	String icode = code;
     	if(code.equals("S17"))
     		code = IesaConstant.SUBJECT_GRAMMAR_CODE;
     	else if(code.equals("S21"))
     		code = IesaConstant.SUBJECT_FRENCH_CODE;
+    	else{
+	    	for(Subject subject : subjects){
+	    		if(subject.getName().equalsIgnoreCase(code)){
+	    			code = subject.getCode();
+	    			//System.out.println("Found s c : "+code);
+	    			//System.exit(0);
+	    		}
+	    		if(StringUtils.isNotBlank(code))
+	    			break;
+	    	}
+	    	
+	    	code = icode;
+	    	for(Subject subject : subjects){
+	    		if(StringUtils.remove(subject.getName(), Constant.CHARACTER_SPACE).equalsIgnoreCase(code)){
+	    			code = subject.getCode();
+	    		}
+	    		if(StringUtils.isNotBlank(code))
+	    			break;
+	    	}
+	    	
+	    	code = icode;
+	    	if(code.equals("Mathematics"))
+	    		code = IesaConstant.SUBJECT_MATHEMATICS_CODE;
+	    	else if(code.equals("Spanish"))
+	    		code = IesaConstant.SUBJECT_SPANISH_CODE;
+	    	else if(code.equals("Biology"))
+	    		code = IesaConstant.SUBJECT_BIOLOGY_CODE;
+	    	else if(code.equals("Chemistry"))
+	    		code = IesaConstant.SUBJECT_CHEMISTRY_CODE;
+	    	else if(code.equals("French"))
+	    		code = IesaConstant.SUBJECT_FRENCH_CODE;
+	    	else if(code.equals("Physics"))
+	    		code = IesaConstant.SUBJECT_PHYSICS_CODE;
+	    	else if(code.equals("Grammar"))
+	    		code = IesaConstant.SUBJECT_GRAMMAR_CODE;
+	    	else if(code.equals("Reading&Comprehension"))
+	    		code = IesaConstant.SUBJECT_READING_COMPREHENSION_CODE;
+	    	else if(code.equals("Handwriting"))
+	    		code = IesaConstant.SUBJECT_HANDWRITING_CODE;
+	    	else if(code.equals("Spelling"))
+	    		code = IesaConstant.SUBJECT_SPELLING_CODE;
+	    	else if(code.equals("Phonics"))
+	    		code = IesaConstant.SUBJECT_PHONICS_CODE;
+	    	else if(code.equals("Creativewriting"))
+	    		code = IesaConstant.SUBJECT_CREATIVE_WRITING_CODE;
+	    	else if(code.equals("Moraleducation"))
+	    		code = IesaConstant.SUBJECT_MORAL_EDUCATION_CODE;
+	    	else if(code.equals("SocialStudies"))
+	    		code = IesaConstant.SUBJECT_SOCIAL_STUDIES_CODE;
+	    	else if(code.equals("Science"))
+	    		code = IesaConstant.SUBJECT_SCIENCE_CODE;
+	    	else if(code.equals("French"))
+	    		code = IesaConstant.SUBJECT_FRENCH_CODE;
+	    	else if(code.equals("Art&Craft"))
+	    		code = IesaConstant.SUBJECT_ART_CRAFT_CODE;
+	    	else if(code.equals("Music"))
+	    		code = IesaConstant.SUBJECT_MUSIC_CODE;
+	    	else if(code.equals("ICT"))
+	    		code = IesaConstant.SUBJECT_ICT_COMPUTER_CODE;
+	    	else if(code.equals("Physicaleducation"))
+	    		code = IesaConstant.SUBJECT_PHYSICAL_EDUCATION_CODE;
+	    	else if(code.equals("Literatureinenglish"))
+	    		code = IesaConstant.SUBJECT_LITERATURE_IN_ENGLISH_CODE;
+	    	else if(code.equals("Geography"))
+	    		code = IesaConstant.SUBJECT_GEOGRAPHY_CODE;
+	    	else if(code.equals("History"))
+	    		code = IesaConstant.SUBJECT_HISTORY_CODE;
+	    	else if(code.equals("EnglishLanguage"))
+	    		code = IesaConstant.SUBJECT_ENGLISH_LANGUAGE_CODE;
+	    	else if(code.equals("Comprehension"))
+	    		code = IesaConstant.SUBJECT_COMPREHENSION_CODE;
+	    	else if(code.equals("Litterature"))
+	    		code = IesaConstant.SUBJECT_LITERATURE_CODE;
+	    	
+	    		
+    	}
     	
-    	return SchoolBusinessLayer.getInstance().getSubjectBusiness().find(code);
+    	/*
+    	S01	MATHEMATICS
+    	S02	GRAMMAR
+    	S03	READING & COMPREHENSION
+    	S04	HANDWRITING
+    	S05	SPELLING
+    	S06	PHONICS
+    	S07	CREATIVE WRITING
+    	S08	MORAL EDUCATION
+    	S09	SOCIAL STUDIES
+    	S10	SCIENCE
+    	S11	FRENCH
+    	S12	ART & CRAFT
+    	S13	MUSIC
+    	S14	ICT (Computer)
+    	S15	PHYSICAL EDUCATION
+
+    	S17	GRAMMAR
+    	S18	LITERATURE
+    	S19	COMPREHENSION
+    	S20	HISTORY
+    	S21	FRENCH
+
+    	S22	ENGLISH LANGUAGE
+    	S23	LITERATURE IN ENGLISH
+    	S24	GEOGRAPHY
+    	S25	PHYSICS
+    	S26	CHEMISTRY
+    	S27	BIOLOGY
+    	S28	SPANISH
+    	S29	ENGLISH LITERATURE
+    	S30	CHINESE MANDARIN
+    	S31	ACCOUNTING
+    	S32	BUSINESS STUDIES
+    	S33	ECONOMICS
+    	S34	ADVANCED MATHEMATICS
+    	S35	CORE MATHEMATICS
+    	S36	ART & DESIGN
+    	S37	DEVELOPMENT STUDIES
+    	S38	ENVIRONMENTAL MANAGEMENT
+
+    	S39	SOCIOLOGY
+    	S40	LAW
+		*/
+    	Subject subject = SchoolBusinessLayer.getInstance().getSubjectBusiness().find(code);
+    	if(subject==null)
+    		System.out.println("No subject has code "+icode);
+    	return subject;
     }
 
     protected Boolean isSimulated(){

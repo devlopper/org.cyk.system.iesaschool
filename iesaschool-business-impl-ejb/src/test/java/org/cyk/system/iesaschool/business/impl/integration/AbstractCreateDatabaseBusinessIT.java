@@ -27,6 +27,10 @@ import org.cyk.system.school.model.session.StudentClassroomSession;
 import org.cyk.system.school.model.session.StudentClassroomSessionDivision;
 import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubject;
 import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubjectEvaluationType;
+import org.cyk.system.school.model.subject.Evaluation;
+import org.cyk.system.school.model.subject.EvaluationType;
+import org.cyk.system.school.model.subject.StudentClassroomSessionDivisionSubject;
+import org.cyk.system.school.model.subject.StudentClassroomSessionDivisionSubjectEvaluation;
 import org.cyk.system.school.model.subject.Subject;
 import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
@@ -117,14 +121,15 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 			processTeachersSheet(excelWorkbookFile,teachersSignatureDirectory);
 			processCoordinatorsSheet(excelWorkbookFile);
 			processClassroomSessionDivisionSubjectTeachersSheet(excelWorkbookFile);
-			
+			/*
 			processStudentsSheet(pkg,excelWorkbookFile,studentsPhotoDirectory,1,2,34);
 			processStudentsSheet(kg1,excelWorkbookFile,studentsPhotoDirectory,1,38,38);
 			processStudentsSheet(kg2,excelWorkbookFile,studentsPhotoDirectory,1,78,38);
 			processStudentsSheet(kg3,excelWorkbookFile,studentsPhotoDirectory,1,118,26);
+			*/
 
 			processStudentsSheet(g1A,excelWorkbookFile,studentsPhotoDirectory,2,2,20);
-			processStudentsSheet(g1B,excelWorkbookFile,studentsPhotoDirectory,2,24,18);
+			/*processStudentsSheet(g1B,excelWorkbookFile,studentsPhotoDirectory,2,24,18);
 			processStudentsSheet(g2,excelWorkbookFile,studentsPhotoDirectory,2,43,25);
 			processStudentsSheet(g3A,excelWorkbookFile,studentsPhotoDirectory,2,69,14);
 			processStudentsSheet(g3B,excelWorkbookFile,studentsPhotoDirectory,2,85,14);
@@ -141,8 +146,9 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 			processStudentsSheet(g10,excelWorkbookFile,studentsPhotoDirectory,4,69,13);
 			processStudentsSheet(g11,excelWorkbookFile,studentsPhotoDirectory,4,84,9);
 			processStudentsSheet(g12,excelWorkbookFile,studentsPhotoDirectory,4,95,1);
-			
-			processPreviousDatabases(previousDatabasesFile);
+			*/
+			//processPreviousDatabases(previousDatabasesFile);
+			processPreviousDatabasesStudentEvaluations(previousDatabasesFile);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -328,6 +334,58 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	
     	System.out.println("Updating "+updatedStudentClassroomSessionDivisions.size()+" student class room session divisions");
 		SchoolBusinessLayer.getInstance().getStudentClassroomSessionDivisionBusiness().update(updatedStudentClassroomSessionDivisions);	
+    	
+    }
+    
+    private void processPreviousDatabasesStudentEvaluations(File file) throws Exception{
+    	Collection<Student> students = schoolBusinessLayer.getStudentBusiness().findAll();
+    	Collection<StudentClassroomSessionDivisionSubject> studentClassroomSessionDivisionSubjects = schoolBusinessLayer.getStudentClassroomSessionDivisionSubjectBusiness().findAll();
+    	//List<StudentClassroomSessionDivisionSubjectEvaluation> studentClassroomSessionDivisionSubjectEvaluations = new ArrayList<>();
+    	Collection<Evaluation> evaluations = new ArrayList<>();
+    	for(int divisionIndex = 0; divisionIndex < 1 ; divisionIndex++){
+    		ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
+        	readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
+        	readExcelSheetArguments.setSheetIndex(divisionIndex+2);
+        	readExcelSheetArguments.setFromRowIndex(1);
+    		List<String[]> list = CommonUtils.getInstance().readExcelSheet(readExcelSheetArguments);
+    		
+    		Evaluation evaluation = null;
+    		EvaluationType previousEvaluationType = null;
+    		for(String[] values : list){
+    			StudentClassroomSessionDivisionSubjectEvaluation studentClassroomSessionDivisionSubjectEvaluation = new StudentClassroomSessionDivisionSubjectEvaluation();
+    			Student student = null;
+    			for(Student index : students)
+    				if(index.getRegistration().getCode().equals(values[0])){
+    					student = index;
+    					break;
+    				}
+    			for(StudentClassroomSessionDivisionSubject index : studentClassroomSessionDivisionSubjects)
+    				if(index.getStudent().equals(student) && index.getClassroomSessionDivisionSubject().getSubject().getCode().equals(getSubject(values[1]))){
+    					studentClassroomSessionDivisionSubjectEvaluation.setStudentSubject(index);
+    					studentClassroomSessionDivisionSubjectEvaluation.setValue(new BigDecimal(values[3]));
+    					break;
+    				}
+    			
+    			if(evaluation == null || !evaluation.getClassroomSessionDivisionSubjectEvaluationType().getEvaluationType().equals(previousEvaluationType))
+    				evaluations.add(evaluation = new Evaluation());
+    			
+    			evaluation.getStudentSubjectEvaluations().add(studentClassroomSessionDivisionSubjectEvaluation);
+				evaluation.setClassroomSessionDivisionSubjectEvaluationType(schoolBusinessLayer.getClassroomSessionDivisionSubjectEvaluationTypeBusiness()
+    					.findBySubjectByEvaluationType(studentClassroomSessionDivisionSubjectEvaluation.getStudentSubject().getClassroomSessionDivisionSubject(),
+    							previousEvaluationType = schoolBusinessLayer.getEvaluationTypeBusiness().find(values[2])));
+        	}
+    		
+    	}
+    	
+    	System.out.println("Number of evaluations : "+evaluations.size());
+    	/*
+    	for(StudentClassroomSessionDivision studentClassroomSessionDivision : studentClassroomSessionDivisions)
+    		if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex().intValue()<2)
+    			System.out.println("No student class room session division has been found for : "+studentClassroomSessionDivision);
+    	
+    	System.out.println("Updating "+updatedStudentClassroomSessionDivisions.size()+" student class room session divisions");
+		SchoolBusinessLayer.getInstance().getStudentClassroomSessionDivisionBusiness().update(updatedStudentClassroomSessionDivisions);	
+		*/
     	
     }
     

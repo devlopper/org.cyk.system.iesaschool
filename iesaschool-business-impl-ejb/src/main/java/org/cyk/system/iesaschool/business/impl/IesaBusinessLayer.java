@@ -3,10 +3,13 @@ package org.cyk.system.iesaschool.business.impl;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import lombok.Getter;
 
 import org.cyk.system.company.business.api.structure.CompanyBusiness;
 import org.cyk.system.company.business.api.structure.OwnedCompanyBusiness;
@@ -71,8 +74,6 @@ import org.cyk.system.school.persistence.api.actor.TeacherDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.joda.time.DateTime;
-
-import lombok.Getter;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=IesaBusinessLayer.DEPLOYMENT_ORDER) @Getter
 public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -293,11 +294,11 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	schoolDataProducerHelper.createOneSubject(IesaConstant.SUBJECT_ENVIRONMENTAL_MANAGEMENT_CODE,"Environmental management",new ArrayList[]{subjectsG9G12});
     	schoolDataProducerHelper.createOneSubject(IesaConstant.SUBJECT_LAW_CODE,"Law",new ArrayList[]{subjectsG9G12});
 				
-    	Collection<ClassroomSession> classroomSessions = new ArrayList<>(); 
-    	Collection<ClassroomSessionDivision> classroomSessionDivisions = new ArrayList<>(); 
-    	Collection<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects = new ArrayList<>();
-    	Collection<ClassroomSessionDivisionSubjectEvaluationType> subjectEvaluationTypes = new ArrayList<>();
-    	Collection<ClassroomSessionDivisionStudentsMetricCollection> classroomSessionDivisionStudentsMetricCollections = new ArrayList<>(); 
+    	final Collection<ClassroomSession> classroomSessions = new ArrayList<>(); 
+    	final Collection<ClassroomSessionDivision> classroomSessionDivisions = new ArrayList<>(); 
+    	final Collection<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects = new ArrayList<>();
+    	final List<ClassroomSessionDivisionSubjectEvaluationType> subjectEvaluationTypes = new ArrayList<>();
+    	final Collection<ClassroomSessionDivisionStudentsMetricCollection> classroomSessionDivisionStudentsMetricCollections = new ArrayList<>(); 
     	
     	Integer gradeIndex = 0;
     	

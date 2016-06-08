@@ -30,7 +30,6 @@ import org.cyk.system.school.model.session.StudentClassroomSessionDivision;
 import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubject;
 import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubjectEvaluationType;
 import org.cyk.system.school.model.subject.Evaluation;
-import org.cyk.system.school.model.subject.EvaluationType;
 import org.cyk.system.school.model.subject.StudentClassroomSessionDivisionSubject;
 import org.cyk.system.school.model.subject.StudentClassroomSessionDivisionSubjectEvaluation;
 import org.cyk.system.school.model.subject.Subject;
@@ -139,17 +138,17 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 			processStudentsSheet(g3B,excelWorkbookFile,studentsPhotoDirectory,2,85,14);
 			
 			processStudentsSheet(g4A,excelWorkbookFile,studentsPhotoDirectory,3,2,19);
-			//processStudentsSheet(g4B,excelWorkbookFile,studentsPhotoDirectory,3,23,13);//0 
-			//processStudentsSheet(g5A,excelWorkbookFile,studentsPhotoDirectory,3,38,12);
-			//processStudentsSheet(g5B,excelWorkbookFile,studentsPhotoDirectory,3,52,9);
-			//processStudentsSheet(g6,excelWorkbookFile,studentsPhotoDirectory,3,63,18);
+			processStudentsSheet(g4B,excelWorkbookFile,studentsPhotoDirectory,3,23,13);//0 
+			processStudentsSheet(g5A,excelWorkbookFile,studentsPhotoDirectory,3,38,12);
+			processStudentsSheet(g5B,excelWorkbookFile,studentsPhotoDirectory,3,52,9);
+			processStudentsSheet(g6,excelWorkbookFile,studentsPhotoDirectory,3,63,18);
 			
-			/*processStudentsSheet(g7,excelWorkbookFile,studentsPhotoDirectory,4,2,16);
+			processStudentsSheet(g7,excelWorkbookFile,studentsPhotoDirectory,4,2,16);
 			processStudentsSheet(g8,excelWorkbookFile,studentsPhotoDirectory,4,20,22);
 			processStudentsSheet(g9,excelWorkbookFile,studentsPhotoDirectory,4,44,23);
 			processStudentsSheet(g10,excelWorkbookFile,studentsPhotoDirectory,4,69,13);
 			processStudentsSheet(g11,excelWorkbookFile,studentsPhotoDirectory,4,84,9);
-			processStudentsSheet(g12,excelWorkbookFile,studentsPhotoDirectory,4,95,1);*/
+			processStudentsSheet(g12,excelWorkbookFile,studentsPhotoDirectory,4,95,1);
 			
 			//processPreviousDatabases(previousDatabasesFile);
 			processPreviousDatabasesStudentEvaluations(previousDatabasesFile);
@@ -225,7 +224,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 			//System.out.println("V : "+getClassroomSession(values[0])+" , "+getSubject(values[1])+" : "+classroomSessionDivisionSubjectDao
     		//		.readByClassroomSessionBySubject(getClassroomSession(values[0]),getSubject(values[1])));
 			for(ClassroomSessionDivisionSubject classroomSessionDivisionSubject : classroomSessionDivisionSubjectDao
-    				.readByClassroomSessionBySubject(getClassroomSession(values[0]),getSubject(values[1]))){
+    				.readByClassroomSessionBySubject(getClassroomSession(values[0]),getSubject(values[1],Boolean.TRUE))){
     			
     			classroomSessionDivisionSubject.setTeacher(SchoolBusinessLayer.getInstance().getTeacherBusiness().findByRegistrationCode(values[2]));
     			classroomSessionDivisionSubjects.add(classroomSessionDivisionSubject);
@@ -350,7 +349,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	System.out.println("Student classroom session division subjects : "+studentClassroomSessionDivisionSubjects.size());
     	//List<StudentClassroomSessionDivisionSubjectEvaluation> studentClassroomSessionDivisionSubjectEvaluations = new ArrayList<>();
     	Collection<Evaluation> evaluations = new ArrayList<>();
-    	for(byte divisionIndex = 1; divisionIndex < 2 ; divisionIndex++){
+    	for(byte divisionIndex = 0; divisionIndex < 2 ; divisionIndex++){
     		ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
         	readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
         	readExcelSheetArguments.setSheetIndex(divisionIndex+2);
@@ -379,7 +378,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     			for(StudentClassroomSessionDivisionSubject index : studentClassroomSessionDivisionSubjects){
     				if(index.getStudent().getRegistration().getCode().equals(student.getRegistration().getCode()) 
     						&& 	index.getClassroomSessionDivisionSubject().getClassroomSessionDivision().getIndex().equals(divisionIndex)
-    						&& index.getClassroomSessionDivisionSubject().getSubject().equals(getSubject(values[1]))){
+    						&& index.getClassroomSessionDivisionSubject().getSubject().equals(getSubject(values[1],Boolean.FALSE))){
     					studentClassroomSessionDivisionSubjectEvaluation.setStudentSubject(index);
     					studentClassroomSessionDivisionSubjectEvaluation.setValue(new BigDecimal(values[3]));
     					break;
@@ -393,10 +392,24 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     				studentClassroomSessionDivisionSubjectsExists.add(studentClassroomSessionDivisionSubjectEvaluation.getStudentSubject());
     			
     			if(evaluation == null || !values[2].equals(previousEvaluationTypeCode)){
-    				evaluations.add(evaluation = new Evaluation());
+    				evaluation = new Evaluation();
     				evaluation.setClassroomSessionDivisionSubjectEvaluationType(schoolBusinessLayer.getClassroomSessionDivisionSubjectEvaluationTypeBusiness()
         					.findBySubjectByEvaluationType(studentClassroomSessionDivisionSubjectEvaluation.getStudentSubject().getClassroomSessionDivisionSubject(),
         							schoolBusinessLayer.getEvaluationTypeBusiness().find(previousEvaluationTypeCode = values[2])));
+    				
+    				Evaluation previous = null;
+    				for(Evaluation index : evaluations)
+    					if(index.getClassroomSessionDivisionSubjectEvaluationType().equals(evaluation.getClassroomSessionDivisionSubjectEvaluationType())){
+    						previous = index;
+    						
+    						System.out.println("Duplicate found for "+evaluation.getClassroomSessionDivisionSubjectEvaluationType().getClassroomSessionDivisionSubject().getSubject()
+    								+" - "+evaluation.getClassroomSessionDivisionSubjectEvaluationType().getEvaluationType());
+    						
+    						break;
+    					}
+    				
+    				if(previous==null)
+    					evaluations.add(evaluation);
     			}
     			
     			studentClassroomSessionDivisionSubjectEvaluation.setEvaluation(evaluation);
@@ -483,14 +496,15 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	return null;
     }
     
-    private Subject getSubject(String code){
+    private Subject getSubject(String code,Boolean load){
     	code = StringUtils.trim(code);
     	String icode = code;
-    	if(code.equals("S17"))
-    		code = IesaConstant.SUBJECT_GRAMMAR_CODE;
-    	else if(code.equals("S21"))
-    		code = IesaConstant.SUBJECT_FRENCH_CODE;
-    	else{
+    	if(Boolean.TRUE.equals(load)){
+	    	if(code.equals("S17"))
+	    		code = IesaConstant.SUBJECT_GRAMMAR_CODE;
+	    	else if(code.equals("S21"))
+	    		code = IesaConstant.SUBJECT_FRENCH_CODE;
+    	}else{
 	    	for(Subject subject : subjects){
 	    		if(subject.getName().equalsIgnoreCase(code)){
 	    			code = subject.getCode();
@@ -614,6 +628,16 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	Subject subject = SchoolBusinessLayer.getInstance().getSubjectBusiness().find(code);
     	if(subject==null)
     		System.out.println("No subject has code "+icode);
+    	else{
+    		/*if(subject.getName().toLowerCase().startsWith("science"))
+    			System.out.println("science : "+icode+" > "+code);
+    		
+    		if(subject.getName().toLowerCase().startsWith("litterature"))
+    			System.out.println("litterature : "+icode+" > "+code);
+    		*/
+    	}
+    	
+    	
     	return subject;
     }
 

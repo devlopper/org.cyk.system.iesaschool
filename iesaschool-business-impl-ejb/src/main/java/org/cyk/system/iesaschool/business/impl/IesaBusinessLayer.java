@@ -630,6 +630,8 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		StudentClassroomSession.SearchCriteria searchCriteria = new StudentClassroomSession.SearchCriteria();
 		searchCriteria.getDivisionCount().setLowest(2);
 		searchCriteria.getDivisionCount().setHighest(3);
+		searchCriteria.getDivisionIndexesRequired().add(0);
+		searchCriteria.getDivisionIndexesRequired().add(1);
 		searchCriteria.getDivisionIndexesRequired().add(2);
 		return searchCriteria;
 	}

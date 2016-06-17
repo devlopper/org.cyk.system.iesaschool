@@ -14,6 +14,7 @@ import org.cyk.ui.api.AbstractUserSession;
 import org.cyk.ui.api.command.menu.SystemMenu;
 import org.cyk.ui.web.primefaces.AbstractPrimefacesManager;
 import org.cyk.ui.web.primefaces.HierarchyNode;
+import org.cyk.ui.web.primefaces.UserSession;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.primefaces.model.TreeNode;
@@ -41,7 +42,7 @@ public class IesaWebManager extends AbstractPrimefacesManager implements Seriali
 	}
 	
 	@Override
-	public SystemMenu systemMenu(AbstractUserSession<TreeNode, HierarchyNode> userSession) {
+	public SystemMenu systemMenu(UserSession userSession) {
 		return SchoolWebManager.getInstance().systemMenu(userSession);
 	}
 	

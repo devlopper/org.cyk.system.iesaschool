@@ -18,7 +18,6 @@ import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.actor.Teacher;
 import org.cyk.system.school.ui.web.primefaces.AbstractSchoolContextListener;
 import org.cyk.system.school.ui.web.primefaces.SchoolWebManager;
-import org.cyk.ui.api.AbstractUserSession;
 import org.cyk.ui.api.command.AbstractCommandable.Builder;
 import org.cyk.ui.api.command.UICommandable;
 import org.cyk.ui.api.command.menu.AbstractMenu;
@@ -28,11 +27,9 @@ import org.cyk.ui.api.command.menu.UIMenu;
 import org.cyk.ui.api.data.collector.form.FormConfiguration;
 import org.cyk.ui.api.model.party.AbstractActorEditFormModel;
 import org.cyk.ui.api.model.party.DefaultPersonEditFormModel;
-import org.cyk.ui.web.primefaces.HierarchyNode;
 import org.cyk.ui.web.primefaces.UserSession;
 import org.cyk.ui.web.primefaces.page.tools.AbstractActorConsultPageAdapter;
 import org.cyk.ui.web.primefaces.page.tools.AbstractActorCrudOnePageAdapter;
-import org.primefaces.model.TreeNode;
 
 @WebListener
 public class ContextListener extends AbstractSchoolContextListener implements Serializable {
@@ -45,11 +42,11 @@ public class ContextListener extends AbstractSchoolContextListener implements Se
 		SchoolWebManager.getInstance().getListeners().add(new SchoolWebManager.Listener.Adapter(){
 			private static final long serialVersionUID = 2331867191141196758L;
 			@Override
-			public Set<String> getInvisibleCommandableIdentifiers(AbstractUserSession<TreeNode, HierarchyNode> userSession) {
+			public Set<String> getInvisibleCommandableIdentifiers(UserSession userSession) {
 				return new HashSet<>(Arrays.asList(SchoolWebManager.COMMANDABLE_IDENTIFIER_CONSULT_STUDENTCLASSROOMSESSION_RANKS));
 			}
 			@Override
-			public void onBusinessMenuPopulateEnded(AbstractUserSession<TreeNode, HierarchyNode> userSession,UICommandable module) {
+			public void onBusinessMenuPopulateEnded(UserSession userSession,UICommandable module) {
 				super.onBusinessMenuPopulateEnded(userSession, module);
 				module.addChild(Builder.create("iesaschool.menu.customranks", null,"studentClassroomSessionCustomConsultManyRankView"));
 			}

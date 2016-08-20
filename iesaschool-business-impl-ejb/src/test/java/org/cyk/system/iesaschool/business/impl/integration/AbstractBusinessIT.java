@@ -11,6 +11,7 @@ import org.cyk.system.company.business.impl.CompanyBusinessLayer;
 import org.cyk.system.iesaschool.business.impl.IesaBusinessLayer;
 import org.cyk.system.iesaschool.business.impl.IesaBusinessTestHelper;
 import org.cyk.system.root.business.api.GenericBusiness;
+import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.AbstractFakedDataProducer;
 import org.cyk.system.root.business.impl.BusinessIntegrationTestHelper;
@@ -51,7 +52,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     		}
     		@Override
     		public String formatBigDecimal(BigDecimal value) {
-    			return RootBusinessLayer.getInstance().getNumberBusiness().format(value);
+    			return inject(NumberBusiness.class).format(value);
     		}
     	});
 	}

@@ -5,18 +5,23 @@ import java.io.Serializable;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.iesaschool.model.IesaConstant;
+import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
+import org.cyk.system.root.business.api.mathematics.MathematicsBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness.FormatArguments;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness.FormatArguments.CharacterSet;
 import org.cyk.system.root.model.file.report.LabelValueCollectionReport;
 import org.cyk.system.root.model.userinterface.style.FontName;
 import org.cyk.system.root.model.userinterface.style.Style;
+import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
+import org.cyk.system.school.business.api.session.ClassroomSessionBusiness;
 import org.cyk.system.school.business.impl.AbstractSchoolReportProducer;
-import org.cyk.system.school.business.impl.SchoolBusinessLayer;
 import org.cyk.system.school.model.StudentResults;
 import org.cyk.system.school.model.session.AcademicSession;
 import org.cyk.system.school.model.session.ClassroomSessionDivision;
 import org.cyk.system.school.model.session.StudentClassroomSessionDivision;
 import org.cyk.system.school.model.session.StudentClassroomSessionDivisionReport;
+import org.cyk.system.school.persistence.api.session.ClassroomSessionDivisionDao;
+import org.cyk.system.school.persistence.api.session.StudentClassroomSessionDao;
 
 public class ReportProducer extends AbstractSchoolReportProducer implements Serializable{
 	
@@ -46,7 +51,7 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		r.getAcademicSession().getCompany().setName(iesa("INTERNATIONAL ")+iesa("ENGLISH ")+iesa("SCHOOL OF ")+iesa("ABIDJAN"));
 		
 		AcademicSession as = studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getAcademicSession();
-		r.getAcademicSession().setFromDateToDate(timeBusiness.findYear(as.getPeriod().getFromDate())+"/"+timeBusiness.findYear(as.getPeriod().getToDate())+" ACADEMIC SESSION");
+		r.getAcademicSession().setFromDateToDate(timeBusiness.findYear(as.getBirthDate())+"/"+timeBusiness.findYear(as.getDeathDate())+" ACADEMIC SESSION");
 	
 		r.addLabelValueCollection("PUPIL'S DETAILS",new String[][]{
 				{"Formname(s)", r.getStudent().getPerson().getLastName()}
@@ -72,7 +77,7 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		//r.setName(name+" TERM , "+studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getLevelTimeDivision().getLevel().getGroup().getName().toUpperCase()
 		//		+" REPORT");
 		
-		String levelNameCode = studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getLevelTimeDivision().getLevel().getName().getCode();
+		String levelNameCode = studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getLevelTimeDivision().getLevel().getLevelName().getCode();
 		if(ArrayUtils.contains(new String[]{IesaConstant.LEVEL_NAME_CODE_PK,IesaConstant.LEVEL_NAME_CODE_K1,IesaConstant.LEVEL_NAME_CODE_K2,IesaConstant.LEVEL_NAME_CODE_K3},levelNameCode)){
 			r.setName(r.getName()+" SHEET");
 			String performanceCodeMetricCollectionCode = null;
@@ -113,7 +118,7 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 					});
 			}
 			
-			labelValueCollectionReport = addIntervalCollectionLabelValueCollection(r,rootBusinessLayer.getMetricCollectionDao().read(performanceCodeMetricCollectionCode).getValueIntervalCollection()
+			labelValueCollectionReport = addIntervalCollectionLabelValueCollection(r,inject(MetricCollectionDao.class).read(performanceCodeMetricCollectionCode).getValueIntervalCollection()
 					,Boolean.TRUE,Boolean.FALSE,null);
 			labelValueCollectionReport.add("NA", "Not Assessed");
 		}else{
@@ -162,26 +167,26 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 			
 			r.addLabelValueCollection(labelValueCollectionReport);
 			
-			addIntervalCollectionLabelValueCollection(r,SchoolBusinessLayer.getInstance().getClassroomSessionBusiness().findCommonNodeInformations(
+			addIntervalCollectionLabelValueCollection(r,inject(ClassroomSessionBusiness.class).findCommonNodeInformations(
 				((StudentClassroomSessionDivision)r.getSource()).getClassroomSessionDivision().getClassroomSession()).getStudentClassroomSessionDivisionAverageScale()
 				,Boolean.FALSE,Boolean.TRUE,new Integer[][]{{1,2}});
 			r.getCurrentLabelValueCollection().setName(StringUtils.upperCase(r.getCurrentLabelValueCollection().getName()));
 			
-			addIntervalCollectionLabelValueCollection(r,rootBusinessLayer.getMetricCollectionDao().read(studentBehaviourMetricCollectionCode).getValueIntervalCollection()
+			addIntervalCollectionLabelValueCollection(r,inject(MetricCollectionDao.class).read(studentBehaviourMetricCollectionCode).getValueIntervalCollection()
 					,Boolean.TRUE,Boolean.FALSE,null);
 			r.getCurrentLabelValueCollection().setName(StringUtils.upperCase(r.getCurrentLabelValueCollection().getName()));
 			
 		}
 		
 		if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==2){
-			StudentResults classroomSessionResults = SchoolBusinessLayer.getInstance().getStudentClassroomSessionDao()
+			StudentResults classroomSessionResults = inject(StudentClassroomSessionDao.class)
 					.readByStudentByClassroomSession(studentClassroomSessionDivision.getStudent(), studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession()).getResults();
 			
 			r.addLabelValueCollection("HOME/SCHOOL COMMUNICATIONS",new String[][]{
 					{"ANNUAL AVERAGE",format(classroomSessionResults.getEvaluationSort().getAverage().getValue())}
 					,{"ANNUAL GRADE"
-						,classroomSessionResults.getEvaluationSort().getAverageAppreciatedInterval()==null?NULL_VALUE:rootBusinessLayer.getIntervalBusiness().findRelativeCode(classroomSessionResults.getEvaluationSort().getAverageAppreciatedInterval())}
-					,{"ANNUAL RANK",rootBusinessLayer.getMathematicsBusiness().format(classroomSessionResults.getEvaluationSort().getRank())}
+						,classroomSessionResults.getEvaluationSort().getAverageAppreciatedInterval()==null?NULL_VALUE:inject(IntervalBusiness.class).findRelativeCode(classroomSessionResults.getEvaluationSort().getAverageAppreciatedInterval())}
+					,{"ANNUAL RANK",inject(MathematicsBusiness.class).format(classroomSessionResults.getEvaluationSort().getRank())}
 					,{"PROMOTION INFORMATION",
 						classroomSessionResults.getEvaluationSort().getAveragePromotedInterval()==null?NULL_VALUE:classroomSessionResults.getEvaluationSort().getAveragePromotedInterval().getName().toUpperCase()}
 					,{"NEXT ACADEMIC SESSION",format(studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getAcademicSession().getNextStartingDate())}
@@ -189,15 +194,15 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 			});
 			
 		}else{
-			ClassroomSessionDivision nextClassroomSessionDivision = SchoolBusinessLayer.getInstance().getClassroomSessionDivisionDao()
+			ClassroomSessionDivision nextClassroomSessionDivision = inject(ClassroomSessionDivisionDao.class)
 					.readByClassroomSessionByIndex(studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession()
 							,new Byte((byte) (studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()+1)));
 		
 			r.addLabelValueCollection("HOME/SCHOOL COMMUNICATIONS",new String[][]{
 				{"CONFERENCE REQUESTED",studentClassroomSessionDivision.getResults().getConferenceRequested()==null?"NO"
 						:studentClassroomSessionDivision.getResults().getConferenceRequested()?"YES":"NO"}
-				,{"NEXT OPENING",format(nextClassroomSessionDivision.getPeriod().getFromDate())}
-				,{"NEXT TERM EXAMINATION",format(nextClassroomSessionDivision.getPeriod().getToDate())}
+				,{"NEXT OPENING",format(nextClassroomSessionDivision.getBirthDate())}
+				,{"NEXT TERM EXAMINATION",format(nextClassroomSessionDivision.getDeathDate())}
 				});
 		}
 	

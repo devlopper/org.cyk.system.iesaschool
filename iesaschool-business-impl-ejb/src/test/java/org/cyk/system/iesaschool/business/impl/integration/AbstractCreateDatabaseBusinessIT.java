@@ -15,11 +15,22 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.iesaschool.model.IesaConstant;
 import org.cyk.system.root.business.api.IdentifiableBusinessService.CompleteInstanciationOfOneFromValuesListener;
+import org.cyk.system.root.business.api.file.FileBusiness;
+import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.party.person.AbstractActorBusiness.CompleteActorInstanciationOfManyFromValuesArguments;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
-import org.cyk.system.school.business.impl.SchoolBusinessLayer;
+import org.cyk.system.school.business.api.actor.StudentBusiness;
+import org.cyk.system.school.business.api.actor.TeacherBusiness;
+import org.cyk.system.school.business.api.session.ClassroomSessionBusiness;
+import org.cyk.system.school.business.api.session.EvaluationTypeBusiness;
+import org.cyk.system.school.business.api.session.StudentClassroomSessionBusiness;
+import org.cyk.system.school.business.api.session.StudentClassroomSessionDivisionBusiness;
+import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjectBusiness;
+import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjectEvaluationTypeBusiness;
+import org.cyk.system.school.business.api.subject.EvaluationBusiness;
+import org.cyk.system.school.business.api.subject.StudentClassroomSessionDivisionSubjectBusiness;
+import org.cyk.system.school.business.api.subject.SubjectBusiness;
 import org.cyk.system.school.business.impl.SchoolDataProducerHelper;
 import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.actor.Teacher;
@@ -48,22 +59,22 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     
     @Override
     protected void businesses() {
-    	subjects = schoolBusinessLayer.getSubjectBusiness().findAll();
+    	subjects = inject(SubjectBusiness.class).findAll();
     	SchoolDataProducerHelper.Listener.COLLECTION.add(new SchoolDataProducerHelper.Listener.Adapter.Default(){
 			private static final long serialVersionUID = -5301917191935456060L;
 
 			@Override
     		public void classroomSessionDivisionCreated(ClassroomSessionDivision classroomSessionDivision) {
     			super.classroomSessionDivisionCreated(classroomSessionDivision);
-    			classroomSessionDivision.getPeriod().setFromDate(new DateTime(2016, 4, 4, 0, 0).toDate());
-    			classroomSessionDivision.getPeriod().setToDate(new DateTime(2016, 6, 13, 0, 0).toDate());
-    			classroomSessionDivision.setDuration(48l * DateTimeConstants.MILLIS_PER_DAY);
+    			classroomSessionDivision.setBirthDate(new DateTime(2016, 4, 4, 0, 0).toDate());
+    			classroomSessionDivision.setDeathDate(new DateTime(2016, 6, 13, 0, 0).toDate());
+    			classroomSessionDivision.setNumberOfMillisecond(48l * DateTimeConstants.MILLIS_PER_DAY);
     		}
 			
 			@Override
 			public void classroomSessionDivisionSubjectEvaluationTypeCreated(ClassroomSessionDivisionSubjectEvaluationType classroomSessionDivisionSubjectEvaluationType) {
 				super.classroomSessionDivisionSubjectEvaluationTypeCreated(classroomSessionDivisionSubjectEvaluationType);
-				classroomSessionDivisionSubjectEvaluationType.setCountInterval(rootBusinessLayer.getIntervalBusiness().instanciateOne(null
+				classroomSessionDivisionSubjectEvaluationType.setCountInterval(inject(IntervalBusiness.class).instanciateOne(null
 						, RandomStringUtils.randomAlphanumeric(6), "1", "1"));
 			}
     	});
@@ -180,10 +191,10 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     		@Override
 			public void afterProcessing(Teacher teacher,String[] values) {
     			//teacher.getPerson().getExtendedInformations().getTitle().setCode(getPersonTitleCode(teacher.getPerson().getExtendedInformations().getTitle().getCode()));
-				File signatureFile = new File(signatureDirectory,StringUtils.replace(teacher.getRegistration().getCode(),"/","")+".png");
+				File signatureFile = new File(signatureDirectory,StringUtils.replace(teacher.getCode(),"/","")+".png");
 				if(signatureFile.exists())
 					try {
-						teacher.getPerson().getExtendedInformations().setSignatureSpecimen(RootBusinessLayer.getInstance().getFileBusiness()
+						teacher.getPerson().getExtendedInformations().setSignatureSpecimen(inject(FileBusiness.class)
 							.process(IOUtils.toByteArray(new FileInputStream(signatureFile)), "signature.png"));
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -192,9 +203,9 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 		});
     
     	System.out.print("Instanciating teachers");
-    	List<Teacher> teachers = schoolBusinessLayer.getTeacherBusiness().instanciateMany(readExcelSheetArguments, completeActorInstanciationOfManyFromValuesArguments);
+    	List<Teacher> teachers = inject(TeacherBusiness.class).instanciateMany(readExcelSheetArguments, completeActorInstanciationOfManyFromValuesArguments);
     	System.out.println(" - Creating "+teachers.size()+" teachers");
-    	schoolBusinessLayer.getTeacherBusiness().create(teachers);
+    	inject(TeacherBusiness.class).create(teachers);
     }
     
     private void processCoordinatorsSheet(File file) throws Exception{
@@ -206,11 +217,11 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	Collection<ClassroomSession> classroomSessions = new ArrayList<>();
 		for(String[] values : list){
     		ClassroomSession classroomSession = getClassroomSession(values[0]);
-    		classroomSession.setCoordinator(SchoolBusinessLayer.getInstance().getTeacherBusiness().findByRegistrationCode(values[2]));
+    		classroomSession.setCoordinator(inject(TeacherBusiness.class).find(values[2]));
     		classroomSessions.add(classroomSession);
     	}
 		System.out.println("Updating "+classroomSessions.size()+" class room sessions");
-		SchoolBusinessLayer.getInstance().getClassroomSessionBusiness().update(classroomSessions);
+		inject(ClassroomSessionBusiness.class).update(classroomSessions);
     }
     
     private void processClassroomSessionDivisionSubjectTeachersSheet(File file) throws Exception{
@@ -226,12 +237,12 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 			for(ClassroomSessionDivisionSubject classroomSessionDivisionSubject : classroomSessionDivisionSubjectDao
     				.readByClassroomSessionBySubject(getClassroomSession(values[0]),getSubject(values[1],Boolean.TRUE))){
     			
-    			classroomSessionDivisionSubject.setTeacher(SchoolBusinessLayer.getInstance().getTeacherBusiness().findByRegistrationCode(values[2]));
+    			classroomSessionDivisionSubject.setTeacher(inject(TeacherBusiness.class).find(values[2]));
     			classroomSessionDivisionSubjects.add(classroomSessionDivisionSubject);
     		}
     	}
 		System.out.println("Updating "+classroomSessionDivisionSubjects.size()+" class room session division subjects");
-		SchoolBusinessLayer.getInstance().getClassroomSessionDivisionSubjectBusiness().update(classroomSessionDivisionSubjects);
+		inject(ClassroomSessionDivisionSubjectBusiness.class).update(classroomSessionDivisionSubjects);
     }
     
     private void processStudentsSheet(ClassroomSession classroomSession,File file,final File imageDirectory,Integer sheetIndex,Integer fromRowIndex,Integer count) throws Exception{
@@ -264,7 +275,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     			File photoFile = new File(imageDirectory,new BigDecimal(values[0]).intValue()+".jpg");
 				if(photoFile.exists())
 					try {
-						student.getPerson().setImage(RootBusinessLayer.getInstance().getFileBusiness()
+						student.getPerson().setImage(inject(FileBusiness.class)
 							.process(IOUtils.toByteArray(new FileInputStream(photoFile)), "photo.jpeg"));
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -275,12 +286,12 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 		});
     	System.out.print(classroomSession);
     	System.out.print(" - Instanciating students");
-    	List<Student> students = schoolBusinessLayer.getStudentBusiness().instanciateMany(readExcelSheetArguments, completeActorInstanciationOfManyFromValuesArguments);
+    	List<Student> students = inject(StudentBusiness.class).instanciateMany(readExcelSheetArguments, completeActorInstanciationOfManyFromValuesArguments);
     	System.out.print(" - Creating "+students.size()+" students");
-    	schoolBusinessLayer.getStudentBusiness().create(students);
+    	inject(StudentBusiness.class).create(students);
     	if(classroomSession.getLevelTimeDivision().getIndex()>3 && classroomSession.getLevelTimeDivision().getIndex()<=11){
     		System.out.println(" - Creating "+studentClassroomSessions.size()+" student classroom sessions");
-    		schoolBusinessLayer.getStudentClassroomSessionBusiness().create(studentClassroomSessions);
+    		inject(StudentClassroomSessionBusiness.class).create(studentClassroomSessions);
     		genericBusiness.flushEntityManager();
     	}else
     		System.out.println();
@@ -294,8 +305,8 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	}
     }
     
-    private void processPreviousDatabases(File file) throws Exception{
-    	List<StudentClassroomSessionDivision> studentClassroomSessionDivisions = new ArrayList<>(schoolBusinessLayer.getStudentClassroomSessionDivisionBusiness().findAll());
+    public void processPreviousDatabases(File file) throws Exception{
+    	List<StudentClassroomSessionDivision> studentClassroomSessionDivisions = new ArrayList<>(inject(StudentClassroomSessionDivisionBusiness.class).findAll());
     	Collection<StudentClassroomSessionDivision> updatedStudentClassroomSessionDivisions = new ArrayList<>();
     	System.out.println(studentClassroomSessionDivisions.size()+" student class room session divisions to update");
     	for(int divisionIndex = 0; divisionIndex < 2 ; divisionIndex++){
@@ -309,7 +320,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     		for(String[] values : list){
     			int i=0;
     			for(;i<studentClassroomSessionDivisions.size();i++){
-    				if(studentClassroomSessionDivisions.get(i).getStudent().getRegistration().getCode().equals(values[0].trim()) 
+    				if(studentClassroomSessionDivisions.get(i).getStudent().getCode().equals(values[0].trim()) 
     						&& (studentClassroomSessionDivisions.get(i).getClassroomSessionDivision().getIndex().intValue() == divisionIndex)){
     					break;
     				}
@@ -336,14 +347,14 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     			System.out.println("No student class room session division has been found for : "+studentClassroomSessionDivision);
     	
     	System.out.println("Updating "+updatedStudentClassroomSessionDivisions.size()+" student class room session divisions");
-		SchoolBusinessLayer.getInstance().getStudentClassroomSessionDivisionBusiness().update(updatedStudentClassroomSessionDivisions);	
+		inject(StudentClassroomSessionDivisionBusiness.class).update(updatedStudentClassroomSessionDivisions);	
     	
     }
     
     private void processPreviousDatabasesStudentEvaluations(File file) throws Exception{
-    	Collection<Student> students = schoolBusinessLayer.getStudentBusiness().findAll();
+    	Collection<Student> students = inject(StudentBusiness.class).findAll();
     	Set<Student> studentsExists = new HashSet<>();
-    	Collection<StudentClassroomSessionDivisionSubject> studentClassroomSessionDivisionSubjects = schoolBusinessLayer.getStudentClassroomSessionDivisionSubjectBusiness().findAll();
+    	Collection<StudentClassroomSessionDivisionSubject> studentClassroomSessionDivisionSubjects = inject(StudentClassroomSessionDivisionSubjectBusiness.class).findAll();
     	Set<StudentClassroomSessionDivisionSubject> studentClassroomSessionDivisionSubjectsExists = new HashSet<>();
     	
     	System.out.println("Student classroom session division subjects : "+studentClassroomSessionDivisionSubjects.size());
@@ -363,8 +374,8 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     			Student student = null;
     			for(Student index : students){
     				//System.out
-					//		.println("AbstractCreateDatabaseBusinessIT.processPreviousDatabasesStudentEvaluations() : "+index.getRegistration().getCode()+" , "+values[0]);
-    				if(index.getRegistration().getCode().equals(values[0])){
+					//		.println("AbstractCreateDatabaseBusinessIT.processPreviousDatabasesStudentEvaluations() : "+index.getCode()+" , "+values[0]);
+    				if(index.getCode().equals(values[0])){
     					student = index;
     					break;
     				}
@@ -376,7 +387,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     			}
     			studentsExists.add(student);
     			for(StudentClassroomSessionDivisionSubject index : studentClassroomSessionDivisionSubjects){
-    				if(index.getStudent().getRegistration().getCode().equals(student.getRegistration().getCode()) 
+    				if(index.getStudent().getCode().equals(student.getCode()) 
     						&& 	index.getClassroomSessionDivisionSubject().getClassroomSessionDivision().getIndex().equals(divisionIndex)
     						&& index.getClassroomSessionDivisionSubject().getSubject().equals(getSubject(values[1],Boolean.FALSE))){
     					studentClassroomSessionDivisionSubjectEvaluation.setStudentSubject(index);
@@ -393,9 +404,9 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     			
     			if(evaluation == null || !values[2].equals(previousEvaluationTypeCode)){
     				evaluation = new Evaluation();
-    				evaluation.setClassroomSessionDivisionSubjectEvaluationType(schoolBusinessLayer.getClassroomSessionDivisionSubjectEvaluationTypeBusiness()
+    				evaluation.setClassroomSessionDivisionSubjectEvaluationType(inject(ClassroomSessionDivisionSubjectEvaluationTypeBusiness.class)
         					.findBySubjectByEvaluationType(studentClassroomSessionDivisionSubjectEvaluation.getStudentSubject().getClassroomSessionDivisionSubject(),
-        							schoolBusinessLayer.getEvaluationTypeBusiness().find(previousEvaluationTypeCode = values[2])));
+        							inject(EvaluationTypeBusiness.class).find(previousEvaluationTypeCode = values[2])));
     				
     				Evaluation previous = null;
     				for(Evaluation index : evaluations)
@@ -428,9 +439,9 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     			System.out.println("No student class room session division has been found for : "+studentClassroomSessionDivision);
     	
     	System.out.println("Updating "+updatedStudentClassroomSessionDivisions.size()+" student class room session divisions");
-		SchoolBusinessLayer.getInstance().getStudentClassroomSessionDivisionBusiness().update(updatedStudentClassroomSessionDivisions);	
+		inject(Instance().getStudentClassroomSessionDivisionBusiness.class).update(updatedStudentClassroomSessionDivisions);	
 		*/
-    	schoolBusinessLayer.getEvaluationBusiness().create(evaluations);
+    	inject(EvaluationBusiness.class).create(evaluations);
     }
     
     private String getPersonTitleCode(String code){
@@ -625,7 +636,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	S39	SOCIOLOGY
     	S40	LAW
 		*/
-    	Subject subject = SchoolBusinessLayer.getInstance().getSubjectBusiness().find(code);
+    	Subject subject = inject(SubjectBusiness.class).find(code);
     	if(subject==null)
     		System.out.println("No subject has code "+icode);
     	else{

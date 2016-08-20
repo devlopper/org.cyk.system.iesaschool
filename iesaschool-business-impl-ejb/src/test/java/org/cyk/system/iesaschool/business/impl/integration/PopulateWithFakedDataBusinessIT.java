@@ -49,7 +49,7 @@ public class PopulateWithFakedDataBusinessIT extends AbstractBusinessIT {
 			SchoolBusinessTestHelper.getInstance().randomValues(Arrays.asList(classroomSessionInfos.division(0).getClassroomSessionDivision()), Boolean.TRUE, Boolean.TRUE,Boolean.TRUE);
 			
 			System.out.println("Generating report");
-			SchoolBusinessLayer.getInstance().getStudentClassroomSessionDivisionBusiness().buildReport(Arrays.asList(classroomSessionInfos.division(0).getClassroomSessionDivision()));
+			inject(Instance().getStudentClassroomSessionDivisionBusiness.class).buildReport(Arrays.asList(classroomSessionInfos.division(0).getClassroomSessionDivision()));
 		}
     	*/
     	

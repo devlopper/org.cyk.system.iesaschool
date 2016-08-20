@@ -10,14 +10,11 @@ import org.cyk.system.iesaschool.model.IesaConstant;
 import org.cyk.system.school.business.api.session.SchoolReportProducer;
 import org.cyk.system.school.ui.web.primefaces.SchoolWebManager;
 import org.cyk.system.school.ui.web.primefaces.session.StudentClassroomSessionDivisionConsultPage;
-import org.cyk.ui.api.AbstractUserSession;
 import org.cyk.ui.api.command.menu.SystemMenu;
 import org.cyk.ui.web.primefaces.AbstractPrimefacesManager;
-import org.cyk.ui.web.primefaces.HierarchyNode;
 import org.cyk.ui.web.primefaces.UserSession;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
-import org.primefaces.model.TreeNode;
 
 import lombok.Getter;
 

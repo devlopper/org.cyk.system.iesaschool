@@ -23,12 +23,12 @@ import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.school.business.api.actor.StudentBusiness;
 import org.cyk.system.school.business.api.actor.TeacherBusiness;
 import org.cyk.system.school.business.api.session.ClassroomSessionBusiness;
-import org.cyk.system.school.business.api.session.EvaluationTypeBusiness;
 import org.cyk.system.school.business.api.session.StudentClassroomSessionBusiness;
 import org.cyk.system.school.business.api.session.StudentClassroomSessionDivisionBusiness;
 import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjectBusiness;
 import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjectEvaluationTypeBusiness;
 import org.cyk.system.school.business.api.subject.EvaluationBusiness;
+import org.cyk.system.school.business.api.subject.EvaluationTypeBusiness;
 import org.cyk.system.school.business.api.subject.StudentClassroomSessionDivisionSubjectBusiness;
 import org.cyk.system.school.business.api.subject.SubjectBusiness;
 import org.cyk.system.school.business.impl.SchoolDataProducerHelper;
@@ -68,7 +68,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     			super.classroomSessionDivisionCreated(classroomSessionDivision);
     			classroomSessionDivision.setBirthDate(new DateTime(2016, 4, 4, 0, 0).toDate());
     			classroomSessionDivision.setDeathDate(new DateTime(2016, 6, 13, 0, 0).toDate());
-    			classroomSessionDivision.setNumberOfMillisecond(48l * DateTimeConstants.MILLIS_PER_DAY);
+    			classroomSessionDivision.getExistencePeriod().getNumberOfMillisecond().setUser(new BigDecimal(48l * DateTimeConstants.MILLIS_PER_DAY));
     		}
 			
 			@Override
@@ -86,49 +86,49 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 			,previousDatabasesFile = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\previousdatabase.xlsx");
 		
     	for(ClassroomSession classroomSession : classroomSessionDao.readAll())
-    		if(classroomSession.getLevelTimeDivision().getIndex() == 0)
+    		if(classroomSession.getLevelTimeDivision().getOrderNumber() == 0)
     			pkg = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getIndex() == 1)
+    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 1)
     			kg1 = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getIndex() == 2)
+    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 2)
     			kg2 = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getIndex() == 3)
+    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 3)
     			kg3 = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getIndex() == 4){
+    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 4){
     			if(classroomSession.getSuffix().equals("A"))
     				g1A = classroomSession;
     			else if(classroomSession.getSuffix().equals("B"))
     				g1B = classroomSession;
-    		}else if(classroomSession.getLevelTimeDivision().getIndex() == 5)
+    		}else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 5)
     			g2 = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getIndex() == 6){
+    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 6){
     			if(classroomSession.getSuffix().equals("A"))
     				g3A = classroomSession;
     			else if(classroomSession.getSuffix().equals("B"))
     				g3B = classroomSession;
-    		}else if(classroomSession.getLevelTimeDivision().getIndex() == 7){
+    		}else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 7){
     			if(classroomSession.getSuffix().equals("A"))
     				g4A = classroomSession;
     			else if(classroomSession.getSuffix().equals("B"))
     				g4B = classroomSession;
-    		}else if(classroomSession.getLevelTimeDivision().getIndex() == 8){
+    		}else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 8){
     			if(classroomSession.getSuffix().equals("A"))
     				g5A = classroomSession;
     			else if(classroomSession.getSuffix().equals("B"))
     				g5B = classroomSession;
-    		}else if(classroomSession.getLevelTimeDivision().getIndex() == 9)
+    		}else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 9)
     			g6 = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getIndex() == 10)
+    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 10)
     			g7 = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getIndex() == 11)
+    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 11)
     			g8 = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getIndex() == 12)
+    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 12)
     			g9 = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getIndex() == 13)
+    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 13)
     			g10 = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getIndex() == 14)
+    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 14)
     			g11 = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getIndex() == 15)
+    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 15)
     			g12 = classroomSession;
     	
     	try {
@@ -289,7 +289,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	List<Student> students = inject(StudentBusiness.class).instanciateMany(readExcelSheetArguments, completeActorInstanciationOfManyFromValuesArguments);
     	System.out.print(" - Creating "+students.size()+" students");
     	inject(StudentBusiness.class).create(students);
-    	if(classroomSession.getLevelTimeDivision().getIndex()>3 && classroomSession.getLevelTimeDivision().getIndex()<=11){
+    	if(classroomSession.getLevelTimeDivision().getOrderNumber()>3 && classroomSession.getLevelTimeDivision().getOrderNumber()<=11){
     		System.out.println(" - Creating "+studentClassroomSessions.size()+" student classroom sessions");
     		inject(StudentClassroomSessionBusiness.class).create(studentClassroomSessions);
     		genericBusiness.flushEntityManager();
@@ -321,7 +321,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     			int i=0;
     			for(;i<studentClassroomSessionDivisions.size();i++){
     				if(studentClassroomSessionDivisions.get(i).getStudent().getCode().equals(values[0].trim()) 
-    						&& (studentClassroomSessionDivisions.get(i).getClassroomSessionDivision().getIndex().intValue() == divisionIndex)){
+    						&& (studentClassroomSessionDivisions.get(i).getClassroomSessionDivision().getOrderNumber().intValue() == divisionIndex)){
     					break;
     				}
     			}
@@ -343,7 +343,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	}
     	
     	for(StudentClassroomSessionDivision studentClassroomSessionDivision : studentClassroomSessionDivisions)
-    		if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex().intValue()<2)
+    		if(studentClassroomSessionDivision.getClassroomSessionDivision().getOrderNumber().intValue()<2)
     			System.out.println("No student class room session division has been found for : "+studentClassroomSessionDivision);
     	
     	System.out.println("Updating "+updatedStudentClassroomSessionDivisions.size()+" student class room session divisions");
@@ -388,7 +388,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     			studentsExists.add(student);
     			for(StudentClassroomSessionDivisionSubject index : studentClassroomSessionDivisionSubjects){
     				if(index.getStudent().getCode().equals(student.getCode()) 
-    						&& 	index.getClassroomSessionDivisionSubject().getClassroomSessionDivision().getIndex().equals(divisionIndex)
+    						&& 	index.getClassroomSessionDivisionSubject().getClassroomSessionDivision().getOrderNumber().equals(divisionIndex)
     						&& index.getClassroomSessionDivisionSubject().getSubject().equals(getSubject(values[1],Boolean.FALSE))){
     					studentClassroomSessionDivisionSubjectEvaluation.setStudentSubject(index);
     					studentClassroomSessionDivisionSubjectEvaluation.setValue(new BigDecimal(values[3]));
@@ -435,7 +435,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	System.out.println("Number of evaluations : "+evaluations.size());
     	/*
     	for(StudentClassroomSessionDivision studentClassroomSessionDivision : studentClassroomSessionDivisions)
-    		if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex().intValue()<2)
+    		if(studentClassroomSessionDivision.getClassroomSessionDivision().getOrderNumber().intValue()<2)
     			System.out.println("No student class room session division has been found for : "+studentClassroomSessionDivision);
     	
     	System.out.println("Updating "+updatedStudentClassroomSessionDivisions.size()+" student class room session divisions");

@@ -9,6 +9,8 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import lombok.Getter;
+
 import org.cyk.system.company.business.api.structure.CompanyBusiness;
 import org.cyk.system.company.business.api.structure.OwnedCompanyBusiness;
 import org.cyk.system.company.business.impl.CompanyBusinessLayer;
@@ -17,17 +19,18 @@ import org.cyk.system.company.model.structure.Company;
 import org.cyk.system.company.model.structure.Employee;
 import org.cyk.system.iesaschool.model.IesaConstant;
 import org.cyk.system.root.business.api.TypedBusiness;
+import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessLayer;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
-import org.cyk.system.root.business.impl.RootRandomDataProvider;
 import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.ReportTemplate;
+import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricValueInputted;
@@ -46,12 +49,13 @@ import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.school.business.api.session.ClassroomSessionBusiness;
 import org.cyk.system.school.business.api.session.ClassroomSessionDivisionBusiness;
 import org.cyk.system.school.business.api.session.ClassroomSessionDivisionStudentsMetricCollectionBusiness;
-import org.cyk.system.school.business.api.session.EvaluationTypeBusiness;
 import org.cyk.system.school.business.api.session.LevelGroupBusiness;
 import org.cyk.system.school.business.api.session.LevelGroupTypeBusiness;
 import org.cyk.system.school.business.api.session.SchoolReportProducer;
 import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjectBusiness;
 import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjectEvaluationTypeBusiness;
+import org.cyk.system.school.business.api.subject.EvaluationTypeBusiness;
+import org.cyk.system.school.business.impl.AbstractSchoolReportProducer;
 import org.cyk.system.school.business.impl.SchoolBusinessLayer;
 import org.cyk.system.school.business.impl.SchoolDataProducerHelper;
 import org.cyk.system.school.model.SchoolConstant;
@@ -78,8 +82,6 @@ import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.joda.time.DateTime;
 
-import lombok.Getter;
-
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=IesaBusinessLayer.DEPLOYMENT_ORDER) @Getter
 public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializable {
 
@@ -89,7 +91,6 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	private static IesaBusinessLayer INSTANCE;
 	
 	@Inject private RootBusinessLayer rootBusinessLayer;
-	@Inject private RootRandomDataProvider rootRandomDataProvider;
 	@Inject private CompanyBusinessLayer companyBusinessLayer;
 	@Inject private SchoolBusinessLayer schoolBusinessLayer;
 	@Inject private SchoolDataProducerHelper schoolDataProducerHelper;
@@ -178,7 +179,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 					}
 				});
 		*/
-		schoolBusinessLayer.setReportProducer(new ReportProducer());
+		AbstractSchoolReportProducer.DEFAULT = new ReportProducer();
 		PersonBusiness.FindNamesOptions.FIRST_NAME_IS_FIRST = Boolean.FALSE;
 	}
 	
@@ -208,21 +209,27 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	File reportHeaderFile = createFile("image/document_header.png");
     	File reportBackgroundFile = createFile("image/studentclassroomsessiondivisionreport_background.jpg");
     	
-    	CommonNodeInformations commonNodeInformationsPkg = instanciateCommonNodeInformations(null,null, reportHeaderFile, reportBackgroundFile, "pkg.jrxml", "2");
-    	CommonNodeInformations commonNodeInformationsKg1 = instanciateCommonNodeInformations(null,null, reportHeaderFile, reportBackgroundFile, "kg1.jrxml", "2");
-    	CommonNodeInformations commonNodeInformationsKg2Kg3 = instanciateCommonNodeInformations(null,null, reportHeaderFile, reportBackgroundFile, "kg2kg3.jrxml", "2");
+    	Interval interval = inject(IntervalBusiness.class).instanciateOne(null, "A", "1", "2");
+		create(interval);
     	
+    	CommonNodeInformations commonNodeInformationsPkg = instanciateCommonNodeInformations(null,null, reportHeaderFile, reportBackgroundFile, "pkg.jrxml", "2",interval);
+    	CommonNodeInformations commonNodeInformationsKg1 = instanciateCommonNodeInformations(null,null, reportHeaderFile, reportBackgroundFile, "kg1.jrxml", "2",interval);
+    	CommonNodeInformations commonNodeInformationsKg2Kg3 = instanciateCommonNodeInformations(null,null, reportHeaderFile, reportBackgroundFile, "kg2kg3.jrxml", "2",interval);
+    	
+    	ReportTemplate reportTemplate = createReportTemplate("SCSDRT","student classroomsession division report",Boolean.TRUE
+    			, "report/studentclassroomsessiondivision/g1g12.jrxml", null, null, null);
+    	/*
 		File reportFile = createFile("report/studentclassroomsessiondivision/g1g12.jrxml", "studentclassroomsessiondivisionreport_g1g12.jrxml");
 		ReportTemplate reportTemplate = new ReportTemplate("SCSDRT",reportFile,reportHeaderFile,createFile("image/studentclassroomsessiondivisionreport_background.jpg"),null);
 		create(reportTemplate);
-		
+		*/
 		CommonNodeInformations commonNodeInformationsG1G3 = instanciateCommonNodeInformations(create(inject(IntervalCollectionBusiness.class)
 				.instanciateOne("ICEV1", "Grading Scale", new String[][]{
 						{"A+", "Excellent", "90", "100"},{"A", "Very good", "80", "89.99"},{"B+", "Good", "70", "79.99"},{"B", "Fair", "60", "69.99"}
 						,{"C+", "Satisfactory", "55", "59.99"},{"C", "Barely satisfactory", "50", "54.99"},{"E", "Fail", "0", "49.99"}})),
 				create(inject(IntervalCollectionBusiness.class)
 						.instanciateOne("ICP1", "Promotion Scale", new String[][]{
-								{"P", "Promoted", "50", "100"},{"PT", "Promoted on trial", "45", "49.99"},{"NP", "Not promoted", "0", "44.99"}})),reportTemplate, "2");
+								{"P", "Promoted", "50", "100"},{"PT", "Promoted on trial", "45", "49.99"},{"NP", "Not promoted", "0", "44.99"}})),reportTemplate, "2",interval);
 		CommonNodeInformations commonNodeInformationsG4G6 = commonNodeInformationsG1G3;
 		
 		CommonNodeInformations commonNodeInformationsG7G9 = instanciateCommonNodeInformations(create(inject(IntervalCollectionBusiness.class)
@@ -231,7 +238,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 						,{"D", "Satisfactory", "50", "59.99"},{"E", "Fail", "0", "49.99"}})),
 				create(inject(IntervalCollectionBusiness.class)
 						.instanciateOne("ICP2", "Promotion Scale", new String[][]{
-								{"P", "Promoted", "50", "100"},{"PT", "Promoted on trial", "45", "49.99"},{"NP", "Not promoted", "0", "44.99"}})),reportTemplate, "2");	
+								{"P", "Promoted", "50", "100"},{"PT", "Promoted on trial", "45", "49.99"},{"NP", "Not promoted", "0", "44.99"}})),reportTemplate, "2",interval);	
 		CommonNodeInformations commonNodeInformationsG10G12 = commonNodeInformationsG7G9;
 		
 		JobTitle jobTitle = createEnumeration(JobTitle.class, "Director of studies");
@@ -256,7 +263,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	academicSession.setBirthDate(new DateTime(2015, 10, 1, 0, 0).toDate());
     	academicSession.setDeathDate(new DateTime(2016, 6, 1, 0, 0).toDate());
     	academicSession = create(academicSession);
-		
+		              
 		// Subjects
     	schoolDataProducerHelper.createOneSubject(IesaConstant.SUBJECT_MATHEMATICS_CODE,"Mathematics",new ArrayList[]{subjectsG1G3,subjectsG4G6,subjectsG7G8});
     	schoolDataProducerHelper.createOneSubject(IesaConstant.SUBJECT_GRAMMAR_CODE,"Grammar",new ArrayList[]{subjectsG1G3,subjectsG4G6});
@@ -305,7 +312,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	final List<ClassroomSessionDivisionSubjectEvaluationType> subjectEvaluationTypes = new ArrayList<>();
     	final Collection<ClassroomSessionDivisionStudentsMetricCollection> classroomSessionDivisionStudentsMetricCollections = new ArrayList<>(); 
     	
-    	Integer gradeIndex = 0;
+    	Long gradeIndex = 0l;
     	
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes,academicSession
     			, schoolDataProducerHelper.createLevelTimeDivision(IesaConstant.LEVEL_NAME_CODE_PK,"Pre-Kindergarten",levelGroupKindergarten,commonNodeInformationsPkg,gradeIndex++) 
@@ -603,17 +610,23 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	,{"H", "Has no regard", "5", "5"} }).setMetricValueInputted(MetricValueInputted.VALUE_INTERVAL_CODE))};
 	}
 	
-	private CommonNodeInformations instanciateCommonNodeInformations(IntervalCollection intervalCollection,IntervalCollection promotionIntervalCollection,ReportTemplate reportTemplate,String classroomsessionDivisionIndex){
+	private CommonNodeInformations instanciateCommonNodeInformations(IntervalCollection intervalCollection,IntervalCollection promotionIntervalCollection
+			,ReportTemplate reportTemplate,String classroomsessionDivisionIndex,Interval interval){
 		CommonNodeInformations commonNodeInformations = schoolDataProducerHelper.instanciateOneCommonNodeInformations(intervalCollection,promotionIntervalCollection, reportTemplate
-				, TimeDivisionType.DAY, TimeDivisionType.TRIMESTER,"50", classroomsessionDivisionIndex);
+				, TimeDivisionType.DAY, TimeDivisionType.TRIMESTER,"50", classroomsessionDivisionIndex,interval);
 		return commonNodeInformations;
 	}
 	
-	private CommonNodeInformations instanciateCommonNodeInformations(IntervalCollection intervalCollection,IntervalCollection promotionIntervalCollection,File reportHeaderFile,File backgroundFile,String studentClassroomsessionDivisionReportTemplateFileName,String classroomsessionDivisionIndex){
-		String fileName = "studentclassroomsessiondivisionreport_"+studentClassroomsessionDivisionReportTemplateFileName;
-		File reportFile = createFile("report/studentclassroomsessiondivision/"+studentClassroomsessionDivisionReportTemplateFileName, fileName);
-		ReportTemplate reportTemplate = new ReportTemplate(studentClassroomsessionDivisionReportTemplateFileName,reportFile,reportHeaderFile,backgroundFile,null);
-		return instanciateCommonNodeInformations(intervalCollection,promotionIntervalCollection,create(reportTemplate),classroomsessionDivisionIndex);
+	private CommonNodeInformations instanciateCommonNodeInformations(IntervalCollection intervalCollection,IntervalCollection promotionIntervalCollection
+			,File reportHeaderFile,File backgroundFile,String studentClassroomsessionDivisionReportTemplateFileName,String classroomsessionDivisionIndex,Interval interval){
+		//String fileName = "studentclassroomsessiondivisionreport_"+studentClassroomsessionDivisionReportTemplateFileName;
+		//File reportFile = createFile("report/studentclassroomsessiondivision/"+studentClassroomsessionDivisionReportTemplateFileName, fileName);
+		
+		ReportTemplate reportTemplate = createReportTemplate(studentClassroomsessionDivisionReportTemplateFileName,"student classroomsession division report",Boolean.TRUE
+    			, "report/studentclassroomsessiondivision/"+studentClassroomsessionDivisionReportTemplateFileName, null, null, null);
+		
+		//ReportTemplate reportTemplate = new ReportTemplate(studentClassroomsessionDivisionReportTemplateFileName,reportFile,reportHeaderFile,backgroundFile,null);
+		return instanciateCommonNodeInformations(intervalCollection,promotionIntervalCollection,create(reportTemplate),classroomsessionDivisionIndex,interval);
 	}
 	
 	@Override

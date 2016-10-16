@@ -174,7 +174,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     	}.run();
     }
 
-    protected Collection<ClassroomSession> getClassroomSessions(Integer index){
-    	return classroomSessionDao.readByLevelTimeDivision(levelTimeDivisionDao.readByIndex(index).iterator().next());
+    protected Collection<ClassroomSession> getClassroomSessions(Long index){
+    	return classroomSessionDao.readByLevelTimeDivision(levelTimeDivisionDao.readByGlobalIdentifierOrderNumber(index).iterator().next());
     }
 }

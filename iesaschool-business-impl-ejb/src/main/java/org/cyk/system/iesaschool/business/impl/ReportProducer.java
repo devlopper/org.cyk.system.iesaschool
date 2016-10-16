@@ -19,7 +19,7 @@ import org.cyk.system.school.model.StudentResults;
 import org.cyk.system.school.model.session.AcademicSession;
 import org.cyk.system.school.model.session.ClassroomSessionDivision;
 import org.cyk.system.school.model.session.StudentClassroomSessionDivision;
-import org.cyk.system.school.model.session.StudentClassroomSessionDivisionReport;
+import org.cyk.system.school.model.session.StudentClassroomSessionDivisionReportTemplateFile;
 import org.cyk.system.school.persistence.api.session.ClassroomSessionDivisionDao;
 import org.cyk.system.school.persistence.api.session.StudentClassroomSessionDao;
 
@@ -39,26 +39,26 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		OTHER_LETTERS_STYLE.getFont().setName(FontName.TIN_BIRD_HOUSE);
 	}
 	
-	private String iesa(String text){
+	/*private String iesa(String text){
 		return getJasperStyle(text.charAt(0)+"", FIRST_LETTER_STYLE)+getJasperStyle(text.substring(1), OTHER_LETTERS_STYLE);
-	}
+	}*/
 	
 	@Override
-	public StudentClassroomSessionDivisionReport produceStudentClassroomSessionDivisionReport(StudentClassroomSessionDivision studentClassroomSessionDivision,
+	public StudentClassroomSessionDivisionReportTemplateFile produceStudentClassroomSessionDivisionReport(StudentClassroomSessionDivision studentClassroomSessionDivision,
 			StudentClassroomSessionDivisionReportParameters parameters) {
 		LabelValueCollectionReport labelValueCollectionReport;
-		StudentClassroomSessionDivisionReport r = super.produceStudentClassroomSessionDivisionReport(studentClassroomSessionDivision,parameters);
-		r.getAcademicSession().getCompany().setName(iesa("INTERNATIONAL ")+iesa("ENGLISH ")+iesa("SCHOOL OF ")+iesa("ABIDJAN"));
+		StudentClassroomSessionDivisionReportTemplateFile r = super.produceStudentClassroomSessionDivisionReport(studentClassroomSessionDivision,parameters);
+		//r.getAcademicSession().getCompany().setName(iesa("INTERNATIONAL ")+iesa("ENGLISH ")+iesa("SCHOOL OF ")+iesa("ABIDJAN"));
 		
 		AcademicSession as = studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getAcademicSession();
 		r.getAcademicSession().setFromDateToDate(timeBusiness.findYear(as.getBirthDate())+"/"+timeBusiness.findYear(as.getDeathDate())+" ACADEMIC SESSION");
 	
 		r.addLabelValueCollection("PUPIL'S DETAILS",new String[][]{
-				{"Formname(s)", r.getStudent().getPerson().getLastName()}
-				,{"Surname", r.getStudent().getPerson().getName()}
-				,{"Date of birth", r.getStudent().getPerson().getBirthDate()}
-				,{"Place of birth", r.getStudent().getPerson().getBirthLocation()}
-				,{"Admission No", r.getStudent().getRegistrationCode()}
+				{"Formname(s)", r.getStudent().getPerson().getLastnames()}
+				,{"Surname", r.getStudent().getPerson().getNames()}
+				,{"Date of birth", r.getStudent().getPerson().getGlobalIdentifier().getExistencePeriod().getFrom()}
+				,{"Place of birth", r.getStudent().getPerson().getGlobalIdentifier().getBirthLocation()}
+				,{"Admission No", r.getStudent().getGlobalIdentifier().getCode()}
 				,{"Class", r.getClassroomSessionDivision().getClassroomSession().getName()}
 				,{"Gender", r.getStudent().getPerson().getSex()}
 				});
@@ -72,7 +72,7 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 		FormatArguments formatArguments = new FormatArguments();
 		formatArguments.setIsRank(Boolean.TRUE);
 		formatArguments.setType(CharacterSet.LETTER);
-		String nameFormat = numberBusiness.format(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()+1, formatArguments).toUpperCase();
+		String nameFormat = numberBusiness.format(studentClassroomSessionDivision.getClassroomSessionDivision().getOrderNumber(), formatArguments).toUpperCase();
 		nameFormat += " TERM , %s REPORT %s";
 		//r.setName(name+" TERM , "+studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession().getLevelTimeDivision().getLevel().getGroup().getName().toUpperCase()
 		//		+" REPORT");
@@ -178,7 +178,7 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 			
 		}
 		
-		if(studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()==2){
+		if(studentClassroomSessionDivision.getClassroomSessionDivision().getOrderNumber()==3){
 			StudentResults classroomSessionResults = inject(StudentClassroomSessionDao.class)
 					.readByStudentByClassroomSession(studentClassroomSessionDivision.getStudent(), studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession()).getResults();
 			
@@ -195,8 +195,8 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 			
 		}else{
 			ClassroomSessionDivision nextClassroomSessionDivision = inject(ClassroomSessionDivisionDao.class)
-					.readByClassroomSessionByIndex(studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession()
-							,new Byte((byte) (studentClassroomSessionDivision.getClassroomSessionDivision().getIndex()+1)));
+					.readByClassroomSessionByOrderNumber(studentClassroomSessionDivision.getClassroomSessionDivision().getClassroomSession()
+							, studentClassroomSessionDivision.getClassroomSessionDivision().getOrderNumber());
 		
 			r.addLabelValueCollection("HOME/SCHOOL COMMUNICATIONS",new String[][]{
 				{"CONFERENCE REQUESTED",studentClassroomSessionDivision.getResults().getConferenceRequested()==null?"NO"

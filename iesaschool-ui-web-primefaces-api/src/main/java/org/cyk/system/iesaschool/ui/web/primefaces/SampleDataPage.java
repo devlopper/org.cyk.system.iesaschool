@@ -3,16 +3,11 @@ package org.cyk.system.iesaschool.ui.web.primefaces;
 import java.io.Serializable;
 
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.NotNull;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
-import org.cyk.system.root.business.impl.RootRandomDataProvider;
 import org.cyk.ui.api.command.CommandAdapter;
 import org.cyk.ui.api.command.UICommand;
 import org.cyk.ui.web.primefaces.data.collector.form.FormOneData;
@@ -23,13 +18,14 @@ import org.cyk.utility.common.annotation.user.interfaces.InputOneChoice;
 import org.cyk.utility.common.annotation.user.interfaces.InputOneCombo;
 import org.cyk.utility.common.generator.RandomDataProvider;
 
-@Getter @Setter @Named @ViewScoped //TOFIX to be moved on GUI projects
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter @Named @ViewScoped //FIXME to be moved on GUI projects
 public class SampleDataPage extends AbstractPrimefacesPage implements Serializable {
 
 	private static final long serialVersionUID = 3459311493291130244L;
 
-	@Inject private RootRandomDataProvider rootRandomDataProvider;
-    
 	private RootBusinessLayer rootBusinessLayer = RootBusinessLayer.getInstance();
 	private RandomDataProvider randomDataProvider = RandomDataProvider.getInstance();
 

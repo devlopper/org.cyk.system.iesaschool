@@ -626,7 +626,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     			, "report/studentclassroomsessiondivision/"+studentClassroomsessionDivisionReportTemplateFileName, null, null, null);
 		
 		//ReportTemplate reportTemplate = new ReportTemplate(studentClassroomsessionDivisionReportTemplateFileName,reportFile,reportHeaderFile,backgroundFile,null);
-		return instanciateCommonNodeInformations(intervalCollection,promotionIntervalCollection,create(reportTemplate),classroomsessionDivisionIndex,interval);
+		return instanciateCommonNodeInformations(intervalCollection,promotionIntervalCollection,reportTemplate,classroomsessionDivisionIndex,interval);
 	}
 	
 	@Override

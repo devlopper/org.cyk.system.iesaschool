@@ -62,7 +62,7 @@
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
-		<field name="studentClassroomSessionDivision" class="org.cyk.system.school.model.session.StudentClassroomSessionDivisionReport">
+		<field name="studentClassroomSessionDivision" class="org.cyk.system.school.model.session.StudentClassroomSessionDivisionReportTemplateFile">
 			<fieldDescription><![CDATA[studentClassroomSessionDivision]]></fieldDescription>
 		</field>
 		<field name="teacher" class="org.cyk.system.root.model.party.person.ActorReport">
@@ -271,7 +271,7 @@
 				</textField>
 				<image isUsingCache="false" onErrorType="Blank">
 					<reportElement x="2" y="19" width="64" height="70" uuid="1e10220e-5880-4b76-a166-a93abc111a9b"/>
-					<imageExpression><![CDATA[$F{student}.getPerson().getImage()]]></imageExpression>
+					<imageExpression><![CDATA[$F{student}.getPerson().getGlobalIdentifier().getImage()]]></imageExpression>
 				</image>
 				<componentElement>
 					<reportElement key="table 1" x="68" y="15" width="222" height="74" backcolor="#FF66CC" uuid="711cc9eb-d9e1-40ef-8d1d-c907bf767ba5"/>
@@ -587,7 +587,7 @@
 										<font size="9"/>
 										<paragraph leftIndent="3"/>
 									</textElement>
-									<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_DYNAMIC_FONT_NAME} + "'>" +$F{averageScale}.getCode()+"</font>"]]></textFieldExpression>
+									<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_DYNAMIC_FONT_NAME} + "'>" +$F{averageScale}.getGlobalIdentifier().getCode()+"</font>"]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -710,7 +710,7 @@
 										<font size="9"/>
 										<paragraph leftIndent="5"/>
 									</textElement>
-									<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_DYNAMIC_FONT_NAME} + "'>" +$F{averageScale}.getName()+"</font>"]]></textFieldExpression>
+									<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_DYNAMIC_FONT_NAME} + "'>" +$F{averageScale}.getGlobalIdentifier().getName()+"</font>"]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>

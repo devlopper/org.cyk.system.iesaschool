@@ -18,7 +18,7 @@ import org.cyk.system.school.model.session.ClassroomSessionDivision;
 import org.cyk.system.school.model.session.StudentClassroomSession;
 import org.cyk.system.school.model.session.StudentClassroomSessionDivision;
 import org.cyk.system.school.ui.web.primefaces.session.AbstractLevelTimeDivisionConsultPage;
-import org.cyk.system.school.ui.web.primefaces.session.StudentClassroomSessionConsultManyRankPage;
+import org.cyk.system.school.ui.web.primefaces.session.student.StudentClassroomSessionConsultManyRankPage;
 import org.cyk.ui.web.primefaces.Table;
 
 import lombok.Getter;

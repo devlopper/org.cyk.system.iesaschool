@@ -9,7 +9,7 @@ import org.cyk.system.iesaschool.business.impl.IesaBusinessLayer;
 import org.cyk.system.iesaschool.model.IesaConstant;
 import org.cyk.system.school.business.api.session.SchoolReportProducer;
 import org.cyk.system.school.ui.web.primefaces.SchoolWebManager;
-import org.cyk.system.school.ui.web.primefaces.session.StudentClassroomSessionDivisionConsultPage;
+import org.cyk.system.school.ui.web.primefaces.session.student.StudentClassroomSessionDivisionConsultPage;
 import org.cyk.ui.api.command.menu.SystemMenu;
 import org.cyk.ui.web.primefaces.AbstractPrimefacesManager;
 import org.cyk.ui.web.primefaces.UserSession;

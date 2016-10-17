@@ -19,6 +19,7 @@ import org.cyk.system.company.model.structure.Company;
 import org.cyk.system.company.model.structure.Employee;
 import org.cyk.system.iesaschool.model.IesaConstant;
 import org.cyk.system.root.business.api.TypedBusiness;
+import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
@@ -46,6 +47,7 @@ import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.GenericDao;
+import org.cyk.system.root.persistence.api.file.report.ReportTemplateDao;
 import org.cyk.system.school.business.api.session.ClassroomSessionBusiness;
 import org.cyk.system.school.business.api.session.ClassroomSessionDivisionBusiness;
 import org.cyk.system.school.business.api.session.ClassroomSessionDivisionStudentsMetricCollectionBusiness;
@@ -216,8 +218,13 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	CommonNodeInformations commonNodeInformationsKg1 = instanciateCommonNodeInformations(null,null, reportHeaderFile, reportBackgroundFile, "kg1.jrxml", "2",interval);
     	CommonNodeInformations commonNodeInformationsKg2Kg3 = instanciateCommonNodeInformations(null,null, reportHeaderFile, reportBackgroundFile, "kg2kg3.jrxml", "2",interval);
     	
-    	ReportTemplate reportTemplate = createReportTemplate("SCSDRT","student classroomsession division report",Boolean.TRUE
-    			, "report/studentclassroomsessiondivision/g1g12.jrxml", null, null, null);
+    	//ReportTemplate reportTemplate = createReportTemplate("SCSDRT","student classroomsession division report",Boolean.TRUE
+    	//		, "report/studentclassroomsessiondivision/g1g12.jrxml", null, null, null);
+    	
+    	ReportTemplate reportTemplate = inject(ReportTemplateDao.class).read(SchoolConstant.REPORT_STUDENT_CLASSROOM_SESSION_DIVISION_SHEET);
+    	reportTemplate.getTemplate().setBytes(getResourceAsBytes(IesaBusinessLayer.class.getPackage(), "report/studentclassroomsessiondivision/g1g12.jrxml"));
+    	inject(FileBusiness.class).update(reportTemplate.getTemplate());
+    	
     	/*
 		File reportFile = createFile("report/studentclassroomsessiondivision/g1g12.jrxml", "studentclassroomsessiondivisionreport_g1g12.jrxml");
 		ReportTemplate reportTemplate = new ReportTemplate("SCSDRT",reportFile,reportHeaderFile,createFile("image/studentclassroomsessiondivisionreport_background.jpg"),null);

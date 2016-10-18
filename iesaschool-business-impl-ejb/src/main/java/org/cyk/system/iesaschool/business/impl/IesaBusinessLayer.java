@@ -14,6 +14,7 @@ import lombok.Getter;
 import org.cyk.system.company.business.api.structure.CompanyBusiness;
 import org.cyk.system.company.business.api.structure.OwnedCompanyBusiness;
 import org.cyk.system.company.business.impl.CompanyBusinessLayer;
+import org.cyk.system.company.model.CompanyConstant;
 import org.cyk.system.company.model.structure.Company;
 import org.cyk.system.company.model.structure.Employee;
 import org.cyk.system.iesaschool.model.IesaConstant;
@@ -25,6 +26,7 @@ import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessLayer;
+import org.cyk.system.root.business.impl.PersistDataListener;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -46,6 +48,7 @@ import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.GenericDao;
+import org.cyk.system.root.persistence.api.file.FileDao;
 import org.cyk.system.root.persistence.api.file.report.ReportTemplateDao;
 import org.cyk.system.school.business.api.session.ClassroomSessionBusiness;
 import org.cyk.system.school.business.api.session.ClassroomSessionDivisionBusiness;
@@ -119,15 +122,27 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	protected void initialisation() {
 		INSTANCE = this;
 		super.initialisation();
-		/*rootBusinessLayer.getBusinessLayerListeners().add(new BusinessLayerListener.Adapter.Default(){
-			
-			private static final long serialVersionUID = -9212697312172717454L;
+		PersistDataListener.COLLECTION.add(new PersistDataListener.Adapter.Default(){
+			private static final long serialVersionUID = -950053441831528010L;
+			@SuppressWarnings("unchecked")
 			@Override
-			public void beforeInstall(BusinessLayer businessLayer,Installation installation) {
-				installation.getApplication().setName("IESA WebApp");
-				super.beforeInstall(businessLayer, installation);
+			public <T> T processPropertyValue(Class<?> aClass,String instanceCode, String name, T value) {
+				if(File.class.equals(aClass)){
+					if(CompanyConstant.FILE_DOCUMENT_HEADER.equals(instanceCode)){
+						if(PersistDataListener.RELATIVE_PATH.equals(name))
+							return (T) "image/document_header.png";
+					}else if(CompanyConstant.FILE_DOCUMENT_BACKGROUND.equals(instanceCode)){
+						if(PersistDataListener.RELATIVE_PATH.equals(name))
+							return (T) "image/studentclassroomsessiondivisionreport_background.jpg";
+					}
+				}else if(ReportTemplate.class.equals(aClass)){
+					if(SchoolConstant.REPORT_STUDENT_CLASSROOM_SESSION_DIVISION_SHEET.equals(instanceCode))
+						if(PersistDataListener.RELATIVE_PATH.equals(name))
+							return (T) "report/studentclassroomsessiondivision/g1g12.jrxml";
+				}
+				return super.processPropertyValue(aClass, instanceCode, name, value);
 			}
-		});*/
+		});
 		
 		CompanyBusinessLayer.Listener.COLLECTION.add(new CompanyBusinessLayer.Listener.Adapter() {
 			private static final long serialVersionUID = 5179809445850168706L;
@@ -207,9 +222,9 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	
     	createMetricCollections();
     	
-    	File reportHeaderFile = createFile("image/document_header.png");
-    	File reportBackgroundFile = createFile("image/studentclassroomsessiondivisionreport_background.jpg");
-    	
+    	File reportHeaderFile = inject(FileDao.class).read(CompanyConstant.FILE_DOCUMENT_HEADER); //createFile("image/document_header.png");
+    	File reportBackgroundFile = inject(FileDao.class).read(CompanyConstant.FILE_DOCUMENT_BACKGROUND); //createFile("image/studentclassroomsessiondivisionreport_background.jpg");
+    	debug(reportHeaderFile);
     	Interval interval = inject(IntervalBusiness.class).instanciateOne(null, "A", "1", "2");
 		create(interval);
     	

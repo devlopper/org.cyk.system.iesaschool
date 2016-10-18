@@ -19,7 +19,6 @@ import org.cyk.system.company.model.structure.Company;
 import org.cyk.system.company.model.structure.Employee;
 import org.cyk.system.iesaschool.model.IesaConstant;
 import org.cyk.system.root.business.api.TypedBusiness;
-import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
@@ -127,18 +126,25 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 			@SuppressWarnings("unchecked")
 			@Override
 			public <T> T processPropertyValue(Class<?> aClass,String instanceCode, String name, T value) {
+				if(SchoolConstant.REPORT_STUDENT_CLASSROOM_SESSION_DIVISION_SHEET.equals(instanceCode)){
+					if(PersistDataListener.BASE_PACKAGE.equals(name))
+						return (T) IesaBusinessLayer.class.getPackage();
+					if(PersistDataListener.RELATIVE_PATH.equals(name))
+						return (T) "report/studentclassroomsessiondivision/g1g12.jrxml";
+				}
+				
 				if(File.class.equals(aClass)){
 					if(CompanyConstant.FILE_DOCUMENT_HEADER.equals(instanceCode)){
+						if(PersistDataListener.BASE_PACKAGE.equals(name))
+							return (T) IesaBusinessLayer.class.getPackage();
 						if(PersistDataListener.RELATIVE_PATH.equals(name))
 							return (T) "image/document_header.png";
 					}else if(CompanyConstant.FILE_DOCUMENT_BACKGROUND.equals(instanceCode)){
+						if(PersistDataListener.BASE_PACKAGE.equals(name))
+							return (T) IesaBusinessLayer.class.getPackage();
 						if(PersistDataListener.RELATIVE_PATH.equals(name))
 							return (T) "image/studentclassroomsessiondivisionreport_background.jpg";
 					}
-				}else if(ReportTemplate.class.equals(aClass)){
-					if(SchoolConstant.REPORT_STUDENT_CLASSROOM_SESSION_DIVISION_SHEET.equals(instanceCode))
-						if(PersistDataListener.RELATIVE_PATH.equals(name))
-							return (T) "report/studentclassroomsessiondivision/g1g12.jrxml";
 				}
 				return super.processPropertyValue(aClass, instanceCode, name, value);
 			}
@@ -224,7 +230,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	
     	File reportHeaderFile = inject(FileDao.class).read(CompanyConstant.FILE_DOCUMENT_HEADER); //createFile("image/document_header.png");
     	File reportBackgroundFile = inject(FileDao.class).read(CompanyConstant.FILE_DOCUMENT_BACKGROUND); //createFile("image/studentclassroomsessiondivisionreport_background.jpg");
-    	debug(reportHeaderFile);
+    	
     	Interval interval = inject(IntervalBusiness.class).instanciateOne(null, "A", "1", "2");
 		create(interval);
     	
@@ -236,9 +242,9 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	//		, "report/studentclassroomsessiondivision/g1g12.jrxml", null, null, null);
     	
     	ReportTemplate reportTemplate = inject(ReportTemplateDao.class).read(SchoolConstant.REPORT_STUDENT_CLASSROOM_SESSION_DIVISION_SHEET);
-    	reportTemplate.getTemplate().setBytes(getResourceAsBytes(IesaBusinessLayer.class.getPackage(), "report/studentclassroomsessiondivision/g1g12.jrxml"));
+    	/*reportTemplate.getTemplate().setBytes(getResourceAsBytes(IesaBusinessLayer.class.getPackage(), "report/studentclassroomsessiondivision/g1g12.jrxml"));
     	inject(FileBusiness.class).update(reportTemplate.getTemplate());
-    	
+    	*/
     	/*
 		File reportFile = createFile("report/studentclassroomsessiondivision/g1g12.jrxml", "studentclassroomsessiondivisionreport_g1g12.jrxml");
 		ReportTemplate reportTemplate = new ReportTemplate("SCSDRT",reportFile,reportHeaderFile,createFile("image/studentclassroomsessiondivisionreport_background.jpg"),null);

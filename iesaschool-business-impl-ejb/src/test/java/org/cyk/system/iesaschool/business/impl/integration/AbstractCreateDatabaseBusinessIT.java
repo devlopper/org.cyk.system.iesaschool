@@ -79,6 +79,8 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 			}
     	});
     	installApplication();
+    	if(Boolean.TRUE.equals(noData()))
+    		return;
     	File directory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data");
 		File excelWorkbookFile = new File(directory, "data.xlsx")
 			,teachersSignatureDirectory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature")
@@ -168,6 +170,10 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 		}
     	
     	System.exit(0);
+    }
+    
+    protected Boolean noData(){
+    	return Boolean.FALSE;
     }
     
     private void processTeachersSheet(File file,final File signatureDirectory) throws Exception{

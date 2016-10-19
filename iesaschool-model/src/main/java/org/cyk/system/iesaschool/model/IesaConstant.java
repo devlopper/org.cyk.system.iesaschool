@@ -2,6 +2,8 @@ package org.cyk.system.iesaschool.model;
 
 public interface IesaConstant {
 	
+	String IESA = "IESA";
+	
 	String SUBJECT_MATHEMATICS_CODE = "S01";
 	String SUBJECT_GRAMMAR_CODE = "S02";
 	String SUBJECT_READING_COMPREHENSION_CODE = "S03";

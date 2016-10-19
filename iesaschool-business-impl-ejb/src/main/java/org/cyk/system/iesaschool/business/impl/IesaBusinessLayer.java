@@ -2,6 +2,7 @@ package org.cyk.system.iesaschool.business.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -25,12 +26,14 @@ import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessLayer;
+import org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl;
 import org.cyk.system.root.business.impl.PersistDataListener;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.ReportTemplate;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollection;
@@ -69,8 +72,10 @@ import org.cyk.system.school.model.session.ClassroomSession;
 import org.cyk.system.school.model.session.ClassroomSessionDivision;
 import org.cyk.system.school.model.session.ClassroomSessionDivisionStudentsMetricCollection;
 import org.cyk.system.school.model.session.CommonNodeInformations;
+import org.cyk.system.school.model.session.Level;
 import org.cyk.system.school.model.session.LevelGroup;
 import org.cyk.system.school.model.session.LevelGroupType;
+import org.cyk.system.school.model.session.LevelTimeDivision;
 import org.cyk.system.school.model.session.School;
 import org.cyk.system.school.model.session.StudentClassroomSession;
 import org.cyk.system.school.model.session.StudentClassroomSessionDivision;
@@ -202,7 +207,19 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 				});
 		*/
 		AbstractSchoolReportProducer.DEFAULT = new ReportProducer();
-		PersonBusiness.FindNamesOptions.FIRST_NAME_IS_FIRST = Boolean.FALSE;
+		PersonBusiness.FindNamesArguments.FIRST_NAME_IS_FIRST = Boolean.FALSE;
+		SchoolReportProducer.DEFAULT_STUDENT_CLASSROOM_SESSION_DIVISION_REPORT_PARAMETERS.getEvaluationTypeCodes()
+		.addAll(Arrays.asList(IesaConstant.EVALUATION_TYPE_TEST1,IesaConstant.EVALUATION_TYPE_TEST2,IesaConstant.EVALUATION_TYPE_EXAM));
+    	SchoolReportProducer.DEFAULT_STUDENT_CLASSROOM_SESSION_DIVISION_REPORT_PARAMETERS.setSumMarks(Boolean.TRUE);
+		
+		SchoolConstant.Code.LevelGroup.KINDERGARTEN = "KS";
+		SchoolConstant.Code.LevelGroup.PRIMARY = "PS";
+		SchoolConstant.Code.LevelGroup.SECONDARY = "HS";
+		
+		AbstractIdentifiableBusinessServiceImpl.addAutoSetPropertyValueClass(new String[]{GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME}
+			,AcademicSession.class,Level.class,LevelTimeDivision.class,ClassroomSession.class,ClassroomSessionDivision.class,ClassroomSessionDivisionSubject.class
+			,ClassroomSessionDivisionSubjectEvaluationType.class,StudentClassroomSession.class,StudentClassroomSessionDivision.class
+			,StudentClassroomSessionDivisionSubject.class);
 	}
 	
 	@Override @SuppressWarnings("unchecked")
@@ -215,11 +232,11 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		updateEnumeration(Sex.class, Sex.FEMALE, "Female");
 		
 		LevelGroupType levelGroupType = create(inject(LevelGroupTypeBusiness.class).instanciateOne("LevelGroupTypeDummy"));
-		LevelGroup levelGroupKindergarten = (LevelGroup) create(inject(LevelGroupBusiness.class).instanciateOne(SchoolConstant.LEVEL_GROUP_KINDERGARTEN)
+		LevelGroup levelGroupKindergarten = (LevelGroup) create(inject(LevelGroupBusiness.class).instanciateOne(SchoolConstant.Code.LevelGroup.KINDERGARTEN)
 				.setType(levelGroupType));
-		LevelGroup levelGroupPrimary = (LevelGroup) create(inject(LevelGroupBusiness.class).instanciateOne(SchoolConstant.LEVEL_GROUP_PRIMARY)
+		LevelGroup levelGroupPrimary = (LevelGroup) create(inject(LevelGroupBusiness.class).instanciateOne(SchoolConstant.Code.LevelGroup.PRIMARY)
 				.setType(levelGroupType));
-		LevelGroup levelGroupSecondary = (LevelGroup) create(inject(LevelGroupBusiness.class).instanciateOne(SchoolConstant.LEVEL_GROUP_SECONDARY)
+		LevelGroup levelGroupSecondary = (LevelGroup) create(inject(LevelGroupBusiness.class).instanciateOne(SchoolConstant.Code.LevelGroup.SECONDARY)
 				.setType(levelGroupType));
 		
     	evaluationTypeTest1 = create(inject(EvaluationTypeBusiness.class).instanciateOne(IesaConstant.EVALUATION_TYPE_TEST1,"Test 1"));
@@ -228,8 +245,8 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	
     	createMetricCollections();
     	
-    	File reportHeaderFile = inject(FileDao.class).read(CompanyConstant.FILE_DOCUMENT_HEADER); //createFile("image/document_header.png");
-    	File reportBackgroundFile = inject(FileDao.class).read(CompanyConstant.FILE_DOCUMENT_BACKGROUND); //createFile("image/studentclassroomsessiondivisionreport_background.jpg");
+    	File reportHeaderFile = inject(FileDao.class).read(CompanyConstant.FILE_DOCUMENT_HEADER); 
+    	File reportBackgroundFile = inject(FileDao.class).read(CompanyConstant.FILE_DOCUMENT_BACKGROUND);
     	
     	Interval interval = inject(IntervalBusiness.class).instanciateOne(null, "A", "1", "2");
 		create(interval);
@@ -238,18 +255,8 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	CommonNodeInformations commonNodeInformationsKg1 = instanciateCommonNodeInformations(null,null, reportHeaderFile, reportBackgroundFile, "kg1.jrxml", "2",interval);
     	CommonNodeInformations commonNodeInformationsKg2Kg3 = instanciateCommonNodeInformations(null,null, reportHeaderFile, reportBackgroundFile, "kg2kg3.jrxml", "2",interval);
     	
-    	//ReportTemplate reportTemplate = createReportTemplate("SCSDRT","student classroomsession division report",Boolean.TRUE
-    	//		, "report/studentclassroomsessiondivision/g1g12.jrxml", null, null, null);
-    	
     	ReportTemplate reportTemplate = inject(ReportTemplateDao.class).read(SchoolConstant.REPORT_STUDENT_CLASSROOM_SESSION_DIVISION_SHEET);
-    	/*reportTemplate.getTemplate().setBytes(getResourceAsBytes(IesaBusinessLayer.class.getPackage(), "report/studentclassroomsessiondivision/g1g12.jrxml"));
-    	inject(FileBusiness.class).update(reportTemplate.getTemplate());
-    	*/
-    	/*
-		File reportFile = createFile("report/studentclassroomsessiondivision/g1g12.jrxml", "studentclassroomsessiondivisionreport_g1g12.jrxml");
-		ReportTemplate reportTemplate = new ReportTemplate("SCSDRT",reportFile,reportHeaderFile,createFile("image/studentclassroomsessiondivisionreport_background.jpg"),null);
-		create(reportTemplate);
-		*/
+    	
 		CommonNodeInformations commonNodeInformationsG1G3 = instanciateCommonNodeInformations(create(inject(IntervalCollectionBusiness.class)
 				.instanciateOne("ICEV1", "Grading Scale", new String[][]{
 						{"A+", "Excellent", "90", "100"},{"A", "Very good", "80", "89.99"},{"B+", "Good", "70", "79.99"},{"B", "Fair", "60", "69.99"}
@@ -287,8 +294,8 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	companyBusiness.update(school.getOwnedCompany().getCompany());
     	
     	AcademicSession academicSession = new AcademicSession(school,commonNodeInformationsG1G3,new DateTime(2016, 4, 4, 0, 0).toDate());
-    	academicSession.setBirthDate(new DateTime(2015, 10, 1, 0, 0).toDate());
-    	academicSession.setDeathDate(new DateTime(2016, 6, 1, 0, 0).toDate());
+    	academicSession.setBirthDate(new DateTime(2016, 10, 1, 0, 0).toDate());
+    	academicSession.setDeathDate(new DateTime(2017, 6, 1, 0, 0).toDate());
     	academicSession = create(academicSession);
 		              
 		// Subjects

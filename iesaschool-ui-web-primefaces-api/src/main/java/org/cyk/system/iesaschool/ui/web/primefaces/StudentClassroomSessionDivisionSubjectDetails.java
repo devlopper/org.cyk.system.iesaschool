@@ -11,7 +11,7 @@ import org.cyk.utility.common.annotation.user.interfaces.InputText;
 import org.cyk.utility.common.annotation.user.interfaces.Sequence;
 import org.cyk.utility.common.annotation.user.interfaces.Sequence.Direction;
 
-public class SubjectDetails extends AbstractStudentClassroomSessionDivisionSubjectDetails implements Serializable{
+public class StudentClassroomSessionDivisionSubjectDetails extends AbstractStudentClassroomSessionDivisionSubjectDetails implements Serializable{
 	
 	private static final long serialVersionUID = -4741435164709063863L;
 	
@@ -19,7 +19,7 @@ public class SubjectDetails extends AbstractStudentClassroomSessionDivisionSubje
 	@Input @InputText @Sequence(direction=Direction.AFTER,field=FIELD_TEST1) private String test2;
 	@Input @InputText @Sequence(direction=Direction.AFTER,field=FIELD_TEST2) private String exam;
 	
-	public SubjectDetails(StudentClassroomSessionDivisionSubject studentClassroomSessionDivisionSubject) {
+	public StudentClassroomSessionDivisionSubjectDetails(StudentClassroomSessionDivisionSubject studentClassroomSessionDivisionSubject) {
 		super(studentClassroomSessionDivisionSubject);
 		for(StudentClassroomSessionDivisionSubjectEvaluation studentSubjectEvaluation : studentClassroomSessionDivisionSubject.getDetails()){
 			if(studentSubjectEvaluation.getStudentSubject().equals(studentClassroomSessionDivisionSubject)){

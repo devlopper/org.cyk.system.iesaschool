@@ -32,6 +32,8 @@ import org.cyk.system.school.business.api.subject.EvaluationTypeBusiness;
 import org.cyk.system.school.business.api.subject.StudentClassroomSessionDivisionSubjectBusiness;
 import org.cyk.system.school.business.api.subject.SubjectBusiness;
 import org.cyk.system.school.business.impl.SchoolDataProducerHelper;
+import org.cyk.system.school.business.impl.session.LevelBusinessImpl;
+import org.cyk.system.school.business.impl.session.LevelTimeDivisionBusinessImpl;
 import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.actor.Teacher;
 import org.cyk.system.school.model.session.ClassroomSession;
@@ -59,6 +61,8 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     
     @Override
     protected void businesses() {
+    	LevelBusinessImpl.PROPERTY_VALUE_TOKENS_CONCATENATE_WITH_GROUP_LEVELNAME_SPECIALITY = Boolean.FALSE;
+    	LevelTimeDivisionBusinessImpl.PROPERTY_VALUE_TOKENS_CONCATENATE_WITH_TIMEDIVISIONTYPE = Boolean.FALSE;
     	subjects = inject(SubjectBusiness.class).findAll();
     	SchoolDataProducerHelper.Listener.COLLECTION.add(new SchoolDataProducerHelper.Listener.Adapter.Default(){
 			private static final long serialVersionUID = -5301917191935456060L;

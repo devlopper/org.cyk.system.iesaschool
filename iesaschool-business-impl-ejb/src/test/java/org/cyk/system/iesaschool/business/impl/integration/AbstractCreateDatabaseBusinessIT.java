@@ -275,8 +275,8 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setListener(new CompleteInstanciationOfOneFromValuesListener<Student>() {
 			@Override
 			public void beforeProcessing(Student student,String[] values) {
-				if(!ArrayUtils.contains(new String[]{"g9","g10","g11","g12"}, values[7].toLowerCase()));
-					studentClassroomSessions.add(new StudentClassroomSession(student, getClassroomSession(values[7])));
+				//if(!ArrayUtils.contains(new String[]{"g9","g10","g11","g12"}, values[7].toLowerCase()));
+				//	studentClassroomSessions.add(new StudentClassroomSession(student, getClassroomSession(values[7])));
 			}
     		@Override
 			public void afterProcessing(Student student,String[] values) {
@@ -285,8 +285,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     			File photoFile = new File(imageDirectory,new BigDecimal(values[0]).intValue()+".jpg");
 				if(photoFile.exists())
 					try {
-						student.getPerson().setImage(inject(FileBusiness.class)
-							.process(IOUtils.toByteArray(new FileInputStream(photoFile)), "photo.jpeg"));
+						student.setImage(inject(FileBusiness.class).process(IOUtils.toByteArray(new FileInputStream(photoFile)), "photo.jpeg"));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -299,12 +298,12 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	List<Student> students = inject(StudentBusiness.class).instanciateMany(readExcelSheetArguments, completeActorInstanciationOfManyFromValuesArguments);
     	System.out.print(" - Creating "+students.size()+" students");
     	inject(StudentBusiness.class).create(students);
-    	if(classroomSession.getLevelTimeDivision().getOrderNumber()>3 && classroomSession.getLevelTimeDivision().getOrderNumber()<=11){
+    	/*if(classroomSession.getLevelTimeDivision().getOrderNumber()>3 && classroomSession.getLevelTimeDivision().getOrderNumber()<=11){
     		System.out.println(" - Creating "+studentClassroomSessions.size()+" student classroom sessions");
     		inject(StudentClassroomSessionBusiness.class).create(studentClassroomSessions);
     		genericBusiness.flushEntityManager();
     	}else
-    		System.out.println();
+    		System.out.println();*/
     	
     	//System.out.println("Number of students : "+ classroomSessionDao.read(classroomSession.getIdentifier()).getNumberOfStudents());
     	

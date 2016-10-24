@@ -2,19 +2,7 @@ package org.cyk.system.iesaschool.ui.web.primefaces;
 
 import java.io.Serializable;
 
-import org.cyk.system.root.model.geography.Country;
-import org.cyk.system.root.model.language.Language;
-import org.cyk.system.root.model.party.person.Allergy;
-import org.cyk.system.root.model.party.person.JobFunction;
-import org.cyk.system.root.model.party.person.JobTitle;
-import org.cyk.system.root.model.party.person.Medication;
-import org.cyk.system.root.model.party.person.Person;
-import org.cyk.system.root.model.party.person.PersonRelationshipType;
-import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.security.Role;
-import org.cyk.system.school.model.session.AcademicSession;
-import org.cyk.system.school.model.subject.Subject;
-import org.cyk.ui.api.command.UICommandable;
 import org.cyk.ui.api.command.menu.SystemMenu;
 import org.cyk.ui.web.primefaces.UserSession;
 
@@ -39,27 +27,8 @@ public class SystemMenuBuilder extends org.cyk.system.school.ui.web.primefaces.a
 		addBusinessMenu(userSession,systemMenu,getRegularActivitiesCommandable(userSession, null));
 		addBusinessMenu(userSession,systemMenu,getResultsCardCommandable(userSession, null));
 		
-		if(userSession.hasRole(Role.MANAGER)){
-		UICommandable module = createModuleCommandable("", null);
-			module.setLabel("Référence");
-			module.addChild(createListCommandable(Person.class, null));
-			module.addChild(createListCommandable(PersonTitle.class, null));
-			module.addChild(createListCommandable(JobFunction.class, null));
-			module.addChild(createListCommandable(JobTitle.class, null));
-			module.addChild(createListCommandable(PersonRelationshipType.class, null));
-			
-			module.addChild(createListCommandable(Country.class, null));
-			
-			module.addChild(createListCommandable(Language.class, null));
-			
-			module.addChild(createListCommandable(Medication.class, null));
-			module.addChild(createListCommandable(Allergy.class, null));
-			
-			module.addChild(createListCommandable(AcademicSession.class, null));
-			module.addChild(createListCommandable(Subject.class, null));
-			
-			systemMenu.getBusinesses().add(module);
-		}
+		addReferences(userSession, systemMenu, null);
+		
 		initialiseNavigatorTree(userSession);//TODO make it as a call after .build
 		return systemMenu;
 	}

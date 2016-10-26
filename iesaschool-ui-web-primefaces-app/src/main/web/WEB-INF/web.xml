@@ -11,5 +11,10 @@
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.jsf</url-pattern>
 	</servlet-mapping>
+	
+	<!--mime-mapping>
+        <extension>jrxml</extension>
+        <mime-type>text/plain</mime-type>
+    </mime-mapping-->
 
 </web-app>

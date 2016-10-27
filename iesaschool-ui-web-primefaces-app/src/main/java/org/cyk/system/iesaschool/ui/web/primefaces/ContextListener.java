@@ -12,6 +12,8 @@ import org.cyk.system.company.model.structure.Employee;
 import org.cyk.system.root.business.api.language.LanguageBusiness.FindTextResult;
 import org.cyk.system.root.business.impl.geography.ContactCollectionDetails;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
+import org.cyk.system.root.business.impl.party.person.AbstractActorDetails;
+import org.cyk.system.root.business.impl.party.person.AbstractPersonDetails;
 import org.cyk.system.root.business.impl.party.person.JobDetails;
 import org.cyk.system.root.business.impl.party.person.MedicalDetails;
 import org.cyk.system.root.business.impl.party.person.MedicalInformationsAllergyDetails;
@@ -92,6 +94,27 @@ public class ContextListener extends AbstractSchoolContextListener implements Se
 			private static final long serialVersionUID = 1L;
 
 			@Override
+			public FindTextResult afterFindFieldLabelText(Class<?> aClass,Field field, FindTextResult findTextResult) {
+				if(AbstractPersonEditFormModel.class.isAssignableFrom(aClass) || AbstractPersonDetails.class.isAssignableFrom(aClass)){
+					if(AbstractPersonEditFormModel.FIELD_NAME.equals(field.getName()))
+						findTextResult.setValue("Surname");
+					else if(AbstractPersonEditFormModel.FIELD_IMAGE.equals(field.getName()))
+						findTextResult.setValue("Photo");
+				}
+				if(AbstractActorEditFormModel.class.isAssignableFrom(aClass) || AbstractActorDetails.class.isAssignableFrom(aClass)){
+					if(AbstractActorEditFormModel.FIELD_CODE.equals(field.getName()))
+						findTextResult.setValue("Admission No");
+					else if(AbstractActorEditFormModel.FIELD_REGISTRATION_DATE.equals(field.getName()))
+						findTextResult.setValue("Date of admission");
+				}
+				if(StudentEditPage.Form.class.isAssignableFrom(aClass) || StudentDetails.class.isAssignableFrom(aClass)){
+					if(StudentEditPage.Form.FIELD_ADMISSION_LEVEL_TIME_DIVISION.equals(field.getName()))
+						findTextResult.setValue("Admission level");
+				}
+				return super.afterFindFieldLabelText(aClass, field, findTextResult);
+			}
+			
+			/*@Override
 			public FindTextResult afterFindFieldLabelText(Object object,Field field, FindTextResult findTextResult) {
 				if(object instanceof AbstractPersonEditFormModel<?>){
 					if(AbstractPersonEditFormModel.FIELD_NAME.equals(field.getName()))
@@ -110,7 +133,7 @@ public class ContextListener extends AbstractSchoolContextListener implements Se
 						findTextResult.setValue("Admission level");
 				}
 				return super.afterFindFieldLabelText(object, field, findTextResult);
-			}
+			}*/
 		});
 	}
 		

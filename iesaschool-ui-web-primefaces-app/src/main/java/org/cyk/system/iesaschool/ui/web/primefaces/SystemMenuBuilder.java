@@ -2,16 +2,12 @@ package org.cyk.system.iesaschool.ui.web.primefaces;
 
 import java.io.Serializable;
 
-import org.cyk.system.root.model.security.Role;
-import org.cyk.ui.api.command.menu.SystemMenu;
-import org.cyk.ui.web.primefaces.UserSession;
-
 public class SystemMenuBuilder extends org.cyk.system.school.ui.web.primefaces.adapter.enterpriseresourceplanning.SystemMenuBuilder implements Serializable {
 
 	private static final long serialVersionUID = 6995162040038809581L;
 
 	private static SystemMenuBuilder INSTANCE;
-	
+	/*
 	@Override
 	public SystemMenu build(UserSession userSession) {
 		SystemMenu systemMenu = new SystemMenu();
@@ -31,7 +27,7 @@ public class SystemMenuBuilder extends org.cyk.system.school.ui.web.primefaces.a
 		
 		initialiseNavigatorTree(userSession);//TODO make it as a call after .build
 		return systemMenu;
-	}
+	}*/
 	
 	public static SystemMenuBuilder getInstance(){
 		if(INSTANCE==null)

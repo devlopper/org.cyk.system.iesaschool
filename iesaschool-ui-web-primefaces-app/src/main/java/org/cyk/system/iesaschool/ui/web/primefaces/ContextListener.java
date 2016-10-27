@@ -1,6 +1,7 @@
 package org.cyk.system.iesaschool.ui.web.primefaces;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.List;
 
 import javax.servlet.ServletContextEvent;
@@ -8,7 +9,9 @@ import javax.servlet.annotation.WebListener;
 
 import org.cyk.system.company.business.impl.structure.EmployeeDetails;
 import org.cyk.system.company.model.structure.Employee;
+import org.cyk.system.root.business.api.language.LanguageBusiness.FindTextResult;
 import org.cyk.system.root.business.impl.geography.ContactCollectionDetails;
+import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 import org.cyk.system.root.business.impl.party.person.JobDetails;
 import org.cyk.system.root.business.impl.party.person.MedicalDetails;
 import org.cyk.system.root.business.impl.party.person.MedicalInformationsAllergyDetails;
@@ -24,6 +27,7 @@ import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.actor.Teacher;
 import org.cyk.system.school.ui.web.primefaces.AbstractSchoolContextListener;
 import org.cyk.system.school.ui.web.primefaces.SchoolWebManager;
+import org.cyk.system.school.ui.web.primefaces.page.StudentEditPage;
 import org.cyk.system.school.ui.web.primefaces.session.student.StudentClassroomSessionDivisionConsultPage;
 import org.cyk.ui.api.AbstractWindow;
 import org.cyk.ui.api.command.UICommandable;
@@ -31,6 +35,8 @@ import org.cyk.ui.api.command.menu.AbstractMenu;
 import org.cyk.ui.api.command.menu.MenuManager;
 import org.cyk.ui.api.command.menu.MenuManager.ModuleGroup;
 import org.cyk.ui.api.command.menu.UIMenu;
+import org.cyk.ui.api.model.party.AbstractActorEditFormModel;
+import org.cyk.ui.api.model.party.AbstractPersonEditFormModel;
 import org.cyk.ui.web.primefaces.UserSession;
 import org.cyk.ui.web.primefaces.page.AbstractPrimefacesPage.PageInstanceManager;
 
@@ -81,6 +87,31 @@ public class ContextListener extends AbstractSchoolContextListener implements Se
 				return super.isShowDetails(detailsClass, identifiable,window);
 			}
 		};
+		
+		LanguageBusinessImpl.Listener.COLLECTION.add(new LanguageBusinessImpl.Listener.Adapter.Default.EnterpriseResourcePlanning(){
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public FindTextResult afterFindFieldLabelText(Object object,Field field, FindTextResult findTextResult) {
+				if(object instanceof AbstractPersonEditFormModel<?>){
+					if(AbstractPersonEditFormModel.FIELD_NAME.equals(field.getName()))
+						findTextResult.setValue("Surname");
+					else if(AbstractPersonEditFormModel.FIELD_IMAGE.equals(field.getName()))
+						findTextResult.setValue("Photo");
+				}
+				if(object instanceof AbstractActorEditFormModel<?>){
+					if(AbstractActorEditFormModel.FIELD_CODE.equals(field.getName()))
+						findTextResult.setValue("Admission No");
+					else if(AbstractActorEditFormModel.FIELD_REGISTRATION_DATE.equals(field.getName()))
+						findTextResult.setValue("Date of admission");
+				}
+				if(object instanceof StudentEditPage.Form){
+					if(StudentEditPage.Form.FIELD_ADMISSION_LEVEL_TIME_DIVISION.equals(field.getName()))
+						findTextResult.setValue("Admission level");
+				}
+				return super.afterFindFieldLabelText(object, field, findTextResult);
+			}
+		});
 	}
 		
 	/**/

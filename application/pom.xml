@@ -5,13 +5,13 @@
 
 	<parent>
 		<groupId>org.cyk.system.iesaschool</groupId>
-		<artifactId>pom</artifactId>
+		<artifactId>iesaschool-_pom</artifactId>
 		<version>0.0.1</version>
 	</parent>
 
 	<name>Application</name>
 
-	<artifactId>application</artifactId>
+	<artifactId>iesaschool-application</artifactId>
 	<packaging>ear</packaging>
 
 	<pluginRepositories>

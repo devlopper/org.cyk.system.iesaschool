@@ -10,7 +10,7 @@
 	</parent>
 
 	<groupId>org.cyk.system.iesaschool</groupId>
-	<artifactId>pom</artifactId>
+	<artifactId>iesaschool-_pom</artifactId>
 	<version>0.0.1</version>
 	<packaging>pom</packaging>
 
@@ -27,7 +27,7 @@
 		<module>../iesaschool-application-resources</module>
 		
 		<module>../iesaschool-ui-web-primefaces-app</module>
-		<module>../application</module>
+		<module>../iesaschool-application</module>
 	</modules>
 
 	<properties>

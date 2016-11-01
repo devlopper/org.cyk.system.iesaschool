@@ -1,6 +1,7 @@
 package org.cyk.system.iesaschool.business.impl;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -71,6 +72,7 @@ import org.cyk.system.school.business.impl.SchoolBusinessLayer;
 import org.cyk.system.school.business.impl.SchoolDataProducerHelper;
 import org.cyk.system.school.business.impl.actor.StudentBusinessImpl;
 import org.cyk.system.school.business.impl.actor.TeacherBusinessImpl;
+import org.cyk.system.school.business.impl.subject.ClassroomSessionDivisionSubjectBusinessImpl;
 import org.cyk.system.school.model.SchoolConstant;
 import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.actor.Teacher;
@@ -243,7 +245,24 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	TeacherBusinessImpl.Listener.COLLECTION.add(new TeacherBusinessImpl.Listener.Adapter.Default.EnterpriseResourcePlanning());
     	EmployeeBusinessImpl.Listener.COLLECTION.add(new EmployeeBusinessImpl.Listener.Adapter.Default.EnterpriseResourcePlanning()); 
     	
-		SchoolConstant.Code.LevelGroup.KINDERGARTEN = "KS";
+    	ClassroomSessionDivisionSubjectBusinessImpl.Listener.COLLECTION.add(new ClassroomSessionDivisionSubjectBusinessImpl.Listener.Adapter.Default.EnterpriseResourcePlanning(){
+			private static final long serialVersionUID = 1L;
+    		@Override
+    		public void afterCreate(ClassroomSessionDivisionSubject classroomSessionDivisionSubject) {
+    			super.afterCreate(classroomSessionDivisionSubject);
+    			Collection<ClassroomSessionDivisionSubjectEvaluationType> classroomSessionDivisionSubjectEvaluationTypes = new ArrayList<>();
+    			for(EvaluationType evaluationType : inject(EvaluationTypeBusiness.class).findAll()){
+    				ClassroomSessionDivisionSubjectEvaluationType classroomSessionDivisionSubjectEvaluationType = new ClassroomSessionDivisionSubjectEvaluationType();
+    				classroomSessionDivisionSubjectEvaluationType.setClassroomSessionDivisionSubject(classroomSessionDivisionSubject);
+    				classroomSessionDivisionSubjectEvaluationType.setEvaluationType(evaluationType);
+    				classroomSessionDivisionSubjectEvaluationType.setMaximumValue(new BigDecimal("100"));
+    				classroomSessionDivisionSubjectEvaluationType.setCountInterval(inject(IntervalBusiness.class).instanciateOne(null, null, "1", "1"));
+    				classroomSessionDivisionSubjectEvaluationTypes.add(classroomSessionDivisionSubjectEvaluationType);
+    			}
+    			inject(ClassroomSessionDivisionSubjectEvaluationTypeBusiness.class).create(classroomSessionDivisionSubjectEvaluationTypes);
+    		}
+    	});
+    	SchoolConstant.Code.LevelGroup.KINDERGARTEN = "KS";
 		SchoolConstant.Code.LevelGroup.PRIMARY = "PS";
 		SchoolConstant.Code.LevelGroup.SECONDARY = "HS";
 		

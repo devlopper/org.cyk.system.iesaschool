@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Student Classroom Session Division Report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="de4e9630-bfde-428f-bc68-96e9a465fd5d">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="432"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -257,7 +257,7 @@
 				</textField>
 			</frame>
 		</band>
-		<band height="97">
+		<band height="95">
 			<frame>
 				<reportElement mode="Transparent" x="0" y="2" width="290" height="91" backcolor="#33FFFF" uuid="6b6c63bd-9412-43cd-aff6-b9bdc4d25e8a"/>
 				<textField>
@@ -385,7 +385,7 @@
 					<textFieldExpression><![CDATA["<font face='" + $P{CYK_TEXT_STATIC_FONT_NAME} + "'>" +$F{subjectsBlockTitle}+"</font>"]]></textFieldExpression>
 				</textField>
 				<componentElement>
-					<reportElement key="table 2" x="0" y="12" width="555" height="36" uuid="68657a31-e9fb-40e2-99b6-b3069f952bde"/>
+					<reportElement key="table 2" x="0" y="12" width="555" height="43" uuid="68657a31-e9fb-40e2-99b6-b3069f952bde"/>
 					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 						<datasetRun subDataset="Subjects Dataset" uuid="b5c7b352-ecca-4b2d-be57-34e79e3bd611">
 							<datasetParameter name="CYK_TEXT_STATIC_FONT_NAME">

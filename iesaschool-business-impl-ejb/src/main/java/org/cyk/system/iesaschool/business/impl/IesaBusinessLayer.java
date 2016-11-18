@@ -63,7 +63,7 @@ import org.cyk.system.school.business.api.session.ClassroomSessionDivisionBusine
 import org.cyk.system.school.business.api.session.ClassroomSessionDivisionStudentsMetricCollectionBusiness;
 import org.cyk.system.school.business.api.session.LevelGroupBusiness;
 import org.cyk.system.school.business.api.session.LevelGroupTypeBusiness;
-import org.cyk.system.school.business.api.session.SchoolReportProducer;
+import org.cyk.system.school.business.api.session.StudentClassroomSessionDivisionBusiness;
 import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjectBusiness;
 import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjectEvaluationTypeBusiness;
 import org.cyk.system.school.business.api.subject.EvaluationTypeBusiness;
@@ -221,9 +221,9 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		*/
 		AbstractSchoolReportProducer.DEFAULT = new ReportProducer();
 		PersonBusiness.FindNamesArguments.FIRST_NAME_IS_FIRST = Boolean.FALSE;
-		SchoolReportProducer.DEFAULT_STUDENT_CLASSROOM_SESSION_DIVISION_REPORT_PARAMETERS.getEvaluationTypeCodes()
+		StudentClassroomSessionDivisionBusiness.EVALUATION_TYPE_CODES
 		.addAll(Arrays.asList(IesaConstant.EVALUATION_TYPE_TEST1,IesaConstant.EVALUATION_TYPE_TEST2,IesaConstant.EVALUATION_TYPE_EXAM));
-    	SchoolReportProducer.DEFAULT_STUDENT_CLASSROOM_SESSION_DIVISION_REPORT_PARAMETERS.setSumMarks(Boolean.TRUE);
+		StudentClassroomSessionDivisionBusiness.SUM_MARKS[0] = Boolean.TRUE;
 		
     	StudentBusinessImpl.Listener.COLLECTION.add(new StudentBusinessImpl.Listener.Adapter.Default.EnterpriseResourcePlanning(){
     		private static final long serialVersionUID = 1L;
@@ -475,8 +475,8 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	classroomSessionDivisionStudentsMetricCollectionBusiness.create(classroomSessionDivisionStudentsMetricCollections);
     	
     	for(AbstractIdentifiable identifiable :  genericDao.use(EvaluationType.class).select().all())
-    		SchoolReportProducer.DEFAULT_STUDENT_CLASSROOM_SESSION_DIVISION_REPORT_PARAMETERS.getEvaluationTypeCodes().add(((EvaluationType)identifiable).getCode());
-    	SchoolReportProducer.DEFAULT_STUDENT_CLASSROOM_SESSION_DIVISION_REPORT_PARAMETERS.setSumMarks(Boolean.TRUE);
+    		StudentClassroomSessionDivisionBusiness.EVALUATION_TYPE_CODES.add(((EvaluationType)identifiable).getCode());
+    	StudentClassroomSessionDivisionBusiness.SUM_MARKS[0] = Boolean.TRUE;
     	
     	/* reading data from excel files */
 	}

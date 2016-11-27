@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -20,7 +19,6 @@ import org.cyk.system.company.model.CompanyConstant;
 import org.cyk.system.company.model.structure.Company;
 import org.cyk.system.company.model.structure.Employee;
 import org.cyk.system.iesaschool.model.IesaConstant;
-import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
@@ -44,6 +42,7 @@ import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricValueInputted;
 import org.cyk.system.root.model.mathematics.MetricValueType;
+import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.model.party.person.JobInformations;
 import org.cyk.system.root.model.party.person.JobTitle;
@@ -51,6 +50,7 @@ import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
+import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.time.TimeDivisionType;
@@ -162,7 +162,25 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 							return (T) IesaBusinessLayer.class.getPackage();
 						if(PersistDataListener.RELATIVE_PATH.equals(name))
 							return (T) "image/studentclassroomsessiondivisionreport_background.jpg";
+					}else if(CompanyConstant.FILE_DOCUMENT_BACKGROUND_DRAFT.equals(instanceCode)){
+						if(PersistDataListener.BASE_PACKAGE.equals(name))
+							return (T) IesaBusinessLayer.class.getPackage();
+						if(PersistDataListener.RELATIVE_PATH.equals(name))
+							return (T) "image/studentclassroomsessiondivisionreport_background_draft2.png";
 					}
+				}
+				
+				if(SmtpProperties.class.equals(aClass)){
+					if(SmtpProperties.FIELD_FROM.equals(name))
+						return (T) "kycdev@gmail.com";
+					if(SmtpProperties.FIELD_HOST.equals(name))
+						return (T) "smtp@gmail.com";
+					if(SmtpProperties.FIELD_PORT.equals(name))
+						return (T) new Integer(465);
+					if(commonUtils.attributePath(SmtpProperties.FIELD_CREDENTIALS, Credentials.FIELD_USERNAME).equals(name))
+						return (T) "kycdev@gmail.com";
+					if(commonUtils.attributePath(SmtpProperties.FIELD_CREDENTIALS, Credentials.FIELD_USERNAME).equals(name))
+						return (T) "p@ssw0rd*";
 				}
 				return super.processPropertyValue(aClass, instanceCode, name, value);
 			}
@@ -517,9 +535,6 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		inject(UserAccountBusiness.class).create(rootDataProducerHelper.getUserAccounts());
 		*/
 	}
-	
-	@Override
-    public void registerTypedBusinessBean(Map<Class<AbstractIdentifiable>, TypedBusiness<AbstractIdentifiable>> beansMap) {}
 	
 	/**/
 	

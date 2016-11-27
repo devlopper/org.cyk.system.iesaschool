@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebListener;
 import org.cyk.system.company.business.impl.structure.EmployeeDetails;
 import org.cyk.system.company.model.structure.Employee;
 import org.cyk.system.root.business.api.language.LanguageBusiness.FindTextResult;
+import org.cyk.system.root.business.api.message.MailBusiness;
 import org.cyk.system.root.business.impl.geography.ContactCollectionDetails;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 import org.cyk.system.root.business.impl.party.person.AbstractActorDetails;
@@ -135,6 +136,8 @@ public class ContextListener extends AbstractSchoolContextListener implements Se
 				return super.afterFindFieldLabelText(object, field, findTextResult);
 			}*/
 		});
+		
+		inject(MailBusiness.class).setProperties("smtp.gmail.com", 465, "kycdev@gmail.com", "p@ssw0rd*");
 	}
 		
 	/**/

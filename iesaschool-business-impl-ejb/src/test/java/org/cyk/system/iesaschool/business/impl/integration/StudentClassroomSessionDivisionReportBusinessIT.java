@@ -87,7 +87,7 @@ public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBus
     	    		{"STUD1","85","20","30"}
     	    		,{"STUD2","55","50","60"}
     	    	}}
-    	}, Boolean.TRUE,Boolean.TRUE, Boolean.TRUE,Boolean.TRUE);
+    	}, Boolean.TRUE,Boolean.TRUE, Boolean.TRUE,Boolean.TRUE,Boolean.FALSE);
     	
     	classroomSessionDivision = inject(ClassroomSessionDivisionBusiness.class).findByClassroomSessionByOrderNumber(g4,index);
     	classroomSessionDivisionSubjects = new ArrayList<>(inject(ClassroomSessionDivisionSubjectBusiness.class).findByClassroomSessionDivision(classroomSessionDivision));
@@ -96,7 +96,7 @@ public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBus
     	    		{"STUD1","84","12","23"}
     	    		,{"STUD2","51","94","26"}
     	    	}}
-    	}, Boolean.TRUE,Boolean.TRUE, Boolean.TRUE,Boolean.TRUE);
+    	}, Boolean.TRUE,Boolean.TRUE, Boolean.TRUE,Boolean.TRUE,Boolean.FALSE);
     	
     	classroomSessionDivision = inject(ClassroomSessionDivisionBusiness.class).findByClassroomSessionByOrderNumber(g7,index);
     	classroomSessionDivisionSubjects = new ArrayList<>(inject(ClassroomSessionDivisionSubjectBusiness.class).findByClassroomSessionDivision(classroomSessionDivision));
@@ -105,7 +105,7 @@ public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBus
     	    		{"STUD1","48","15","26"}
     	    		,{"STUD2","24","35","68"}
     	    	}}
-    	}, Boolean.TRUE,Boolean.TRUE, Boolean.TRUE,Boolean.TRUE);
+    	}, Boolean.TRUE,Boolean.TRUE, Boolean.TRUE,Boolean.TRUE,Boolean.FALSE);
     	
     	/*
     	classroomSessionDivision = inject(ClassroomSessionDivisionBusiness.class).findByClassroomSessionByIndex(g9,index);

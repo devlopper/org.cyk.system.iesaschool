@@ -56,7 +56,7 @@ public class ReportProducer extends AbstractSchoolReportProducer implements Seri
 	
 		r.addLabelValueCollection("PUPIL'S DETAILS",new String[][]{
 				{"Formname(s)", r.getStudent().getPerson().getLastnames()}
-				,{"Surname", r.getStudent().getPerson().getNames()}
+				,{"Surname", r.getStudent().getPerson().getGlobalIdentifier().getName()}
 				,{"Date of birth", r.getStudent().getPerson().getGlobalIdentifier().getExistencePeriod().getFrom()}
 				,{"Place of birth", r.getStudent().getPerson().getGlobalIdentifier().getBirthLocation()}
 				,{"Admission No", r.getStudent().getGlobalIdentifier().getCode()}

@@ -1,14 +1,22 @@
 package org.cyk.system.iesaschool.business.impl.integration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
+import org.cyk.system.root.model.party.person.PersonRelationshipType;
+import org.cyk.system.school.business.api.actor.StudentBusiness;
+import org.cyk.system.school.business.api.session.ClassroomSessionBusiness;
 import org.cyk.system.school.business.api.session.ClassroomSessionDivisionBusiness;
 import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjectBusiness;
+import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.session.ClassroomSession;
 import org.cyk.system.school.model.session.ClassroomSessionDivision;
+import org.cyk.system.school.model.session.LevelTimeDivision;
 import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubject;
 import org.cyk.system.school.model.subject.EvaluationType;
+import org.cyk.system.school.persistence.api.session.LevelTimeDivisionDao;
 
 public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBusinessIT {
 
@@ -20,27 +28,57 @@ public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBus
     protected void businesses() {  
     	installApplication();
     	
-    	pk=getClassroomSessions(0l).iterator().next();
-    	k1=getClassroomSessions(1l).iterator().next();
-    	k2=getClassroomSessions(2l).iterator().next();
-    	k3=getClassroomSessions(3l).iterator().next();
-    	g1=getClassroomSessions(4l).iterator().next();
-    	g2=getClassroomSessions(5l).iterator().next();
-    	g3=getClassroomSessions(6l).iterator().next();
-    	g4=getClassroomSessions(7l).iterator().next();
-    	g5=getClassroomSessions(8l).iterator().next();
-    	g6=getClassroomSessions(9l).iterator().next();
-    	g7=getClassroomSessions(10l).iterator().next();
-    	g8=getClassroomSessions(11l).iterator().next();
-    	g9=getClassroomSessions(12l).iterator().next();
-    	g10=getClassroomSessions(13l).iterator().next();
-    	g11=getClassroomSessions(14l).iterator().next();
-    	g12=getClassroomSessions(15l).iterator().next();
+    	pk=getClassroomSessionOne(0l);
+    	k1=getClassroomSessionOne(1l);
+    	k2=getClassroomSessionOne(2l);
+    	k3=getClassroomSessionOne(3l);
+    	g1=getClassroomSessionOne(4l);
+    	g2=getClassroomSessionOne(5l);
+    	g3=getClassroomSessionOne(6l);
+    	g4=getClassroomSessionOne(7l);
+    	g5=getClassroomSessionOne(8l);
+    	g6=getClassroomSessionOne(9l);
+    	g7=getClassroomSessionOne(10l);
+    	g8=getClassroomSessionOne(11l);
+    	g9=getClassroomSessionOne(12l);
+    	g10=getClassroomSessionOne(13l);
+    	g11=getClassroomSessionOne(14l);
+    	g12=getClassroomSessionOne(15l);
     	
     	
-    	//schoolBusinessTestHelper.createActors(Student.class,new String[]{"STUD1","STUD2","STUD3","STUD4","STUD5"});
-    	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"STUD1","STUD2"},pk, new Object[][]{{0},{0},{0}});
-    	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"STUD1","STUD2"},k1, new Object[][]{{0},{0},{0}});
+    	Student student1 = inject(StudentBusiness.class).instanciateOne();
+    	student1.setCode("STUD1");
+    	student1.setName("komenan");
+    	student1.getPerson().setLastnames("yao christian");
+    	inject(ElectronicMailBusiness.class).setAddress(student1.getPerson(), PersonRelationshipType.FAMILY_FATHER, "kycdev@gmail.com");
+    	inject(ElectronicMailBusiness.class).setAddress(student1.getPerson(), PersonRelationshipType.FAMILY_MOTHER, "ckydevbackup@gmail.com");
+    	
+    	Student pkStudent = inject(StudentBusiness.class).instanciateOne();
+    	pkStudent.setCode("PK_STUD1");
+    	pkStudent.setName("Zadi");
+    	pkStudent.getPerson().setLastnames("leon");
+    	//inject(ElectronicMailBusiness.class).setAddress(pkStudent.getPerson(), PersonRelationshipType.FAMILY_FATHER, "kycdev@gmail.com");
+    	//inject(ElectronicMailBusiness.class).setAddress(pkStudent.getPerson(), PersonRelationshipType.FAMILY_MOTHER, "ckydevbackup@gmail.com");
+    	
+    	Student k1Student = inject(StudentBusiness.class).instanciateOne();
+    	k1Student.setCode("K1_STUD1");
+    	k1Student.setName("Kacou");
+    	k1Student.getPerson().setLastnames("philipe");
+    	
+    	Student k2Student = inject(StudentBusiness.class).instanciateOne();
+    	k2Student.setCode("K2_STUD1");
+    	k2Student.setName("Anza");
+    	k2Student.getPerson().setLastnames("roger");
+    	
+    	Student k3Student = inject(StudentBusiness.class).instanciateOne();
+    	k3Student.setCode("K3_STUD1");
+    	k3Student.setName("Aka");
+    	k3Student.getPerson().setLastnames("clarisse");
+    	
+    	inject(StudentBusiness.class).create(Arrays.asList(pkStudent,k1Student,k2Student,k3Student,student1));
+    	
+    	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"PK_STUD1"},pk, new Object[][]{{0},{0},{0}});
+    	/*schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"STUD1","STUD2"},k1, new Object[][]{{0},{0},{0}});
     	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"STUD1","STUD2"},k2, new Object[][]{{0},{0},{0}});
     	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"STUD1","STUD2"},k3, new Object[][]{{0},{0},{0}});
     	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"STUD1","STUD2"},g1, new Object[][]{{15},{15},{15}}); 
@@ -48,32 +86,20 @@ public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBus
     	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"STUD1","STUD2"},g7, new Object[][]{{15},{15},{15}}); 
     	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"STUD1","STUD2"},g9, new Object[][]{{15},{15},{15}}); 
     	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"STUD1","STUD2"},g12, new Object[][]{{15},{15},{15}}); 
-    	
+    	*/
     	schoolBusinessTestHelper.getEvaluationTypes().addAll(rootDataProducerHelper.getEnumerations(EvaluationType.class));
     	
     	
+    	LevelTimeDivision levelTimeDivision = inject(LevelTimeDivisionDao.class).readByGlobalIdentifierOrderNumber(0l).iterator().next();
+    	ClassroomSessionDivision classroomSessionDivision = inject(ClassroomSessionDivisionBusiness.class).findByClassroomSessionsByOrderNumber(
+    			inject(ClassroomSessionBusiness.class).findByLevelTimeDivision(levelTimeDivision), 1l).iterator().next();
     	
-    	/*
-    	classroomSessionDivision = inject(ClassroomSessionDivisionBusiness.class).findByClassroomSession(pk).iterator().next();
-    	classroomSessionDivisionSubjects = new ArrayList<>(inject(ClassroomSessionDivisionSubjectBusiness.class).findByClassroomSessionDivision(classroomSessionDivision));
-    	schoolBusinessTestHelper.simulateStudentClassroomSessionDivisionReport(classroomSessionDivision, null, Boolean.TRUE,Boolean.TRUE, Boolean.TRUE,Boolean.TRUE);
+    	schoolBusinessTestHelper.simulateStudentClassroomSessionDivisionReport(classroomSessionDivision, null
+    			,Boolean.TRUE,Boolean.TRUE,Boolean.TRUE,Boolean.TRUE,Boolean.FALSE);
     	
-    	classroomSessionDivision = inject(ClassroomSessionDivisionBusiness.class).findByClassroomSession(k1).iterator().next();
-    	classroomSessionDivisionSubjects = new ArrayList<>(inject(ClassroomSessionDivisionSubjectBusiness.class).findByClassroomSessionDivision(classroomSessionDivision));
-    	schoolBusinessTestHelper.simulateStudentClassroomSessionDivisionReport(classroomSessionDivision, null, Boolean.TRUE,Boolean.TRUE, Boolean.TRUE,Boolean.TRUE);
-    	
-    	classroomSessionDivision = inject(ClassroomSessionDivisionBusiness.class).findByClassroomSession(k2).iterator().next();
-    	classroomSessionDivisionSubjects = new ArrayList<>(inject(ClassroomSessionDivisionSubjectBusiness.class).findByClassroomSessionDivision(classroomSessionDivision));
-    	schoolBusinessTestHelper.simulateStudentClassroomSessionDivisionReport(classroomSessionDivision, null, Boolean.TRUE,Boolean.TRUE, Boolean.TRUE,Boolean.TRUE);
-    	
-    	classroomSessionDivision = inject(ClassroomSessionDivisionBusiness.class).findByClassroomSession(k3).iterator().next();
-    	classroomSessionDivisionSubjects = new ArrayList<>(inject(ClassroomSessionDivisionSubjectBusiness.class).findByClassroomSessionDivision(classroomSessionDivision));
-    	schoolBusinessTestHelper.simulateStudentClassroomSessionDivisionReport(classroomSessionDivision, null, Boolean.TRUE,Boolean.TRUE, Boolean.TRUE,Boolean.TRUE);
-    	*/
-    	
-    	trimester(new Long("0"));
-    	trimester(new Long("1"));
-    	trimester(new Long("2"));
+    	//trimester(new Long("1"));
+    	/*trimester(new Long("1"));
+    	trimester(new Long("2"));*/
     }
     
     private void trimester(Long index){

@@ -26,7 +26,9 @@ import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.system.root.persistence.impl.PersistenceIntegrationTestHelper;
 import org.cyk.system.school.business.impl.SchoolBusinessLayer;
 import org.cyk.system.school.business.impl.SchoolBusinessTestHelper;
+import org.cyk.system.school.model.SchoolConstant;
 import org.cyk.system.school.model.session.ClassroomSession;
+import org.cyk.system.school.model.session.LevelTimeDivision;
 import org.cyk.system.school.model.subject.Evaluation;
 import org.cyk.system.school.persistence.api.session.ClassroomSessionDao;
 import org.cyk.system.school.persistence.api.session.LevelTimeDivisionDao;
@@ -90,6 +92,9 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     }
     
     protected void installApplication(){
+    	SchoolConstant.Code.LevelGroup.KINDERGARTEN = "KS";
+		SchoolConstant.Code.LevelGroup.PRIMARY = "PS";
+		SchoolConstant.Code.LevelGroup.SECONDARY = "HS";
     	long t = System.currentTimeMillis();
     	Evaluation.COEFFICIENT_APPLIED = Boolean.FALSE;
     	installApplication(Boolean.TRUE);
@@ -176,5 +181,13 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 
     protected Collection<ClassroomSession> getClassroomSessions(Long index){
     	return classroomSessionDao.readByLevelTimeDivision(levelTimeDivisionDao.readByGlobalIdentifierOrderNumber(index).iterator().next());
+    }
+    
+    protected ClassroomSession getClassroomSessionOne(Long index){
+    	Collection<LevelTimeDivision> levelTimeDivisions = levelTimeDivisionDao.readByGlobalIdentifierOrderNumber(index);
+    	if(levelTimeDivisions.isEmpty())
+    		return null;
+    	Collection<ClassroomSession> classroomSessions = classroomSessionDao.readByLevelTimeDivision(levelTimeDivisions.iterator().next());
+    	return classroomSessions.isEmpty() ? null : classroomSessions.iterator().next();
     }
 }

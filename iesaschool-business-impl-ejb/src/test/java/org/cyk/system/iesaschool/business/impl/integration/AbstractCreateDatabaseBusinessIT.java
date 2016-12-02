@@ -12,17 +12,17 @@ import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.iesaschool.model.IesaConstant;
+import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.IdentifiableBusinessService.CompleteInstanciationOfOneFromValuesListener;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.party.person.AbstractActorBusiness.CompleteActorInstanciationOfManyFromValuesArguments;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.school.business.api.actor.StudentBusiness;
 import org.cyk.system.school.business.api.actor.TeacherBusiness;
-import org.cyk.system.school.business.api.session.ClassroomSessionBusiness;
 import org.cyk.system.school.business.api.session.StudentClassroomSessionDivisionBusiness;
-import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjectBusiness;
 import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjectEvaluationTypeBusiness;
 import org.cyk.system.school.business.api.subject.EvaluationBusiness;
 import org.cyk.system.school.business.api.subject.EvaluationTypeBusiness;
@@ -225,11 +225,15 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	Collection<ClassroomSession> classroomSessions = new ArrayList<>();
 		for(String[] values : list){
     		ClassroomSession classroomSession = getClassroomSession(values[0]);
+    		if(classroomSession==null){
+    			System.out.println("No classroom session found for coordinator "+values[2]);
+    			continue;
+    		}
     		classroomSession.setCoordinator(inject(TeacherBusiness.class).find(values[2]));
     		classroomSessions.add(classroomSession);
     	}
 		System.out.println("Updating "+classroomSessions.size()+" class room sessions");
-		inject(ClassroomSessionBusiness.class).update(classroomSessions);
+		inject(GenericBusiness.class).update(CommonUtils.getInstance().castCollection(classroomSessions, AbstractIdentifiable.class));
     }
     
     private void processClassroomSessionDivisionSubjectTeachersSheet(File file) throws Exception{
@@ -250,7 +254,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     		}
     	}
 		System.out.println("Updating "+classroomSessionDivisionSubjects.size()+" class room session division subjects");
-		inject(ClassroomSessionDivisionSubjectBusiness.class).update(classroomSessionDivisionSubjects);
+		inject(GenericBusiness.class).update(CommonUtils.getInstance().castCollection(classroomSessionDivisionSubjects, AbstractIdentifiable.class));
     }
     
     private void processStudentsSheet(ClassroomSession classroomSession,File file,final File imageDirectory,Integer sheetIndex,Integer fromRowIndex,Integer count) throws Exception{

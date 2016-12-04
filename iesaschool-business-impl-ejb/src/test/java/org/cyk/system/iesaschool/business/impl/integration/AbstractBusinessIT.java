@@ -11,6 +11,7 @@ import org.cyk.system.company.business.impl.CompanyBusinessLayer;
 import org.cyk.system.iesaschool.business.impl.IesaBusinessLayer;
 import org.cyk.system.iesaschool.business.impl.IesaBusinessTestHelper;
 import org.cyk.system.root.business.api.GenericBusiness;
+import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.AbstractFakedDataProducer;
@@ -26,9 +27,13 @@ import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.system.root.persistence.impl.PersistenceIntegrationTestHelper;
 import org.cyk.system.school.business.impl.SchoolBusinessLayer;
 import org.cyk.system.school.business.impl.SchoolBusinessTestHelper;
+import org.cyk.system.school.business.impl.SchoolDataProducerHelper;
+import org.cyk.system.school.business.impl.subject.ClassroomSessionDivisionSubjectBusinessImpl;
 import org.cyk.system.school.model.SchoolConstant;
 import org.cyk.system.school.model.session.ClassroomSession;
+import org.cyk.system.school.model.session.ClassroomSessionDivision;
 import org.cyk.system.school.model.session.LevelTimeDivision;
+import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubjectEvaluationType;
 import org.cyk.system.school.model.subject.Evaluation;
 import org.cyk.system.school.persistence.api.session.ClassroomSessionDao;
 import org.cyk.system.school.persistence.api.session.LevelTimeDivisionDao;
@@ -39,6 +44,8 @@ import org.cyk.utility.test.Transaction;
 import org.cyk.utility.test.integration.AbstractIntegrationTestJpaBased;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 import org.junit.Assert;
 
 public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased {
@@ -95,6 +102,26 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     	SchoolConstant.Code.LevelGroup.KINDERGARTEN = "KS";
 		SchoolConstant.Code.LevelGroup.PRIMARY = "PS";
 		SchoolConstant.Code.LevelGroup.SECONDARY = "HS";
+		SchoolDataProducerHelper.Listener.COLLECTION.add(new SchoolDataProducerHelper.Listener.Adapter.Default(){
+			private static final long serialVersionUID = -5301917191935456060L;
+
+			@Override
+    		public void classroomSessionDivisionCreated(ClassroomSessionDivision classroomSessionDivision) {
+    			super.classroomSessionDivisionCreated(classroomSessionDivision);
+    			classroomSessionDivision.setBirthDate(new DateTime(2016, 4, 4, 0, 0).toDate());
+    			classroomSessionDivision.setDeathDate(new DateTime(2016, 6, 13, 0, 0).toDate());
+    			classroomSessionDivision.getExistencePeriod().getNumberOfMillisecond().setUser(new BigDecimal(48l * DateTimeConstants.MILLIS_PER_DAY));
+    		}
+			
+			@Override
+			public void classroomSessionDivisionSubjectEvaluationTypeCreated(ClassroomSessionDivisionSubjectEvaluationType classroomSessionDivisionSubjectEvaluationType) {
+				super.classroomSessionDivisionSubjectEvaluationTypeCreated(classroomSessionDivisionSubjectEvaluationType);
+				classroomSessionDivisionSubjectEvaluationType.setMaximumValue(new BigDecimal("100"));
+				classroomSessionDivisionSubjectEvaluationType.setCountInterval(inject(IntervalBusiness.class).instanciateOne(null, null, "1", "1"));
+			}
+    	});
+    	ClassroomSessionDivisionSubjectBusinessImpl.Listener.COLLECTION.clear();
+    	
     	long t = System.currentTimeMillis();
     	Evaluation.COEFFICIENT_APPLIED = Boolean.FALSE;
     	installApplication(Boolean.TRUE);

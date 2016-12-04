@@ -15,7 +15,6 @@ import org.cyk.system.iesaschool.model.IesaConstant;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.IdentifiableBusinessService.CompleteInstanciationOfOneFromValuesListener;
 import org.cyk.system.root.business.api.file.FileBusiness;
-import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.party.person.AbstractActorBusiness.CompleteActorInstanciationOfManyFromValuesArguments;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.party.person.PersonTitle;
@@ -28,17 +27,13 @@ import org.cyk.system.school.business.api.subject.EvaluationBusiness;
 import org.cyk.system.school.business.api.subject.EvaluationTypeBusiness;
 import org.cyk.system.school.business.api.subject.StudentClassroomSessionDivisionSubjectBusiness;
 import org.cyk.system.school.business.api.subject.SubjectBusiness;
-import org.cyk.system.school.business.impl.SchoolDataProducerHelper;
 import org.cyk.system.school.business.impl.session.LevelBusinessImpl;
 import org.cyk.system.school.business.impl.session.LevelTimeDivisionBusinessImpl;
-import org.cyk.system.school.business.impl.subject.ClassroomSessionDivisionSubjectBusinessImpl;
 import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.actor.Teacher;
 import org.cyk.system.school.model.session.ClassroomSession;
-import org.cyk.system.school.model.session.ClassroomSessionDivision;
 import org.cyk.system.school.model.session.StudentClassroomSessionDivision;
 import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubject;
-import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubjectEvaluationType;
 import org.cyk.system.school.model.subject.Evaluation;
 import org.cyk.system.school.model.subject.StudentClassroomSessionDivisionSubject;
 import org.cyk.system.school.model.subject.StudentClassroomSessionDivisionSubjectEvaluation;
@@ -46,8 +41,6 @@ import org.cyk.system.school.model.subject.Subject;
 import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.Constant;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeConstants;
 
 public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessIT {
 
@@ -61,25 +54,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	LevelBusinessImpl.PROPERTY_VALUE_TOKENS_CONCATENATE_WITH_GROUP_LEVELNAME_SPECIALITY = Boolean.FALSE;
     	LevelTimeDivisionBusinessImpl.PROPERTY_VALUE_TOKENS_CONCATENATE_WITH_TIMEDIVISIONTYPE = Boolean.FALSE;
     	subjects = inject(SubjectBusiness.class).findAll();
-    	SchoolDataProducerHelper.Listener.COLLECTION.add(new SchoolDataProducerHelper.Listener.Adapter.Default(){
-			private static final long serialVersionUID = -5301917191935456060L;
-
-			@Override
-    		public void classroomSessionDivisionCreated(ClassroomSessionDivision classroomSessionDivision) {
-    			super.classroomSessionDivisionCreated(classroomSessionDivision);
-    			classroomSessionDivision.setBirthDate(new DateTime(2016, 4, 4, 0, 0).toDate());
-    			classroomSessionDivision.setDeathDate(new DateTime(2016, 6, 13, 0, 0).toDate());
-    			classroomSessionDivision.getExistencePeriod().getNumberOfMillisecond().setUser(new BigDecimal(48l * DateTimeConstants.MILLIS_PER_DAY));
-    		}
-			
-			@Override
-			public void classroomSessionDivisionSubjectEvaluationTypeCreated(ClassroomSessionDivisionSubjectEvaluationType classroomSessionDivisionSubjectEvaluationType) {
-				super.classroomSessionDivisionSubjectEvaluationTypeCreated(classroomSessionDivisionSubjectEvaluationType);
-				classroomSessionDivisionSubjectEvaluationType.setMaximumValue(new BigDecimal("100"));
-				classroomSessionDivisionSubjectEvaluationType.setCountInterval(inject(IntervalBusiness.class).instanciateOne(null, null, "1", "1"));
-			}
-    	});
-    	ClassroomSessionDivisionSubjectBusinessImpl.Listener.COLLECTION.clear();
+    	
     	installApplication();
     	if(Boolean.TRUE.equals(noData()))
     		return;
@@ -416,7 +391,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     			if(evaluation == null || !values[2].equals(previousEvaluationTypeCode)){
     				evaluation = new Evaluation();
     				evaluation.setClassroomSessionDivisionSubjectEvaluationType(inject(ClassroomSessionDivisionSubjectEvaluationTypeBusiness.class)
-        					.findBySubjectByEvaluationType(studentClassroomSessionDivisionSubjectEvaluation.getStudentSubject().getClassroomSessionDivisionSubject(),
+        					.findByClassroomSessionDivisionSubjectByEvaluationType(studentClassroomSessionDivisionSubjectEvaluation.getStudentSubject().getClassroomSessionDivisionSubject(),
         							inject(EvaluationTypeBusiness.class).find(previousEvaluationTypeCode = values[2])));
     				
     				Evaluation previous = null;

@@ -110,7 +110,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     			super.classroomSessionDivisionCreated(classroomSessionDivision);
     			classroomSessionDivision.setBirthDate(new DateTime(2016, 4, 4, 0, 0).toDate());
     			classroomSessionDivision.setDeathDate(new DateTime(2016, 6, 13, 0, 0).toDate());
-    			classroomSessionDivision.getExistencePeriod().getNumberOfMillisecond().setUser(new BigDecimal(48l * DateTimeConstants.MILLIS_PER_DAY));
+    			classroomSessionDivision.getExistencePeriod().getNumberOfMillisecond().setUser(48l * DateTimeConstants.MILLIS_PER_DAY);
     		}
 			
 			@Override

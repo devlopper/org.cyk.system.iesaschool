@@ -11,7 +11,6 @@ import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.iesaschool.model.IesaConstant;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.IdentifiableBusinessService.CompleteInstanciationOfOneFromValuesListener;
 import org.cyk.system.root.business.api.file.FileBusiness;
@@ -29,6 +28,7 @@ import org.cyk.system.school.business.api.subject.StudentClassroomSessionDivisio
 import org.cyk.system.school.business.api.subject.SubjectBusiness;
 import org.cyk.system.school.business.impl.session.LevelBusinessImpl;
 import org.cyk.system.school.business.impl.session.LevelTimeDivisionBusinessImpl;
+import org.cyk.system.school.model.SchoolConstant;
 import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.actor.Teacher;
 import org.cyk.system.school.model.session.ClassroomSession;
@@ -498,9 +498,9 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	String icode = code;
     	if(Boolean.TRUE.equals(load)){
 	    	if(code.equals("S17"))
-	    		code = IesaConstant.SUBJECT_GRAMMAR_CODE;
+	    		code = SchoolConstant.Code.Subject.GRAMMAR;
 	    	else if(code.equals("S21"))
-	    		code = IesaConstant.SUBJECT_FRENCH_CODE;
+	    		code = SchoolConstant.Code.Subject.FRENCH;
     	}else{
 	    	for(Subject subject : subjects){
 	    		if(subject.getName().equalsIgnoreCase(code)){
@@ -523,57 +523,57 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 	    	
 	    	code = icode;
 	    	if(code.equals("Mathematics"))
-	    		code = IesaConstant.SUBJECT_MATHEMATICS_CODE;
+	    		code = SchoolConstant.Code.Subject.MATHEMATICS;
 	    	else if(code.equals("Spanish"))
-	    		code = IesaConstant.SUBJECT_SPANISH_CODE;
+	    		code = SchoolConstant.Code.Subject.SPANISH;
 	    	else if(code.equals("Biology"))
-	    		code = IesaConstant.SUBJECT_BIOLOGY_CODE;
+	    		code = SchoolConstant.Code.Subject.BIOLOGY;
 	    	else if(code.equals("Chemistry"))
-	    		code = IesaConstant.SUBJECT_CHEMISTRY_CODE;
+	    		code = SchoolConstant.Code.Subject.CHEMISTRY;
 	    	else if(code.equals("French"))
-	    		code = IesaConstant.SUBJECT_FRENCH_CODE;
+	    		code = SchoolConstant.Code.Subject.FRENCH;
 	    	else if(code.equals("Physics"))
-	    		code = IesaConstant.SUBJECT_PHYSICS_CODE;
+	    		code = SchoolConstant.Code.Subject.PHYSICS;
 	    	else if(code.equals("Grammar"))
-	    		code = IesaConstant.SUBJECT_GRAMMAR_CODE;
+	    		code = SchoolConstant.Code.Subject.GRAMMAR;
 	    	else if(code.equals("Reading&Comprehension"))
-	    		code = IesaConstant.SUBJECT_READING_COMPREHENSION_CODE;
+	    		code = SchoolConstant.Code.Subject.READING_COMPREHENSION;
 	    	else if(code.equals("Handwriting"))
-	    		code = IesaConstant.SUBJECT_HANDWRITING_CODE;
+	    		code = SchoolConstant.Code.Subject.HANDWRITING;
 	    	else if(code.equals("Spelling"))
-	    		code = IesaConstant.SUBJECT_SPELLING_CODE;
+	    		code = SchoolConstant.Code.Subject.SPELLING;
 	    	else if(code.equals("Phonics"))
-	    		code = IesaConstant.SUBJECT_PHONICS_CODE;
+	    		code = SchoolConstant.Code.Subject.PHONICS;
 	    	else if(code.equals("Creativewriting"))
-	    		code = IesaConstant.SUBJECT_CREATIVE_WRITING_CODE;
+	    		code = SchoolConstant.Code.Subject.CREATIVE_WRITING;
 	    	else if(code.equals("Moraleducation"))
-	    		code = IesaConstant.SUBJECT_MORAL_EDUCATION_CODE;
+	    		code = SchoolConstant.Code.Subject.MORAL_EDUCATION;
 	    	else if(code.equals("SocialStudies"))
-	    		code = IesaConstant.SUBJECT_SOCIAL_STUDIES_CODE;
+	    		code = SchoolConstant.Code.Subject.SOCIAL_STUDIES;
 	    	else if(code.equals("Science"))
-	    		code = IesaConstant.SUBJECT_SCIENCE_CODE;
+	    		code = SchoolConstant.Code.Subject.SCIENCE;
 	    	else if(code.equals("French"))
-	    		code = IesaConstant.SUBJECT_FRENCH_CODE;
+	    		code = SchoolConstant.Code.Subject.FRENCH;
 	    	else if(code.equals("Art&Craft"))
-	    		code = IesaConstant.SUBJECT_ART_CRAFT_CODE;
+	    		code = SchoolConstant.Code.Subject.ART_CRAFT;
 	    	else if(code.equals("Music"))
-	    		code = IesaConstant.SUBJECT_MUSIC_CODE;
+	    		code = SchoolConstant.Code.Subject.MUSIC;
 	    	else if(code.equals("ICT"))
-	    		code = IesaConstant.SUBJECT_ICT_COMPUTER_CODE;
+	    		code = SchoolConstant.Code.Subject.ICT_COMPUTER;
 	    	else if(code.equals("Physicaleducation"))
-	    		code = IesaConstant.SUBJECT_PHYSICAL_EDUCATION_CODE;
+	    		code = SchoolConstant.Code.Subject.PHYSICAL_EDUCATION;
 	    	else if(code.equals("Literatureinenglish"))
-	    		code = IesaConstant.SUBJECT_LITERATURE_IN_ENGLISH_CODE;
+	    		code = SchoolConstant.Code.Subject.LITERATURE_IN_ENGLISH;
 	    	else if(code.equals("Geography"))
-	    		code = IesaConstant.SUBJECT_GEOGRAPHY_CODE;
+	    		code = SchoolConstant.Code.Subject.GEOGRAPHY;
 	    	else if(code.equals("History"))
-	    		code = IesaConstant.SUBJECT_HISTORY_CODE;
+	    		code = SchoolConstant.Code.Subject.HISTORY;
 	    	else if(code.equals("EnglishLanguage"))
-	    		code = IesaConstant.SUBJECT_ENGLISH_LANGUAGE_CODE;
+	    		code = SchoolConstant.Code.Subject.ENGLISH_LANGUAGE;
 	    	else if(code.equals("Comprehension"))
-	    		code = IesaConstant.SUBJECT_COMPREHENSION_CODE;
+	    		code = SchoolConstant.Code.Subject.COMPREHENSION;
 	    	else if(code.equals("Litterature"))
-	    		code = IesaConstant.SUBJECT_LITERATURE_CODE;
+	    		code = SchoolConstant.Code.Subject.LITERATURE;
 	    	
 	    		
     	}

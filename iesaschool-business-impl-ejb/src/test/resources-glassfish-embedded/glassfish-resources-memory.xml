@@ -4,9 +4,14 @@
     "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
 <resources>
 
-    <jdbc-connection-pool is-isolation-level-guaranteed="false" name="ArquillianHsqlPool" driver-classname="org.hsqldb.jdbcDriver"
-   		res-type="java.sql.Driver"
-   		statement-cache-size="1000" 
+    <jdbc-connection-pool is-isolation-level-guaranteed="false" name="ArquillianHsqlPool" driver-classname="org.hsqldb.jdbcDriver" res-type="java.sql.Driver"
+   		
+        >
+    	<property name="URL" value="jdbc:hsqldb:mem:hsql" />
+    </jdbc-connection-pool>
+    
+    <!-- 
+    statement-cache-size="1000" 
    		associate-with-thread="true" 
    		statement-timeout-in-seconds="1000"                  
         non-transactional-connections="true" 
@@ -18,9 +23,8 @@
         statement-leak-timeout-in-seconds="360"
         connection-leak-timeout-in-seconds="420" 
         statement-leak-reclaim="true"
-        is-connection-validation-required="false">
-    	<property name="URL" value="jdbc:hsqldb:mem:hsql" />
-    </jdbc-connection-pool>
+        is-connection-validation-required="false"
+     -->
       
     <jdbc-resource pool-name="ArquillianHsqlPool" jndi-name="jdbc/arquillian" />
     	

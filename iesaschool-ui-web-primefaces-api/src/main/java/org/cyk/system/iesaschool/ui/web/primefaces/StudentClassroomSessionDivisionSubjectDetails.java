@@ -2,8 +2,8 @@ package org.cyk.system.iesaschool.ui.web.primefaces;
 
 import java.io.Serializable;
 
-import org.cyk.system.iesaschool.model.IesaConstant;
 import org.cyk.system.school.business.impl.session.AbstractStudentClassroomSessionDivisionSubjectDetails;
+import org.cyk.system.school.model.SchoolConstant;
 import org.cyk.system.school.model.subject.StudentClassroomSessionDivisionSubject;
 import org.cyk.system.school.model.subject.StudentClassroomSessionDivisionSubjectEvaluation;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
@@ -23,11 +23,11 @@ public class StudentClassroomSessionDivisionSubjectDetails extends AbstractStude
 		super(studentClassroomSessionDivisionSubject);
 		for(StudentClassroomSessionDivisionSubjectEvaluation studentSubjectEvaluation : studentClassroomSessionDivisionSubject.getDetails()){
 			if(studentSubjectEvaluation.getStudentSubject().equals(studentClassroomSessionDivisionSubject)){
-				if(studentSubjectEvaluation.getEvaluation().getClassroomSessionDivisionSubjectEvaluationType().getEvaluationType().getCode().equals(IesaConstant.EVALUATION_TYPE_TEST1))
+				if(studentSubjectEvaluation.getEvaluation().getClassroomSessionDivisionSubjectEvaluationType().getEvaluationType().getCode().equals(SchoolConstant.Code.EvaluationType.TEST1))
 					test1 = numberBusiness.format(studentSubjectEvaluation.getValue());
-				else if(studentSubjectEvaluation.getEvaluation().getClassroomSessionDivisionSubjectEvaluationType().getEvaluationType().getCode().equals(IesaConstant.EVALUATION_TYPE_TEST2))
+				else if(studentSubjectEvaluation.getEvaluation().getClassroomSessionDivisionSubjectEvaluationType().getEvaluationType().getCode().equals(SchoolConstant.Code.EvaluationType.TEST2))
 					test2 = numberBusiness.format(studentSubjectEvaluation.getValue());
-				else if(studentSubjectEvaluation.getEvaluation().getClassroomSessionDivisionSubjectEvaluationType().getEvaluationType().getCode().equals(IesaConstant.EVALUATION_TYPE_EXAM))
+				else if(studentSubjectEvaluation.getEvaluation().getClassroomSessionDivisionSubjectEvaluationType().getEvaluationType().getCode().equals(SchoolConstant.Code.EvaluationType.EXAM))
 					exam = numberBusiness.format(studentSubjectEvaluation.getValue());
 			}	
 		}

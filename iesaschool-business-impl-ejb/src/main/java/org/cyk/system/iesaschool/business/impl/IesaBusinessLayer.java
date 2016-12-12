@@ -20,10 +20,9 @@ import org.cyk.system.company.model.structure.Company;
 import org.cyk.system.company.model.structure.Employee;
 import org.cyk.system.iesaschool.model.IesaConstant;
 import org.cyk.system.root.business.api.GenericBusiness;
-import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
-import org.cyk.system.root.business.api.mathematics.MetricCollectionIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness.FormatArguments;
+import org.cyk.system.root.business.api.message.MailBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessLayer;
@@ -31,14 +30,13 @@ import org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl
 import org.cyk.system.root.business.impl.PersistDataListener;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
-import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
-import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollectionIdentifiableGlobalIdentifier;
+import org.cyk.system.root.model.mathematics.MetricValueIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.model.party.person.JobInformations;
 import org.cyk.system.root.model.party.person.JobTitle;
@@ -52,13 +50,13 @@ import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.file.FileDao;
 import org.cyk.system.root.persistence.api.mathematics.IntervalCollectionDao;
+import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
 import org.cyk.system.school.business.api.session.AcademicSessionBusiness;
 import org.cyk.system.school.business.api.session.ClassroomSessionBusiness;
 import org.cyk.system.school.business.api.session.ClassroomSessionDivisionBusiness;
 import org.cyk.system.school.business.api.session.StudentClassroomSessionDivisionBusiness;
 import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjectBusiness;
 import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjectEvaluationTypeBusiness;
-import org.cyk.system.school.business.api.subject.EvaluationTypeBusiness;
 import org.cyk.system.school.business.impl.AbstractSchoolReportProducer;
 import org.cyk.system.school.business.impl.SchoolBusinessLayer;
 import org.cyk.system.school.business.impl.SchoolDataProducerHelper;
@@ -86,6 +84,7 @@ import org.cyk.system.school.model.subject.Subject;
 import org.cyk.system.school.persistence.api.actor.StudentDao;
 import org.cyk.system.school.persistence.api.actor.TeacherDao;
 import org.cyk.system.school.persistence.api.session.LevelGroupDao;
+import org.cyk.system.school.persistence.api.subject.EvaluationTypeDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
@@ -115,8 +114,6 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	@Inject private GenericDao genericDao;
 	@Inject private TeacherDao teacherDao;
-	
-	private EvaluationType evaluationTypeTest1,evaluationTypeTest2,evaluationTypeExam;
 	
 	private ArrayList<Subject> subjectsG1G3 = new ArrayList<>(),subjectsG4G5 = new ArrayList<>(),subjectsG6 = new ArrayList<>()
 			,subjectsG7G8 = new ArrayList<>(); 
@@ -152,7 +149,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 						if(PersistDataListener.BASE_PACKAGE.equals(name))
 							return (T) IesaBusinessLayer.class.getPackage();
 						if(PersistDataListener.RELATIVE_PATH.equals(name))
-							return (T) "image/studentclassroomsessiondivisionreport_background_draft2.png";
+							return (T) "image/studentclassroomsessiondivisionreport_background_draft3.png";
 					}
 					
 					if(PersistDataListener.BASE_PACKAGE.equals(name))
@@ -162,19 +159,25 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 				
 				if(SmtpProperties.class.equals(aClass)){
 					if(SmtpProperties.FIELD_FROM.equals(name))
-						return (T) "kycdev@gmail.com";
+						return (T) "results@iesaci.com";
 					if(SmtpProperties.FIELD_HOST.equals(name))
-						return (T) "smtp@gmail.com";
+						return (T) "smtp.iesaci.com";
 					if(SmtpProperties.FIELD_PORT.equals(name))
-						return (T) new Integer(465);
+						return (T) new Integer(25);
 					if(commonUtils.attributePath(SmtpProperties.FIELD_CREDENTIALS, Credentials.FIELD_USERNAME).equals(name))
-						return (T) "kycdev@gmail.com";
-					if(commonUtils.attributePath(SmtpProperties.FIELD_CREDENTIALS, Credentials.FIELD_USERNAME).equals(name))
-						return (T) "p@ssw0rd*";
+						return (T) "results@iesaci.com";
+					if(commonUtils.attributePath(SmtpProperties.FIELD_CREDENTIALS, Credentials.FIELD_PASSWORD).equals(name))
+						return (T) "school2009";
 				}
 				return super.processPropertyValue(aClass, instanceCode, name, value);
 			}
 		});
+		
+		inject(MailBusiness.class).getSmtpProperties().setHost("smtp.iesaci.com");
+		inject(MailBusiness.class).getSmtpProperties().setPort(25);
+		inject(MailBusiness.class).getSmtpProperties().setFrom("results@iesaci.com");
+		inject(MailBusiness.class).getSmtpProperties().getCredentials().setUsername("results@iesaci.com");
+		inject(MailBusiness.class).getSmtpProperties().getCredentials().setPassword("school2009");
 		
 		CompanyBusinessLayer.Listener.COLLECTION.add(new CompanyBusinessLayer.Listener.Adapter() {
 			private static final long serialVersionUID = 5179809445850168706L;
@@ -196,18 +199,11 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 				, new String[]{"05996283","49925138","06173731"}, new String[]{"08 BP 1828 Abidjan 08"}, new String[]{"iesa@aviso.ci"}, new String[]{"http://www.iesaci.com"});
 			}
 		});
-		SchoolDataProducerHelper.Listener.COLLECTION.add(new SchoolDataProducerHelper.Listener.Adapter(){
-			private static final long serialVersionUID = -5322009577688489872L;
-			@Override
-			public void classroomSessionDivisionCreated(ClassroomSessionDivision classroomSessionDivision) {
-				classroomSessionDivision.setStudentSubjectAttendanceAggregated(Boolean.FALSE);
-			}
-		});
 		
 		AbstractSchoolReportProducer.DEFAULT = new ReportProducer();
 		PersonBusiness.FindNamesArguments.FIRST_NAME_IS_FIRST = Boolean.FALSE;
-		StudentClassroomSessionDivisionBusiness.EVALUATION_TYPE_CODES
-		.addAll(Arrays.asList(IesaConstant.EVALUATION_TYPE_TEST1,IesaConstant.EVALUATION_TYPE_TEST2,IesaConstant.EVALUATION_TYPE_EXAM));
+		SchoolConstant.Code.EvaluationType.COLLECTION.addAll(Arrays.asList(SchoolConstant.Code.EvaluationType.TEST1,SchoolConstant.Code.EvaluationType.TEST2
+				,SchoolConstant.Code.EvaluationType.EXAM));
 		StudentClassroomSessionDivisionBusiness.SUM_MARKS[0] = Boolean.TRUE;
 		
     	StudentBusinessImpl.Listener.COLLECTION.add(new StudentBusinessImpl.Listener.Adapter.Default.EnterpriseResourcePlanning(){
@@ -236,12 +232,12 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     		public void afterCreate(ClassroomSessionDivisionSubject classroomSessionDivisionSubject) {
     			super.afterCreate(classroomSessionDivisionSubject);
     			Collection<ClassroomSessionDivisionSubjectEvaluationType> classroomSessionDivisionSubjectEvaluationTypes = new ArrayList<>();
-    			for(EvaluationType evaluationType : inject(EvaluationTypeBusiness.class).findAll()){
+    			for(EvaluationType evaluationType : inject(EvaluationTypeDao.class).read(SchoolConstant.Code.EvaluationType.COLLECTION)){
     				ClassroomSessionDivisionSubjectEvaluationType classroomSessionDivisionSubjectEvaluationType = new ClassroomSessionDivisionSubjectEvaluationType();
     				classroomSessionDivisionSubjectEvaluationType.setClassroomSessionDivisionSubject(classroomSessionDivisionSubject);
     				classroomSessionDivisionSubjectEvaluationType.setEvaluationType(evaluationType);
     				classroomSessionDivisionSubjectEvaluationType.setMaximumValue(new BigDecimal("100"));
-    				classroomSessionDivisionSubjectEvaluationType.setCountInterval(inject(IntervalBusiness.class).instanciateOne(null, null, "1", "1"));
+    				classroomSessionDivisionSubjectEvaluationType.setCountInterval(inject(IntervalDao.class).read(SchoolConstant.Code.Interval.EVALUATION_COUNT_BY_TYPE));
     				classroomSessionDivisionSubjectEvaluationTypes.add(classroomSessionDivisionSubjectEvaluationType);
     			}
     			inject(ClassroomSessionDivisionSubjectEvaluationTypeBusiness.class).create(classroomSessionDivisionSubjectEvaluationTypes);
@@ -249,7 +245,11 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	});
     	SchoolConstant.Code.LevelGroup.KINDERGARTEN = "KS";
 		SchoolConstant.Code.LevelGroup.PRIMARY = "PS";
+		SchoolConstant.Code.LevelGroup.PRIMARY_LOWER = "PSL";
+		SchoolConstant.Code.LevelGroup.PRIMARY_HIGHER = "PSH";
 		SchoolConstant.Code.LevelGroup.SECONDARY = "HS";
+		SchoolConstant.Code.LevelGroup.SECONDARY_LOWER = "HSL";
+		SchoolConstant.Code.LevelGroup.SECONDARY_HIGHER = "HSH";
 		
 		AbstractIdentifiableBusinessServiceImpl.addAutoSetPropertyValueClass(new String[]{GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME}
 			,AcademicSession.class,Level.class,LevelTimeDivision.class,ClassroomSession.class,ClassroomSessionDivision.class,ClassroomSessionDivisionSubject.class
@@ -260,6 +260,9 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		FileIdentifiableGlobalIdentifier.define(Employee.class);
 		FileIdentifiableGlobalIdentifier.define(Teacher.class);
 		FileIdentifiableGlobalIdentifier.define(StudentClassroomSessionDivision.class);
+		
+		MetricCollectionIdentifiableGlobalIdentifier.define(ClassroomSessionDivision.class);
+		MetricValueIdentifiableGlobalIdentifier.define(StudentClassroomSessionDivision.class);
 	}
 	
 	@Override @SuppressWarnings("unchecked")
@@ -271,15 +274,14 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		updateEnumeration(Sex.class, Sex.MALE, "Male");
 		updateEnumeration(Sex.class, Sex.FEMALE, "Female");
 		JobTitle directorOfStudies = updateEnumeration(JobTitle.class, SchoolConstant.Code.JobTitle.DIRECTOR_OF_STUDIES, "Director of studies");
+		updateEnumeration(EvaluationType.class, SchoolConstant.Code.EvaluationType.EXAM, "Exam");
 		
 		LevelGroup levelGroupKindergarten = inject(LevelGroupDao.class).read(SchoolConstant.Code.LevelGroup.KINDERGARTEN);
-		LevelGroup levelGroupPrimary = inject(LevelGroupDao.class).read(SchoolConstant.Code.LevelGroup.PRIMARY);
-		LevelGroup levelGroupSecondary = inject(LevelGroupDao.class).read(SchoolConstant.Code.LevelGroup.SECONDARY);
+		LevelGroup levelGroupPrimaryLower = inject(LevelGroupDao.class).read(SchoolConstant.Code.LevelGroup.PRIMARY_LOWER);
+		LevelGroup levelGroupPrimaryHigher = inject(LevelGroupDao.class).read(SchoolConstant.Code.LevelGroup.PRIMARY_HIGHER);
+		LevelGroup levelGroupSecondaryLower = inject(LevelGroupDao.class).read(SchoolConstant.Code.LevelGroup.SECONDARY_LOWER);
+		LevelGroup levelGroupSecondaryHigher = inject(LevelGroupDao.class).read(SchoolConstant.Code.LevelGroup.SECONDARY_HIGHER);
 		
-    	evaluationTypeTest1 = create(inject(EvaluationTypeBusiness.class).instanciateOne(IesaConstant.EVALUATION_TYPE_TEST1,"Test 1"));
-    	evaluationTypeTest2 = create(inject(EvaluationTypeBusiness.class).instanciateOne(IesaConstant.EVALUATION_TYPE_TEST2,"Test 2"));
-    	evaluationTypeExam = create(inject(EvaluationTypeBusiness.class).instanciateOne(IesaConstant.EVALUATION_TYPE_EXAM,"Exam"));
-    	
     	File documentHeaderFile = inject(FileDao.class).read(CompanyConstant.FILE_DOCUMENT_HEADER); 
     	File documentBackgroundImageFile = inject(FileDao.class).read(CompanyConstant.FILE_DOCUMENT_BACKGROUND); 
     	File documentBackgroundImageDraftFile = inject(FileDao.class).read(CompanyConstant.FILE_DOCUMENT_BACKGROUND_DRAFT);
@@ -296,23 +298,20 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 		ReportTemplate reportTemplateG1G12 = rootDataProducerHelper.createReportTemplate("IesaReportTemplateG1G12", "Report Sheet"
 				, Boolean.TRUE, "report/studentclassroomsessiondivision/g1g12.jrxml", documentHeaderFile, documentBackgroundImageFile, documentBackgroundImageDraftFile); 
     	
-    	Interval interval = inject(IntervalBusiness.class).instanciateOne(null, "A", "1", "2");
-		create(interval);
-    	
 		String classroomSessionDivisionIndex = "1";
 		
-    	CommonNodeInformations commonNodeInformationsPkg = instanciateCommonNodeInformations(null,null, reportTemplatePk,classroomSessionDivisionIndex,interval);
-    	CommonNodeInformations commonNodeInformationsKg1 = instanciateCommonNodeInformations(null,null, reportTemplateKg1,classroomSessionDivisionIndex,interval);
-    	CommonNodeInformations commonNodeInformationsKg2Kg3 = instanciateCommonNodeInformations(null,null, reportTemplateKg2Kg3,classroomSessionDivisionIndex,interval);
+    	CommonNodeInformations commonNodeInformationsPkg = instanciateCommonNodeInformations(null,null, reportTemplatePk,classroomSessionDivisionIndex);
+    	CommonNodeInformations commonNodeInformationsKg1 = instanciateCommonNodeInformations(null,null, reportTemplateKg1,classroomSessionDivisionIndex);
+    	CommonNodeInformations commonNodeInformationsKg2Kg3 = instanciateCommonNodeInformations(null,null, reportTemplateKg2Kg3,classroomSessionDivisionIndex);
     	
 		CommonNodeInformations commonNodeInformationsG1G3 = instanciateCommonNodeInformations(inject(IntervalCollectionDao.class)
 				.read(SchoolConstant.Code.IntervalCollection.GRADING_SCALE_PRIMARY_STUDENT),inject(IntervalCollectionDao.class)
-				.read(SchoolConstant.Code.IntervalCollection.PROMOTION_SCALE_STUDENT),reportTemplateG1G12, classroomSessionDivisionIndex,interval);
+				.read(SchoolConstant.Code.IntervalCollection.PROMOTION_SCALE_STUDENT),reportTemplateG1G12, classroomSessionDivisionIndex);
 		CommonNodeInformations commonNodeInformationsG4G6 = commonNodeInformationsG1G3;
 		
 		CommonNodeInformations commonNodeInformationsG7G9 = instanciateCommonNodeInformations(inject(IntervalCollectionDao.class)
 				.read(SchoolConstant.Code.IntervalCollection.GRADING_SCALE_SECONDARY_STUDENT),inject(IntervalCollectionDao.class)
-				.read(SchoolConstant.Code.IntervalCollection.PROMOTION_SCALE_STUDENT),reportTemplateG1G12, classroomSessionDivisionIndex,interval);	
+				.read(SchoolConstant.Code.IntervalCollection.PROMOTION_SCALE_STUDENT),reportTemplateG1G12, classroomSessionDivisionIndex);	
 		CommonNodeInformations commonNodeInformationsG10G12 = commonNodeInformationsG7G9;
 		
 		Person signer = new Person();
@@ -372,7 +371,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	Collection<MetricCollectionIdentifiableGlobalIdentifier> metricCollectionIdentifiableGlobalIdentifiers = new ArrayList<>(); 
     	
     	Long gradeIndex = 0l;
-    	
+    	/*
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes
     			,metricCollectionIdentifiableGlobalIdentifiers,academicSession
     			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.PK,"Pre-Kindergarten",levelGroupKindergarten,commonNodeInformationsPkg,gradeIndex++) 
@@ -433,18 +432,22 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     					,SchoolConstant.Code.MetricCollection.BEHAVIOUR_KINDERGARTEN_K2_STUDENT_PHYSICAL_EDUCATION
     					,SchoolConstant.Code.MetricCollection.BEHAVIOUR_KINDERGARTEN_K2_STUDENT_WORK_BEHAVIOUR_HABITS
     					,SchoolConstant.Code.MetricCollection.COMMUNICATION_KINDERGARTEN_STUDENT},Boolean.FALSE,Boolean.FALSE);
+    	*/
+    	EvaluationType evaluationTypeTest1=inject(EvaluationTypeDao.class).read(SchoolConstant.Code.EvaluationType.TEST1)
+    			,evaluationTypeTest2=inject(EvaluationTypeDao.class).read(SchoolConstant.Code.EvaluationType.TEST2)
+    			,evaluationTypeExam=inject(EvaluationTypeDao.class).read(SchoolConstant.Code.EvaluationType.EXAM);
     	
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes
     			,metricCollectionIdentifiableGlobalIdentifiers,academicSession
-    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G1,"Grade 1",levelGroupPrimary,commonNodeInformationsG1G3,gradeIndex++),null 
+    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G1,"Grade 1",levelGroupPrimaryLower,commonNodeInformationsG1G3,gradeIndex++),null 
     			,new Object[][]{{evaluationTypeTest1,"0.15","100"},{evaluationTypeTest2,"0.15","100"},{evaluationTypeExam,"0.7","100"}}, subjectsG1G3
-    			,new String[]{"A","B"},new String[]{SchoolConstant.Code.MetricCollection.BEHAVIOUR_PRIMARY_STUDENT
+    			,new String[]{"A"/*,"B"*/},new String[]{SchoolConstant.Code.MetricCollection.BEHAVIOUR_PRIMARY_STUDENT
     					,SchoolConstant.Code.MetricCollection.ATTENDANCE_STUDENT
     					,SchoolConstant.Code.MetricCollection.COMMUNICATION_STUDENT},Boolean.TRUE,Boolean.TRUE);    	
-    	
+    	/*
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes
     			,metricCollectionIdentifiableGlobalIdentifiers,academicSession
-    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G2,"Grade 2",levelGroupPrimary,commonNodeInformationsG1G3,gradeIndex++),null 
+    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G2,"Grade 2",levelGroupPrimaryLower,commonNodeInformationsG1G3,gradeIndex++),null 
     			,new Object[][]{{evaluationTypeTest1,"0.15","100"},{evaluationTypeTest2,"0.15","100"},{evaluationTypeExam,"0.7","100"}}, subjectsG1G3
     			,new String[]{"A","B"},new String[]{SchoolConstant.Code.MetricCollection.BEHAVIOUR_PRIMARY_STUDENT
     					,SchoolConstant.Code.MetricCollection.ATTENDANCE_STUDENT
@@ -452,7 +455,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes
     			,metricCollectionIdentifiableGlobalIdentifiers,academicSession
-    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G3,"Grade 3",levelGroupPrimary,commonNodeInformationsG1G3,gradeIndex++),null
+    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G3,"Grade 3",levelGroupPrimaryLower,commonNodeInformationsG1G3,gradeIndex++),null
     			,new Object[][]{{evaluationTypeTest1,"0.15","100"},{evaluationTypeTest2,"0.15","100"},{evaluationTypeExam,"0.7","100"}},subjectsG1G3
     			,new String[]{"A","B"},new String[]{SchoolConstant.Code.MetricCollection.BEHAVIOUR_PRIMARY_STUDENT
     					,SchoolConstant.Code.MetricCollection.ATTENDANCE_STUDENT
@@ -460,7 +463,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes
     			,metricCollectionIdentifiableGlobalIdentifiers,academicSession
-    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G4,"Grade 4",levelGroupPrimary,commonNodeInformationsG4G6,gradeIndex++),null 
+    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G4,"Grade 4",levelGroupPrimaryHigher,commonNodeInformationsG4G6,gradeIndex++),null 
     			,new Object[][]{{evaluationTypeTest1,"0.15","100"},{evaluationTypeTest2,"0.15","100"},{evaluationTypeExam,"0.7","100"}},subjectsG4G5
     			,new String[]{"A","B"},new String[]{SchoolConstant.Code.MetricCollection.BEHAVIOUR_PRIMARY_STUDENT
     					,SchoolConstant.Code.MetricCollection.ATTENDANCE_STUDENT
@@ -468,14 +471,15 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes
     			,metricCollectionIdentifiableGlobalIdentifiers,academicSession
-    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G5,"Grade 5",levelGroupPrimary,commonNodeInformationsG4G6,gradeIndex++),null 
+    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G5,"Grade 5",levelGroupPrimaryHigher,commonNodeInformationsG4G6,gradeIndex++),null 
     			,new Object[][]{{evaluationTypeTest1,"0.15","100"},{evaluationTypeTest2,"0.15","100"},{evaluationTypeExam,"0.7","100"}},subjectsG4G5
     			,new String[]{"A","B"},new String[]{SchoolConstant.Code.MetricCollection.BEHAVIOUR_PRIMARY_STUDENT
     					,SchoolConstant.Code.MetricCollection.ATTENDANCE_STUDENT
     					,SchoolConstant.Code.MetricCollection.COMMUNICATION_STUDENT},Boolean.TRUE,Boolean.TRUE);
+    	
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes
     			,metricCollectionIdentifiableGlobalIdentifiers,academicSession
-    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G6,"Grade 6",levelGroupPrimary,commonNodeInformationsG4G6,gradeIndex++),null 
+    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G6,"Grade 6",levelGroupPrimaryHigher,commonNodeInformationsG4G6,gradeIndex++),null 
     			,new Object[][]{{evaluationTypeTest1,"0.15","100"},{evaluationTypeTest2,"0.15","100"},{evaluationTypeExam,"0.7","100"}},subjectsG6
     			,null,new String[]{SchoolConstant.Code.MetricCollection.BEHAVIOUR_PRIMARY_STUDENT
     					,SchoolConstant.Code.MetricCollection.ATTENDANCE_STUDENT
@@ -483,31 +487,31 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes
     			,metricCollectionIdentifiableGlobalIdentifiers,academicSession
-    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G7,"Grade 7",levelGroupSecondary,commonNodeInformationsG7G9,gradeIndex++),null 
-    			, new Object[][]{{evaluationTypeTest1,"0.15","100"},{evaluationTypeTest2,"0.15","100"},{evaluationTypeExam,"0.7","100"}},subjectsG7G8
+    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G7,"Grade 7",levelGroupSecondaryLower,commonNodeInformationsG7G9,gradeIndex++),null 
+    			, new Object[][]{{evaluationTypeTest1,"0.2","100"},{evaluationTypeTest2,"0.2","100"},{evaluationTypeExam,"0.6","100"}},subjectsG7G8
     			,null,new String[]{SchoolConstant.Code.MetricCollection.BEHAVIOUR_SECONDARY_STUDENT
     					,SchoolConstant.Code.MetricCollection.ATTENDANCE_STUDENT
     					,SchoolConstant.Code.MetricCollection.COMMUNICATION_STUDENT},Boolean.TRUE,Boolean.TRUE);
     	
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes
     			,metricCollectionIdentifiableGlobalIdentifiers,academicSession
-    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G8,"Grade 8",levelGroupSecondary,commonNodeInformationsG7G9,gradeIndex++) ,null
-    			, new Object[][]{{evaluationTypeTest1,"0.15","100"},{evaluationTypeTest2,"0.15","100"},{evaluationTypeExam,"0.7","100"}},subjectsG7G8
+    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G8,"Grade 8",levelGroupSecondaryLower,commonNodeInformationsG7G9,gradeIndex++) ,null
+    			, new Object[][]{{evaluationTypeTest1,"0.2","100"},{evaluationTypeTest2,"0.2","100"},{evaluationTypeExam,"0.6","100"}},subjectsG7G8
     			,null,new String[]{SchoolConstant.Code.MetricCollection.BEHAVIOUR_SECONDARY_STUDENT
     					,SchoolConstant.Code.MetricCollection.ATTENDANCE_STUDENT
     					,SchoolConstant.Code.MetricCollection.COMMUNICATION_STUDENT},Boolean.TRUE,Boolean.TRUE);
     	
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes
     			,metricCollectionIdentifiableGlobalIdentifiers,academicSession
-    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G9,"Grade 9",levelGroupSecondary,commonNodeInformationsG7G9,gradeIndex++),null 
-    			,new Object[][]{{evaluationTypeTest1,"0.15","100"},{evaluationTypeTest2,"0.15","100"},{evaluationTypeExam,"0.7","100"}},null
+    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G9,"Grade 9",levelGroupSecondaryLower,commonNodeInformationsG7G9,gradeIndex++),null 
+    			,new Object[][]{{evaluationTypeTest1,"0.2","100"},{evaluationTypeTest2,"0.2","100"},{evaluationTypeExam,"0.6","100"}},null
     			,null,new String[]{SchoolConstant.Code.MetricCollection.BEHAVIOUR_SECONDARY_STUDENT
     					,SchoolConstant.Code.MetricCollection.ATTENDANCE_STUDENT
     					,SchoolConstant.Code.MetricCollection.COMMUNICATION_STUDENT},Boolean.TRUE,Boolean.FALSE);
     	
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes
     			,metricCollectionIdentifiableGlobalIdentifiers,academicSession
-    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G10,"Grade 10",levelGroupSecondary,commonNodeInformationsG10G12,gradeIndex++),null 
+    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G10,"Grade 10",levelGroupSecondaryHigher,commonNodeInformationsG10G12,gradeIndex++),null 
     			, new Object[][]{{evaluationTypeTest1,"0.2","100"},{evaluationTypeTest2,"0.2","100"},{evaluationTypeExam,"0.6","100"}},null
     			,null,new String[]{SchoolConstant.Code.MetricCollection.BEHAVIOUR_SECONDARY_STUDENT
     					,SchoolConstant.Code.MetricCollection.ATTENDANCE_STUDENT
@@ -515,19 +519,20 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes
     			,metricCollectionIdentifiableGlobalIdentifiers,academicSession
-    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G11,"Grade 11",levelGroupSecondary,commonNodeInformationsG10G12,gradeIndex++),null 
-    			, new Object[][]{{evaluationTypeTest1,"0.2","100"},{evaluationTypeTest2,"0.2","100"},{evaluationTypeExam,"0.6","100"}},null
-    			,null,new String[]{SchoolConstant.Code.MetricCollection.BEHAVIOUR_SECONDARY_STUDENT
-    					,SchoolConstant.Code.MetricCollection.ATTENDANCE_STUDENT
-    					,SchoolConstant.Code.MetricCollection.COMMUNICATION_STUDENT},Boolean.TRUE,Boolean.FALSE);
-    	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes
-    			,metricCollectionIdentifiableGlobalIdentifiers,academicSession
-    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G12,"Grade 12",levelGroupSecondary,commonNodeInformationsG10G12,gradeIndex++),null 
+    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G11,"Grade 11",levelGroupSecondaryHigher,commonNodeInformationsG10G12,gradeIndex++),null 
     			, new Object[][]{{evaluationTypeTest1,"0.2","100"},{evaluationTypeTest2,"0.2","100"},{evaluationTypeExam,"0.6","100"}},null
     			,null,new String[]{SchoolConstant.Code.MetricCollection.BEHAVIOUR_SECONDARY_STUDENT
     					,SchoolConstant.Code.MetricCollection.ATTENDANCE_STUDENT
     					,SchoolConstant.Code.MetricCollection.COMMUNICATION_STUDENT},Boolean.TRUE,Boolean.FALSE);
     	
+    	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes
+    			,metricCollectionIdentifiableGlobalIdentifiers,academicSession
+    			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G12,"Grade 12",levelGroupSecondaryHigher,commonNodeInformationsG10G12,gradeIndex++),null 
+    			, new Object[][]{{evaluationTypeTest1,"0.2","100"},{evaluationTypeTest2,"0.2","100"},{evaluationTypeExam,"0.6","100"}},null
+    			,null,new String[]{SchoolConstant.Code.MetricCollection.BEHAVIOUR_SECONDARY_STUDENT
+    					,SchoolConstant.Code.MetricCollection.ATTENDANCE_STUDENT
+    					,SchoolConstant.Code.MetricCollection.COMMUNICATION_STUDENT},Boolean.TRUE,Boolean.FALSE);
+    	*/
     	long t = System.currentTimeMillis();
     	System.out.println("Creating "+classroomSessions.size());
     	inject(GenericBusiness.class).createIdentifiables(classroomSessions,Boolean.FALSE);
@@ -538,19 +543,17 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	System.out.println("Classroom session divisions created : "+((System.currentTimeMillis()-t)/(1000)));t = System.currentTimeMillis();
     	
     	System.out.println("Creating "+classroomSessionDivisionSubjects.size());
-    	inject(GenericBusiness.class).createIdentifiables(classroomSessionDivisionSubjects,Boolean.TRUE);
+    	inject(GenericBusiness.class).createIdentifiables(classroomSessionDivisionSubjects,Boolean.FALSE);
     	System.out.println("Classroom session division subjects created : "+((System.currentTimeMillis()-t)/(1000)));t = System.currentTimeMillis();
     	
     	System.out.println("Creating "+subjectEvaluationTypes.size());
-    	inject(GenericBusiness.class).createIdentifiables(subjectEvaluationTypes,Boolean.TRUE);
+    	inject(GenericBusiness.class).createIdentifiables(subjectEvaluationTypes,Boolean.FALSE);
     	System.out.println("Classroom session division subject evaluation types created : "+((System.currentTimeMillis()-t)/(1000)));t = System.currentTimeMillis();
     	
     	System.out.println("Creating "+metricCollectionIdentifiableGlobalIdentifiers.size());
     	inject(GenericBusiness.class).createIdentifiables(metricCollectionIdentifiableGlobalIdentifiers,Boolean.FALSE);
     	System.out.println("metric collection identifiable created : "+((System.currentTimeMillis()-t)/(1000)));t = System.currentTimeMillis();
     	
-    	for(AbstractIdentifiable identifiable :  genericDao.use(EvaluationType.class).select().all())
-    		StudentClassroomSessionDivisionBusiness.EVALUATION_TYPE_CODES.add(((EvaluationType)identifiable).getCode());
     	StudentClassroomSessionDivisionBusiness.SUM_MARKS[0] = Boolean.TRUE;
     	
     	/* reading data from excel files */
@@ -572,9 +575,9 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	/**/
 	
 	private CommonNodeInformations instanciateCommonNodeInformations(IntervalCollection intervalCollection,IntervalCollection promotionIntervalCollection
-			,ReportTemplate reportTemplate,String classroomsessionDivisionIndex,Interval interval){
+			,ReportTemplate reportTemplate,String classroomsessionDivisionIndex){
 		CommonNodeInformations commonNodeInformations = schoolDataProducerHelper.instanciateOneCommonNodeInformations(intervalCollection,promotionIntervalCollection, reportTemplate
-				, TimeDivisionType.DAY, TimeDivisionType.TRIMESTER,"50", classroomsessionDivisionIndex,interval);
+				, TimeDivisionType.DAY, TimeDivisionType.TRIMESTER,"63", classroomsessionDivisionIndex);
 		return commonNodeInformations;
 	}
 	

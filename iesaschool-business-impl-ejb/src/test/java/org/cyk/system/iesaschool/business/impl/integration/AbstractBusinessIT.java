@@ -11,7 +11,6 @@ import org.cyk.system.company.business.impl.CompanyBusinessLayer;
 import org.cyk.system.iesaschool.business.impl.IesaBusinessLayer;
 import org.cyk.system.iesaschool.business.impl.IesaBusinessTestHelper;
 import org.cyk.system.root.business.api.GenericBusiness;
-import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.AbstractFakedDataProducer;
@@ -23,11 +22,14 @@ import org.cyk.system.root.business.impl.validation.DefaultValidator;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.business.impl.validation.ValidatorMap;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.system.root.persistence.impl.PersistenceIntegrationTestHelper;
 import org.cyk.system.school.business.impl.SchoolBusinessLayer;
 import org.cyk.system.school.business.impl.SchoolBusinessTestHelper;
 import org.cyk.system.school.business.impl.SchoolDataProducerHelper;
+import org.cyk.system.school.business.impl.session.LevelBusinessImpl;
+import org.cyk.system.school.business.impl.session.LevelTimeDivisionBusinessImpl;
 import org.cyk.system.school.business.impl.subject.ClassroomSessionDivisionSubjectBusinessImpl;
 import org.cyk.system.school.model.SchoolConstant;
 import org.cyk.system.school.model.session.ClassroomSession;
@@ -102,24 +104,26 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     	SchoolConstant.Code.LevelGroup.KINDERGARTEN = "KS";
 		SchoolConstant.Code.LevelGroup.PRIMARY = "PS";
 		SchoolConstant.Code.LevelGroup.SECONDARY = "HS";
-		SchoolDataProducerHelper.Listener.COLLECTION.add(new SchoolDataProducerHelper.Listener.Adapter.Default(){
-			private static final long serialVersionUID = -5301917191935456060L;
-
+		SchoolDataProducerHelper.Listener.COLLECTION.add(new SchoolDataProducerHelper.Listener.Adapter(){
+			private static final long serialVersionUID = -5322009577688489872L;
 			@Override
-    		public void classroomSessionDivisionCreated(ClassroomSessionDivision classroomSessionDivision) {
-    			super.classroomSessionDivisionCreated(classroomSessionDivision);
-    			classroomSessionDivision.setBirthDate(new DateTime(2016, 4, 4, 0, 0).toDate());
-    			classroomSessionDivision.setDeathDate(new DateTime(2016, 6, 13, 0, 0).toDate());
-    			classroomSessionDivision.getExistencePeriod().getNumberOfMillisecond().setUser(48l * DateTimeConstants.MILLIS_PER_DAY);
-    		}
+			public void classroomSessionDivisionCreated(ClassroomSessionDivision classroomSessionDivision,Long orderNumber) {
+				if(orderNumber==1){
+					classroomSessionDivision.getExistencePeriod().getNumberOfMillisecond().set(63l * DateTimeConstants.MILLIS_PER_DAY);
+				}else if(orderNumber==2){
+					classroomSessionDivision.getExistencePeriod().setFromDate(new DateTime(2017, 1, 9, 0, 0).toDate());
+	    			classroomSessionDivision.getExistencePeriod().setToDate(new DateTime(2017, 3, 27, 0, 0).toDate());
+				}
+				classroomSessionDivision.setStudentSubjectAttendanceAggregated(Boolean.FALSE);
+			}
 			
 			@Override
 			public void classroomSessionDivisionSubjectEvaluationTypeCreated(ClassroomSessionDivisionSubjectEvaluationType classroomSessionDivisionSubjectEvaluationType) {
 				super.classroomSessionDivisionSubjectEvaluationTypeCreated(classroomSessionDivisionSubjectEvaluationType);
 				classroomSessionDivisionSubjectEvaluationType.setMaximumValue(new BigDecimal("100"));
-				classroomSessionDivisionSubjectEvaluationType.setCountInterval(inject(IntervalBusiness.class).instanciateOne(null, null, "1", "1"));
+				classroomSessionDivisionSubjectEvaluationType.setCountInterval(inject(IntervalDao.class).read(SchoolConstant.Code.Interval.EVALUATION_COUNT_BY_TYPE));
 			}
-    	});
+		});
     	ClassroomSessionDivisionSubjectBusinessImpl.Listener.COLLECTION.clear();
     	
     	long t = System.currentTimeMillis();
@@ -176,7 +180,13 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
                 ;
     } 
     
-    @Override protected void populate() {}
+    @Override 
+    protected void populate() {
+    	LevelBusinessImpl.PROPERTY_VALUE_TOKENS_CONCATENATE_WITH_GROUP_LEVELNAME_SPECIALITY = Boolean.FALSE;
+    	LevelTimeDivisionBusinessImpl.PROPERTY_VALUE_TOKENS_CONCATENATE_WITH_TIMEDIVISIONTYPE = Boolean.FALSE;
+    	
+    	installApplication();
+    }
     
     @Override protected void create() {}
     @Override protected void delete() {}

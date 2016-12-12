@@ -5,39 +5,36 @@ import java.io.FileInputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.IdentifiableBusinessService.CompleteInstanciationOfOneFromValuesListener;
 import org.cyk.system.root.business.api.file.FileBusiness;
+import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
 import org.cyk.system.root.business.api.party.person.AbstractActorBusiness.CompleteActorInstanciationOfManyFromValuesArguments;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.party.person.PersonRelationshipType;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.school.business.api.actor.StudentBusiness;
 import org.cyk.system.school.business.api.actor.TeacherBusiness;
+import org.cyk.system.school.business.api.session.ClassroomSessionBusiness;
 import org.cyk.system.school.business.api.session.StudentClassroomSessionDivisionBusiness;
-import org.cyk.system.school.business.api.subject.ClassroomSessionDivisionSubjectEvaluationTypeBusiness;
-import org.cyk.system.school.business.api.subject.EvaluationBusiness;
-import org.cyk.system.school.business.api.subject.EvaluationTypeBusiness;
-import org.cyk.system.school.business.api.subject.StudentClassroomSessionDivisionSubjectBusiness;
 import org.cyk.system.school.business.api.subject.SubjectBusiness;
-import org.cyk.system.school.business.impl.session.LevelBusinessImpl;
-import org.cyk.system.school.business.impl.session.LevelTimeDivisionBusinessImpl;
 import org.cyk.system.school.model.SchoolConstant;
 import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.actor.Teacher;
 import org.cyk.system.school.model.session.ClassroomSession;
+import org.cyk.system.school.model.session.StudentClassroomSession;
 import org.cyk.system.school.model.session.StudentClassroomSessionDivision;
 import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubject;
-import org.cyk.system.school.model.subject.Evaluation;
-import org.cyk.system.school.model.subject.StudentClassroomSessionDivisionSubject;
-import org.cyk.system.school.model.subject.StudentClassroomSessionDivisionSubjectEvaluation;
 import org.cyk.system.school.model.subject.Subject;
+import org.cyk.system.school.persistence.api.actor.StudentDao;
+import org.cyk.system.school.persistence.api.actor.TeacherDao;
+import org.cyk.system.school.persistence.api.subject.SubjectDao;
 import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.Constant;
@@ -46,102 +43,60 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 
     private static final long serialVersionUID = -6691092648665798471L;
     
-    private ClassroomSession pkg,kg1,kg2,kg3,g1A,g1B,g2,g3A,g3B,g4A,g4B,g5A,g5B,g6,g7,g8,g9,g10,g11,g12;
     private Collection<Subject> subjects;
     
     @Override
     protected void businesses() {
-    	LevelBusinessImpl.PROPERTY_VALUE_TOKENS_CONCATENATE_WITH_GROUP_LEVELNAME_SPECIALITY = Boolean.FALSE;
-    	LevelTimeDivisionBusinessImpl.PROPERTY_VALUE_TOKENS_CONCATENATE_WITH_TIMEDIVISIONTYPE = Boolean.FALSE;
     	subjects = inject(SubjectBusiness.class).findAll();
     	
-    	installApplication();
-    	if(Boolean.TRUE.equals(noData()))
+    	if(Boolean.TRUE.equals(noData())){
+    		System.exit(0);
     		return;
+    	}
     	File directory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data");
-		File excelWorkbookFile = new File(directory, "data.xlsx")
-			,teachersSignatureDirectory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\signature")
-			,studentsPhotoDirectory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\photo")
-			,previousDatabasesFile = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\previousdatabase.xlsx");
+		File excelWorkbookFile = new File(directory, "2016_2017_Trimester_1.xls")
+			,teachersSignatureDirectory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\20162017\\signature")
+			,studentsPhotoDirectory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\20162017\\photo");
 		
-    	for(ClassroomSession classroomSession : classroomSessionDao.readAll())
-    		if(classroomSession.getLevelTimeDivision().getOrderNumber() == 0)
-    			pkg = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 1)
-    			kg1 = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 2)
-    			kg2 = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 3)
-    			kg3 = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 4){
-    			if(classroomSession.getSuffix().equals("A"))
-    				g1A = classroomSession;
-    			else if(classroomSession.getSuffix().equals("B"))
-    				g1B = classroomSession;
-    		}else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 5)
-    			g2 = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 6){
-    			if(classroomSession.getSuffix().equals("A"))
-    				g3A = classroomSession;
-    			else if(classroomSession.getSuffix().equals("B"))
-    				g3B = classroomSession;
-    		}else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 7){
-    			if(classroomSession.getSuffix().equals("A"))
-    				g4A = classroomSession;
-    			else if(classroomSession.getSuffix().equals("B"))
-    				g4B = classroomSession;
-    		}else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 8){
-    			if(classroomSession.getSuffix().equals("A"))
-    				g5A = classroomSession;
-    			else if(classroomSession.getSuffix().equals("B"))
-    				g5B = classroomSession;
-    		}else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 9)
-    			g6 = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 10)
-    			g7 = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 11)
-    			g8 = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 12)
-    			g9 = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 13)
-    			g10 = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 14)
-    			g11 = classroomSession;
-    		else if(classroomSession.getLevelTimeDivision().getOrderNumber() == 15)
-    			g12 = classroomSession;
-    	
     	try {
 			processTeachersSheet(excelWorkbookFile,teachersSignatureDirectory);
 			processCoordinatorsSheet(excelWorkbookFile);
 			processClassroomSessionDivisionSubjectTeachersSheet(excelWorkbookFile);
-			/*
-			processStudentsSheet(pkg,excelWorkbookFile,studentsPhotoDirectory,1,2,34);
-			processStudentsSheet(kg1,excelWorkbookFile,studentsPhotoDirectory,1,38,38);
-			processStudentsSheet(kg2,excelWorkbookFile,studentsPhotoDirectory,1,78,38);
-			processStudentsSheet(kg3,excelWorkbookFile,studentsPhotoDirectory,1,118,26);
+			
+    		//for(ClassroomSession classroomSession : inject(ClassroomSessionDao.class).readAll())
+    		
+    		// inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(SchoolConstant.Code.LevelName.PK, null)
+    		
+    		/*processStudentsSheet(pkg,excelWorkbookFile,studentsPhotoDirectory,0,412,18);
+			processStudentsSheet(kg1,excelWorkbookFile,studentsPhotoDirectory,0,294,42);
+			processStudentsSheet(kg2,excelWorkbookFile,studentsPhotoDirectory,0,336,34);
+			processStudentsSheet(kg3,excelWorkbookFile,studentsPhotoDirectory,0,370,42);
 			*/
-
-			processStudentsSheet(g1A,excelWorkbookFile,studentsPhotoDirectory,2,2,20);
-			processStudentsSheet(g1B,excelWorkbookFile,studentsPhotoDirectory,2,24,18);
-			processStudentsSheet(g2,excelWorkbookFile,studentsPhotoDirectory,2,43,25);
+	
+			//processStudentsSheet(g1A,excelWorkbookFile,studentsPhotoDirectory,0,45,21);
+			/*processStudentsSheet(g1B,excelWorkbookFile,studentsPhotoDirectory,2,24,18);
+			//processStudentsSheet(g2A,excelWorkbookFile,studentsPhotoDirectory,2,43,25);
+			//processStudentsSheet(g2B,excelWorkbookFile,studentsPhotoDirectory,2,43,25);
 			processStudentsSheet(g3A,excelWorkbookFile,studentsPhotoDirectory,2,69,14);
 			processStudentsSheet(g3B,excelWorkbookFile,studentsPhotoDirectory,2,85,14);
 			
-			processStudentsSheet(g4A,excelWorkbookFile,studentsPhotoDirectory,3,2,19);
+			processStudentsSheet(g4A,excelWorkbookFile,studentsPhotoDirectory,0,153,21);
 			processStudentsSheet(g4B,excelWorkbookFile,studentsPhotoDirectory,3,23,13);//0 
 			processStudentsSheet(g5A,excelWorkbookFile,studentsPhotoDirectory,3,38,12);
 			processStudentsSheet(g5B,excelWorkbookFile,studentsPhotoDirectory,3,52,9);
 			processStudentsSheet(g6,excelWorkbookFile,studentsPhotoDirectory,3,63,18);
 			
-			processStudentsSheet(g7,excelWorkbookFile,studentsPhotoDirectory,4,2,16);
+			processStudentsSheet(g7,excelWorkbookFile,studentsPhotoDirectory,0,240,19);
 			processStudentsSheet(g8,excelWorkbookFile,studentsPhotoDirectory,4,20,22);
 			processStudentsSheet(g9,excelWorkbookFile,studentsPhotoDirectory,4,44,23);
 			processStudentsSheet(g10,excelWorkbookFile,studentsPhotoDirectory,4,69,13);
 			processStudentsSheet(g11,excelWorkbookFile,studentsPhotoDirectory,4,84,9);
 			processStudentsSheet(g12,excelWorkbookFile,studentsPhotoDirectory,4,95,1);
-			
+			*/
 			//processPreviousDatabases(previousDatabasesFile);
-			processPreviousDatabasesStudentEvaluations(previousDatabasesFile);
+			//processPreviousDatabasesStudentEvaluations(previousDatabasesFile);
+			
+			processStudentsSheet(SchoolConstant.Code.LevelName.G1,"A",excelWorkbookFile,studentsPhotoDirectory,null);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -156,55 +111,70 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     private void processTeachersSheet(File file,final File signatureDirectory) throws Exception{
     	ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
     	readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
-    	readExcelSheetArguments.setSheetIndex(0);
-    	readExcelSheetArguments.setFromRowIndex(2);
-    	readExcelSheetArguments.setFromColumnIndex(1);
-		
+    	readExcelSheetArguments.setSheetIndex(1);
+    	readExcelSheetArguments.setFromRowIndex(35);
+    	readExcelSheetArguments.setFromColumnIndex(0);
+    	readExcelSheetArguments.setRowCount(36);
+    	readExcelSheetArguments.setListener(new ReadExcelSheetArguments.Listener.Adapter.Default(){
+			private static final long serialVersionUID = 1L;
+    		@Override
+    		public Boolean addable(String[] row) {
+    			return inject(TeacherDao.class).read(row[1])==null;
+    		}
+    	});
+    	
 		CompleteActorInstanciationOfManyFromValuesArguments<Teacher> completeActorInstanciationOfManyFromValuesArguments = new CompleteActorInstanciationOfManyFromValuesArguments<>();
 		
-		completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setRegistrationCodeIndex(0);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setTitleCodeIndex(1);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().getPartyInstanciationOfOneFromValuesArguments().setNameIndex(2);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setLastnameIndex(3);
+		completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setRegistrationCodeIndex(1);
+    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setTitleCodeIndex(3);
+    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().getPartyInstanciationOfOneFromValuesArguments().setNameIndex(6);
+    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setLastnameIndex(5);
     	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setListener(new CompleteInstanciationOfOneFromValuesListener<Teacher>() {
 			@Override
 			public void beforeProcessing(Teacher teacher,String[] values) {
-				values[1] = getPersonTitleCode(values[1]);
+				values[3] = getPersonTitleCode(values[3]);
 			}
     		@Override
 			public void afterProcessing(Teacher teacher,String[] values) {
-    			//teacher.getPerson().getExtendedInformations().getTitle().setCode(getPersonTitleCode(teacher.getPerson().getExtendedInformations().getTitle().getCode()));
-				File signatureFile = new File(signatureDirectory,StringUtils.replace(teacher.getCode(),"/","")+".png");
+    			/*if(teacher.getPerson().getExtendedInformations()==null)
+    				teacher.getPerson().setExtendedInformations(new PersonExtendedInformations(teacher.getPerson()));
+    			if(teacher.getPerson().getExtendedInformations()==null)
+    				teacher.getPerson().setExtendedInformations(new PersonExtendedInformations(teacher.getPerson()));
+    			teacher.getPerson().getExtendedInformations().getTitle().setCode(getPersonTitleCode(teacher.getPerson().getExtendedInformations().getTitle().getCode()));
+    			*/
+				File signatureFile = new File(signatureDirectory,new BigDecimal(values[0]).intValue()+".png");
 				if(signatureFile.exists())
 					try {
 						teacher.getPerson().getExtendedInformations().setSignatureSpecimen(inject(FileBusiness.class)
-							.process(IOUtils.toByteArray(new FileInputStream(signatureFile)), "signature.png"));
+							.process(IOUtils.toByteArray(new FileInputStream(signatureFile)), teacher.getCode()+" signature.png"));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+				else
+					System.out.println("Signature file not found for "+teacher.getCode()+" : "+signatureFile);
 			}
 		});
     
     	System.out.print("Instanciating teachers");
     	List<Teacher> teachers = inject(TeacherBusiness.class).instanciateMany(readExcelSheetArguments, completeActorInstanciationOfManyFromValuesArguments);
     	System.out.println(" - Creating "+teachers.size()+" teachers");
-    	inject(TeacherBusiness.class).create(teachers);
+    	inject(GenericBusiness.class).create(CommonUtils.getInstance().castCollection(teachers, AbstractIdentifiable.class));
     }
     
     private void processCoordinatorsSheet(File file) throws Exception{
     	ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
     	readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
-    	readExcelSheetArguments.setSheetIndex(5);
-    	readExcelSheetArguments.setFromRowIndex(2);
+    	readExcelSheetArguments.setSheetIndex(3);
+    	readExcelSheetArguments.setFromRowIndex(0);
 		List<String[]> list = CommonUtils.getInstance().readExcelSheet(readExcelSheetArguments);
     	Collection<ClassroomSession> classroomSessions = new ArrayList<>();
 		for(String[] values : list){
     		ClassroomSession classroomSession = getClassroomSession(values[0]);
     		if(classroomSession==null){
-    			System.out.println("No classroom session found for coordinator "+values[2]);
+    			System.out.println("No classroom session found for coordinator "+values[1]);
     			continue;
     		}
-    		classroomSession.setCoordinator(inject(TeacherBusiness.class).find(values[2]));
+    		classroomSession.setCoordinator(inject(TeacherBusiness.class).find(values[1]));
     		classroomSessions.add(classroomSession);
     	}
 		System.out.println("Updating "+classroomSessions.size()+" class room sessions");
@@ -214,15 +184,13 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     private void processClassroomSessionDivisionSubjectTeachersSheet(File file) throws Exception{
     	ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
     	readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
-    	readExcelSheetArguments.setSheetIndex(8);
-    	readExcelSheetArguments.setFromRowIndex(1);
+    	readExcelSheetArguments.setSheetIndex(2);
+    	readExcelSheetArguments.setFromRowIndex(0);
 		List<String[]> list = CommonUtils.getInstance().readExcelSheet(readExcelSheetArguments);
     	Collection<ClassroomSessionDivisionSubject> classroomSessionDivisionSubjects = new ArrayList<>();
 		for(String[] values : list){
-			//System.out.println("V : "+getClassroomSession(values[0])+" , "+getSubject(values[1])+" : "+classroomSessionDivisionSubjectDao
-    		//		.readByClassroomSessionBySubject(getClassroomSession(values[0]),getSubject(values[1])));
 			for(ClassroomSessionDivisionSubject classroomSessionDivisionSubject : classroomSessionDivisionSubjectDao
-    				.readByClassroomSessionBySubject(getClassroomSession(values[0]),getSubject(values[1],Boolean.TRUE))){
+    				.readByClassroomSessionBySubject(getClassroomSession(values[0]),getSubject(values[1]))){
     			
     			classroomSessionDivisionSubject.setTeacher(inject(TeacherBusiness.class).find(values[2]));
     			classroomSessionDivisionSubjects.add(classroomSessionDivisionSubject);
@@ -232,23 +200,117 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 		inject(GenericBusiness.class).update(CommonUtils.getInstance().castCollection(classroomSessionDivisionSubjects, AbstractIdentifiable.class));
     }
     
-    private void processStudentsSheet(ClassroomSession classroomSession,File file,final File imageDirectory,Integer sheetIndex,Integer fromRowIndex,Integer count) throws Exception{
+    private void processStudentsSheet(final ClassroomSession classroomSession,File file,final File imageDirectory,Integer sheetIndex,Integer count) throws Exception{
     	//final Collection<StudentClassroomSession> studentClassroomSessions = new ArrayList<>();
+    	final Collection<String> studentCodes = new ArrayList<>();
     	ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
     	readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
     	readExcelSheetArguments.setSheetIndex(sheetIndex);
-    	readExcelSheetArguments.setFromRowIndex(fromRowIndex);
+    	readExcelSheetArguments.setFromRowIndex(1);
     	readExcelSheetArguments.setFromColumnIndex(0);
     	readExcelSheetArguments.setRowCount(count);
     	
 		CompleteActorInstanciationOfManyFromValuesArguments<Student> completeActorInstanciationOfManyFromValuesArguments = new CompleteActorInstanciationOfManyFromValuesArguments<>();
 		
 		completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setRegistrationCodeIndex(1);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().getPartyInstanciationOfOneFromValuesArguments().setNameIndex(2);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setLastnameIndex(3);
+    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().getPartyInstanciationOfOneFromValuesArguments().setNameIndex(3);
+    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setLastnameIndex(2);
     	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().getPartyInstanciationOfOneFromValuesArguments().setBirthDateIndex(4);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setBirthLocationOtherDetailsIndex(5);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setSexCodeIndex(6);
+    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setBirthLocationOtherDetailsIndex(6);
+    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setSexCodeIndex(8);
+    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setListener(new CompleteInstanciationOfOneFromValuesListener<Student>() {
+			@Override
+			public void beforeProcessing(Student student,String[] values) {
+				//if(!ArrayUtils.contains(new String[]{"g9","g10","g11","g12"}, values[7].toLowerCase()));
+				//	studentClassroomSessions.add(new StudentClassroomSession(student, getClassroomSession(values[7])));
+			}
+    		@Override
+			public void afterProcessing(Student student,String[] values) {
+    			studentCodes.add(values[1]);
+    			if(student.getPerson().getSex()!=null)
+    				student.getPerson().getSex().setCode(getSexCode(student.getPerson().getSex().getCode()));
+    			if(StringUtils.isNotBlank(values[12]))
+    				inject(ElectronicMailBusiness.class).setAddress(student.getPerson(), PersonRelationshipType.FAMILY_FATHER, values[12]);
+    			if(StringUtils.isNotBlank(values[17]))
+    				inject(ElectronicMailBusiness.class).setAddress(student.getPerson(), PersonRelationshipType.FAMILY_MOTHER, values[17]);
+    			/*File photoFile = new File(imageDirectory,new BigDecimal(values[0]).intValue()+".jpg");
+				if(photoFile.exists())
+					try {
+						student.setImage(inject(FileBusiness.class).process(IOUtils.toByteArray(new FileInputStream(photoFile)), "photo.jpeg"));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				else
+					;*///System.out.println("Not found : "+photoFile);
+				
+				if(!ArrayUtils.contains(new String[]{"g9","g10","g11","g12"}, values[7].toLowerCase()));
+					student.setStudentClassroomSession(new StudentClassroomSession(student, classroomSession));
+			}
+    		
+		});
+    	System.out.print(classroomSession);
+    	System.out.print(" - Instanciating students");
+    	List<Student> students = inject(StudentBusiness.class).instanciateMany(readExcelSheetArguments, completeActorInstanciationOfManyFromValuesArguments);
+    	System.out.print(" - "+students.size());
+    	Collection<Student> existing = inject(StudentDao.class).read(studentCodes);
+    	for(int i = 0; i< students.size();){
+    		Boolean found = false;
+    		for(Student e : existing)
+    			if(students.get(i).getCode().equals(e.getCode())){
+    				students.remove(i);
+    				found = true;
+    				break;
+    			}
+    		if(!found)
+    			i++;
+    	}
+    	
+    	System.out.println(" - Creating "+students.size()+" students");
+    	inject(GenericBusiness.class).create(CommonUtils.getInstance().castCollection(students, AbstractIdentifiable.class));
+    	genericBusiness.flushEntityManager();
+    	/*if(classroomSession.getLevelTimeDivision().getOrderNumber()<=11){
+    		System.out.println(" - Creating "+studentClassroomSessions.size()+" student classroom sessions");
+    		inject(StudentClassroomSessionBusiness.class).create(studentClassroomSessions);
+    		genericBusiness.flushEntityManager();
+    	}else
+    		System.out.println();
+    	*/
+    	//System.out.println("Number of students : "+ classroomSessionDao.read(classroomSession.getIdentifier()).getNumberOfStudents());
+    	
+    	if(Boolean.TRUE.equals(isSimulated())){
+    		schoolBusinessTestHelper.createSubjectEvaluations(classroomSessionDivisionSubjectDao.readByClassroomSession(classroomSession),Boolean.FALSE);
+    		schoolBusinessTestHelper.randomValues(Boolean.TRUE, Boolean.TRUE, Boolean.TRUE);
+    		genericBusiness.flushEntityManager();
+    	}
+    }
+    
+    private void processStudentsSheet(final String levelNameCode,final String classroomSessionSuffix,File file,final File imageDirectory,Integer count) throws Exception{
+    	Collection<ClassroomSession> classroomSessions = inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(levelNameCode, classroomSessionSuffix);
+    	final ClassroomSession classroomSession = classroomSessions.isEmpty() ? null : classroomSessions.iterator().next();
+    	final Collection<String> studentCodes = new ArrayList<>();
+    	ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
+    	readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
+    	readExcelSheetArguments.setSheetIndex(0);
+    	readExcelSheetArguments.setFromRowIndex(1);
+    	readExcelSheetArguments.setFromColumnIndex(0);
+    	readExcelSheetArguments.setRowCount(count);
+    	
+    	readExcelSheetArguments.setListener(new ReadExcelSheetArguments.Listener.Adapter.Default(){
+			private static final long serialVersionUID = 1L;
+    		@Override
+    		public Boolean addable(String[] row) {
+    			return inject(StudentDao.class).read(row[1])==null && isLevel(levelNameCode, classroomSessionSuffix, row[7]);
+    		}
+    	});
+    	
+		CompleteActorInstanciationOfManyFromValuesArguments<Student> completeActorInstanciationOfManyFromValuesArguments = new CompleteActorInstanciationOfManyFromValuesArguments<>();
+		
+		completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setRegistrationCodeIndex(1);
+    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().getPartyInstanciationOfOneFromValuesArguments().setNameIndex(3);
+    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setLastnameIndex(2);
+    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().getPartyInstanciationOfOneFromValuesArguments().setBirthDateIndex(4);
+    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setBirthLocationOtherDetailsIndex(6);
+    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setSexCodeIndex(8);
     	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setListener(new CompleteInstanciationOfOneFromValuesListener<Student>() {
 			@Override
 			public void beforeProcessing(Student student,String[] values) {
@@ -259,29 +321,52 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 			public void afterProcessing(Student student,String[] values) {
     			if(student.getPerson().getSex()!=null)
     				student.getPerson().getSex().setCode(getSexCode(student.getPerson().getSex().getCode()));
+    			if(StringUtils.isNotBlank(values[12]))
+    				inject(ElectronicMailBusiness.class).setAddress(student.getPerson(), PersonRelationshipType.FAMILY_FATHER, values[12]);
+    			if(StringUtils.isNotBlank(values[17]))
+    				inject(ElectronicMailBusiness.class).setAddress(student.getPerson(), PersonRelationshipType.FAMILY_MOTHER, values[17]);
     			File photoFile = new File(imageDirectory,new BigDecimal(values[0]).intValue()+".jpg");
 				if(photoFile.exists())
 					try {
-						student.setImage(inject(FileBusiness.class).process(IOUtils.toByteArray(new FileInputStream(photoFile)), "photo.jpeg"));
+						student.setImage(inject(FileBusiness.class).process(IOUtils.toByteArray(new FileInputStream(photoFile)), student.getCode()+" photo.jpeg"));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				else
-					;//System.out.println("Not found : "+photoFile);
+					System.out.println("Photo not found : "+photoFile);
+				
+				if(classroomSession!=null && !ArrayUtils.contains(new String[]{"g9","g10","g11","g12"}, values[7].toLowerCase()));
+					student.setStudentClassroomSession(new StudentClassroomSession(student, classroomSession));
 			}
+    		
 		});
     	System.out.print(classroomSession);
     	System.out.print(" - Instanciating students");
     	List<Student> students = inject(StudentBusiness.class).instanciateMany(readExcelSheetArguments, completeActorInstanciationOfManyFromValuesArguments);
-    	System.out.print(" - Creating "+students.size()+" students");
-    	inject(StudentBusiness.class).create(students);
-    	/*if(classroomSession.getLevelTimeDivision().getOrderNumber()>3 && classroomSession.getLevelTimeDivision().getOrderNumber()<=11){
+    	System.out.print(" - "+students.size());
+    	Collection<Student> existing = inject(StudentDao.class).read(studentCodes);
+    	for(int i = 0; i< students.size();){
+    		Boolean found = false;
+    		for(Student e : existing)
+    			if(students.get(i).getCode().equals(e.getCode())){
+    				students.remove(i);
+    				found = true;
+    				break;
+    			}
+    		if(!found)
+    			i++;
+    	}
+    	
+    	System.out.println(" - Creating "+students.size()+" students");
+    	inject(GenericBusiness.class).create(CommonUtils.getInstance().castCollection(students, AbstractIdentifiable.class));
+    	genericBusiness.flushEntityManager();
+    	/*if(classroomSession.getLevelTimeDivision().getOrderNumber()<=11){
     		System.out.println(" - Creating "+studentClassroomSessions.size()+" student classroom sessions");
     		inject(StudentClassroomSessionBusiness.class).create(studentClassroomSessions);
     		genericBusiness.flushEntityManager();
     	}else
-    		System.out.println();*/
-    	
+    		System.out.println();
+    	*/
     	//System.out.println("Number of students : "+ classroomSessionDao.read(classroomSession.getIdentifier()).getNumberOfStudents());
     	
     	if(Boolean.TRUE.equals(isSimulated())){
@@ -337,105 +422,14 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	
     }
     
-    private void processPreviousDatabasesStudentEvaluations(File file) throws Exception{
-    	Collection<Student> students = inject(StudentBusiness.class).findAll();
-    	Set<Student> studentsExists = new HashSet<>();
-    	Collection<StudentClassroomSessionDivisionSubject> studentClassroomSessionDivisionSubjects = inject(StudentClassroomSessionDivisionSubjectBusiness.class).findAll();
-    	Set<StudentClassroomSessionDivisionSubject> studentClassroomSessionDivisionSubjectsExists = new HashSet<>();
-    	
-    	System.out.println("Student classroom session division subjects : "+studentClassroomSessionDivisionSubjects.size());
-    	//List<StudentClassroomSessionDivisionSubjectEvaluation> studentClassroomSessionDivisionSubjectEvaluations = new ArrayList<>();
-    	Collection<Evaluation> evaluations = new ArrayList<>();
-    	for(byte divisionIndex = 0; divisionIndex < 2 ; divisionIndex++){
-    		ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
-        	readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
-        	readExcelSheetArguments.setSheetIndex(divisionIndex+2);
-        	readExcelSheetArguments.setFromRowIndex(1);
-    		List<String[]> list = CommonUtils.getInstance().readExcelSheet(readExcelSheetArguments);
-    		
-    		Evaluation evaluation = null;
-    		String previousEvaluationTypeCode = null;
-    		for(String[] values : list){
-    			StudentClassroomSessionDivisionSubjectEvaluation studentClassroomSessionDivisionSubjectEvaluation = new StudentClassroomSessionDivisionSubjectEvaluation();
-    			Student student = null;
-    			for(Student index : students){
-    				//System.out
-					//		.println("AbstractCreateDatabaseBusinessIT.processPreviousDatabasesStudentEvaluations() : "+index.getCode()+" , "+values[0]);
-    				if(index.getCode().equals(values[0])){
-    					student = index;
-    					break;
-    				}
-    			}
-    			
-    			if(student==null){
-    				//System.out.println("No student found for registration code "+values[0]);
-    				continue;
-    			}
-    			studentsExists.add(student);
-    			for(StudentClassroomSessionDivisionSubject index : studentClassroomSessionDivisionSubjects){
-    				if(index.getStudent().getCode().equals(student.getCode()) 
-    						&& 	index.getClassroomSessionDivisionSubject().getClassroomSessionDivision().getOrderNumber().equals(divisionIndex)
-    						&& index.getClassroomSessionDivisionSubject().getSubject().equals(getSubject(values[1],Boolean.FALSE))){
-    					studentClassroomSessionDivisionSubjectEvaluation.setStudentSubject(index);
-    					studentClassroomSessionDivisionSubjectEvaluation.setValue(new BigDecimal(values[3]));
-    					break;
-    				}
-    			}
-    			
-    			if(studentClassroomSessionDivisionSubjectEvaluation.getStudentSubject()==null){
-    				//System.out.println("No student subject found for registration code "+values[0]+" and subject "+values[1]);
-    				continue;
-    			}else
-    				studentClassroomSessionDivisionSubjectsExists.add(studentClassroomSessionDivisionSubjectEvaluation.getStudentSubject());
-    			
-    			if(evaluation == null || !values[2].equals(previousEvaluationTypeCode)){
-    				evaluation = new Evaluation();
-    				evaluation.setClassroomSessionDivisionSubjectEvaluationType(inject(ClassroomSessionDivisionSubjectEvaluationTypeBusiness.class)
-        					.findByClassroomSessionDivisionSubjectByEvaluationType(studentClassroomSessionDivisionSubjectEvaluation.getStudentSubject().getClassroomSessionDivisionSubject(),
-        							inject(EvaluationTypeBusiness.class).find(previousEvaluationTypeCode = values[2])));
-    				
-    				Evaluation previous = null;
-    				for(Evaluation index : evaluations)
-    					if(index.getClassroomSessionDivisionSubjectEvaluationType().equals(evaluation.getClassroomSessionDivisionSubjectEvaluationType())){
-    						previous = index;
-    						
-    						System.out.println("Duplicate found for "+evaluation.getClassroomSessionDivisionSubjectEvaluationType().getClassroomSessionDivisionSubject().getSubject()
-    								+" - "+evaluation.getClassroomSessionDivisionSubjectEvaluationType().getEvaluationType());
-    						
-    						break;
-    					}
-    				
-    				if(previous==null)
-    					evaluations.add(evaluation);
-    			}
-    			
-    			studentClassroomSessionDivisionSubjectEvaluation.setEvaluation(evaluation);
-    			evaluation.getStudentSubjectEvaluations().add(studentClassroomSessionDivisionSubjectEvaluation);
-				
-    		}
-    		
-    	}
-    	
-    	//System.out.println("Number of students : "+students.size());
-    	//System.out.println("Number of students subjects : "+studentClassroomSessionDivisionSubjectsExists.size());
-    	System.out.println("Number of evaluations : "+evaluations.size());
-    	/*
-    	for(StudentClassroomSessionDivision studentClassroomSessionDivision : studentClassroomSessionDivisions)
-    		if(studentClassroomSessionDivision.getClassroomSessionDivision().getOrderNumber().intValue()<2)
-    			System.out.println("No student class room session division has been found for : "+studentClassroomSessionDivision);
-    	
-    	System.out.println("Updating "+updatedStudentClassroomSessionDivisions.size()+" student class room session divisions");
-		inject(Instance().getStudentClassroomSessionDivisionBusiness.class).update(updatedStudentClassroomSessionDivisions);	
-		*/
-    	inject(EvaluationBusiness.class).create(evaluations);
-    }
+    
     
     private String getPersonTitleCode(String code){
-    	if(code.equals("Mrs."))
+    	if(code.equals("Mademoiselle"))
 			return PersonTitle.MISS;
-		else if(code.equals("Ms."))
+		else if(code.equals("Madame"))
 			return PersonTitle.MADAM;
-		else if(code.equals("Mr."))
+		else if(code.equals("Monsieur"))
 			return PersonTitle.MISTER;
     	return code;
     }
@@ -450,192 +444,53 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     
     private ClassroomSession getClassroomSession(String code){
     	code = StringUtils.replace(code, Constant.CHARACTER_SPACE.toString(), Constant.EMPTY_STRING).toLowerCase();
+    	Collection<ClassroomSession> classroomSessions = null;
     	if(code.equals("pre-k") || code.equals("pk"))
-			return pkg;
-    	if(code.equals("kg1"))
-			return kg1;
-    	if(code.equals("kg2"))
-			return kg2;
-    	if(code.equals("kg3"))
-			return kg3;
-    	if(code.equals("g1a"))
-			return g1A;
-    	if(code.equals("g1b"))
-			return g1B;
-    	if(code.equals("g2"))
-			return g2;
-    	if(code.equals("g3a"))
-			return g3A;
-    	if(code.equals("g3b"))
-			return g3B;
-    	if(code.equals("g4a"))
-			return g4A;
-    	if(code.equals("g4b"))
-			return g4B;
-    	if(code.equals("g5a"))
-			return g5A;
-    	if(code.equals("g5b"))
-			return g5B;
-    	if(code.equals("g6"))
-			return g6;
-    	if(code.equals("g7"))
-			return g7;
-    	if(code.equals("g8"))
-			return g8;
-    	if(code.equals("g9"))
-			return g9;
-    	if(code.equals("g10"))
-			return g10;
-    	if(code.equals("g11"))
-			return g11;
-    	if(code.equals("g12"))
-			return g12;
-    	return null;
+    		classroomSessions = inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(SchoolConstant.Code.LevelName.PK, null);
+    	else if(code.equals("kg1"))
+    		classroomSessions = inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(SchoolConstant.Code.LevelName.K1, null);
+    	else if(code.equals("kg2"))
+    		classroomSessions = inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(SchoolConstant.Code.LevelName.K2, null);
+    	else if(code.equals("kg3"))
+    		classroomSessions = inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(SchoolConstant.Code.LevelName.K3, null);
+    	else if(code.equals("g1a"))
+    		classroomSessions = inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(SchoolConstant.Code.LevelName.G1, "A");
+    	else if(code.equals("g1b"))
+    		classroomSessions = inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(SchoolConstant.Code.LevelName.G1, "B");
+    	else if(code.equals("g2a"))
+    		classroomSessions = inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(SchoolConstant.Code.LevelName.G2, "A");
+    	else if(code.equals("g2b"))
+    		classroomSessions = inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(SchoolConstant.Code.LevelName.G2, "B");
+    	else if(code.equals("g3a"))
+    		classroomSessions = inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(SchoolConstant.Code.LevelName.G3, "A");
+    	else if(code.equals("g3b"))
+    		classroomSessions = inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(SchoolConstant.Code.LevelName.G3, "B");
+    	else if(code.equals("g4a"))
+    		classroomSessions = inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(SchoolConstant.Code.LevelName.G4, "A");
+    	else if(code.equals("g4b"))
+    		classroomSessions = inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(SchoolConstant.Code.LevelName.G4, "B");
+    	else if(code.equals("g5a"))
+    		classroomSessions = inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(SchoolConstant.Code.LevelName.G5, "A");
+    	else if(code.equals("g5b"))
+    		classroomSessions = inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(SchoolConstant.Code.LevelName.G5, "B");
+    	else if(code.equals("g6"))
+    		classroomSessions = inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(SchoolConstant.Code.LevelName.G6, null);
+    	else if(code.equals("g7"))
+    		classroomSessions = inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(SchoolConstant.Code.LevelName.G7, null);
+    	else if(code.equals("g8"))
+    		classroomSessions = inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(SchoolConstant.Code.LevelName.G8, null);
+    	
+    	return classroomSessions == null || classroomSessions.isEmpty() ? null : classroomSessions.iterator().next();
     }
     
-    private Subject getSubject(String code,Boolean load){
+    private Subject getSubject(String code){
     	code = StringUtils.trim(code);
-    	String icode = code;
-    	if(Boolean.TRUE.equals(load)){
-	    	if(code.equals("S17"))
-	    		code = SchoolConstant.Code.Subject.GRAMMAR;
-	    	else if(code.equals("S21"))
-	    		code = SchoolConstant.Code.Subject.FRENCH;
-    	}else{
-	    	for(Subject subject : subjects){
-	    		if(subject.getName().equalsIgnoreCase(code)){
-	    			code = subject.getCode();
-	    			//System.out.println("Found s c : "+code);
-	    			//System.exit(0);
-	    		}
-	    		if(StringUtils.isNotBlank(code))
-	    			break;
-	    	}
-	    	
-	    	code = icode;
-	    	for(Subject subject : subjects){
-	    		if(StringUtils.remove(subject.getName(), Constant.CHARACTER_SPACE).equalsIgnoreCase(code)){
-	    			code = subject.getCode();
-	    		}
-	    		if(StringUtils.isNotBlank(code))
-	    			break;
-	    	}
-	    	
-	    	code = icode;
-	    	if(code.equals("Mathematics"))
-	    		code = SchoolConstant.Code.Subject.MATHEMATICS;
-	    	else if(code.equals("Spanish"))
-	    		code = SchoolConstant.Code.Subject.SPANISH;
-	    	else if(code.equals("Biology"))
-	    		code = SchoolConstant.Code.Subject.BIOLOGY;
-	    	else if(code.equals("Chemistry"))
-	    		code = SchoolConstant.Code.Subject.CHEMISTRY;
-	    	else if(code.equals("French"))
-	    		code = SchoolConstant.Code.Subject.FRENCH;
-	    	else if(code.equals("Physics"))
-	    		code = SchoolConstant.Code.Subject.PHYSICS;
-	    	else if(code.equals("Grammar"))
-	    		code = SchoolConstant.Code.Subject.GRAMMAR;
-	    	else if(code.equals("Reading&Comprehension"))
-	    		code = SchoolConstant.Code.Subject.READING_COMPREHENSION;
-	    	else if(code.equals("Handwriting"))
-	    		code = SchoolConstant.Code.Subject.HANDWRITING;
-	    	else if(code.equals("Spelling"))
-	    		code = SchoolConstant.Code.Subject.SPELLING;
-	    	else if(code.equals("Phonics"))
-	    		code = SchoolConstant.Code.Subject.PHONICS;
-	    	else if(code.equals("Creativewriting"))
-	    		code = SchoolConstant.Code.Subject.CREATIVE_WRITING;
-	    	else if(code.equals("Moraleducation"))
-	    		code = SchoolConstant.Code.Subject.MORAL_EDUCATION;
-	    	else if(code.equals("SocialStudies"))
-	    		code = SchoolConstant.Code.Subject.SOCIAL_STUDIES;
-	    	else if(code.equals("Science"))
-	    		code = SchoolConstant.Code.Subject.SCIENCE;
-	    	else if(code.equals("French"))
-	    		code = SchoolConstant.Code.Subject.FRENCH;
-	    	else if(code.equals("Art&Craft"))
-	    		code = SchoolConstant.Code.Subject.ART_CRAFT;
-	    	else if(code.equals("Music"))
-	    		code = SchoolConstant.Code.Subject.MUSIC;
-	    	else if(code.equals("ICT"))
-	    		code = SchoolConstant.Code.Subject.ICT_COMPUTER;
-	    	else if(code.equals("Physicaleducation"))
-	    		code = SchoolConstant.Code.Subject.PHYSICAL_EDUCATION;
-	    	else if(code.equals("Literatureinenglish"))
-	    		code = SchoolConstant.Code.Subject.LITERATURE_IN_ENGLISH;
-	    	else if(code.equals("Geography"))
-	    		code = SchoolConstant.Code.Subject.GEOGRAPHY;
-	    	else if(code.equals("History"))
-	    		code = SchoolConstant.Code.Subject.HISTORY;
-	    	else if(code.equals("EnglishLanguage"))
-	    		code = SchoolConstant.Code.Subject.ENGLISH_LANGUAGE;
-	    	else if(code.equals("Comprehension"))
-	    		code = SchoolConstant.Code.Subject.COMPREHENSION;
-	    	else if(code.equals("Litterature"))
-	    		code = SchoolConstant.Code.Subject.LITERATURE;
-	    	
-	    		
-    	}
-    	
-    	/*
-    	S01	MATHEMATICS
-    	S02	GRAMMAR
-    	S03	READING & COMPREHENSION
-    	S04	HANDWRITING
-    	S05	SPELLING
-    	S06	PHONICS
-    	S07	CREATIVE WRITING
-    	S08	MORAL EDUCATION
-    	S09	SOCIAL STUDIES
-    	S10	SCIENCE
-    	S11	FRENCH
-    	S12	ART & CRAFT
-    	S13	MUSIC
-    	S14	ICT (Computer)
-    	S15	PHYSICAL EDUCATION
-
-    	S17	GRAMMAR
-    	S18	LITERATURE
-    	S19	COMPREHENSION
-    	S20	HISTORY
-    	S21	FRENCH
-
-    	S22	ENGLISH LANGUAGE
-    	S23	LITERATURE IN ENGLISH
-    	S24	GEOGRAPHY
-    	S25	PHYSICS
-    	S26	CHEMISTRY
-    	S27	BIOLOGY
-    	S28	SPANISH
-    	S29	ENGLISH LITERATURE
-    	S30	CHINESE MANDARIN
-    	S31	ACCOUNTING
-    	S32	BUSINESS STUDIES
-    	S33	ECONOMICS
-    	S34	ADVANCED MATHEMATICS
-    	S35	CORE MATHEMATICS
-    	S36	ART & DESIGN
-    	S37	DEVELOPMENT STUDIES
-    	S38	ENVIRONMENTAL MANAGEMENT
-
-    	S39	SOCIOLOGY
-    	S40	LAW
-		*/
-    	Subject subject = inject(SubjectBusiness.class).find(code);
-    	if(subject==null)
-    		System.out.println("No subject has code "+icode);
-    	else{
-    		/*if(subject.getName().toLowerCase().startsWith("science"))
-    			System.out.println("science : "+icode+" > "+code);
-    		
-    		if(subject.getName().toLowerCase().startsWith("litterature"))
-    			System.out.println("litterature : "+icode+" > "+code);
-    		*/
-    	}
-    	
-    	
-    	return subject;
+    	return inject(SubjectDao.class).read(code);
+    }
+    
+    private Boolean isLevel(String levelNameCode,String classroomSessionSuffix,String value){
+    	String c = (levelNameCode+StringUtils.defaultString(classroomSessionSuffix));
+    	return StringUtils.equalsIgnoreCase(c, value);
     }
 
     protected Boolean isSimulated(){

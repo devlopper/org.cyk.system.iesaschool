@@ -125,6 +125,9 @@
 	<field name="headerImage" class="java.io.InputStream">
 		<fieldDescription><![CDATA[headerImage]]></fieldDescription>
 	</field>
+    <field name="provisional" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[provisional]]></fieldDescription>
+	</field>
 	<field name="labelValueCollectionAtIndex0" class="org.cyk.system.root.model.file.report.LabelValueCollectionReport">
 		<fieldDescription><![CDATA[labelValueCollectionAtIndex0]]></fieldDescription>
 	</field>
@@ -166,10 +169,8 @@
 	</field>
 	<background>
 		<band height="679" splitType="Stretch">
-			<image>
-				<reportElement x="27" y="151" width="500" height="500" uuid="e1a82841-5225-4937-84ef-f95938818ed5">
-					<printWhenExpression><![CDATA[false]]></printWhenExpression>
-				</reportElement>
+			<image isLazy="true">
+				<reportElement x="27" y="151" width="500" height="500" uuid="e1a82841-5225-4937-84ef-f95938818ed5"/>
 				<imageExpression><![CDATA[$F{backgroundImage}]]></imageExpression>
 			</image>
 		</band>
@@ -261,7 +262,9 @@
 				</componentElement>
 			</frame>
 			<frame>
-				<reportElement mode="Transparent" x="385" y="0" width="170" height="50" backcolor="#9999FF" uuid="1417754e-aadb-4e8a-82ed-bead42153fec"/>
+				<reportElement mode="Transparent" x="385" y="0" width="170" height="50" backcolor="#9999FF" uuid="1417754e-aadb-4e8a-82ed-bead42153fec">
+					<printWhenExpression><![CDATA[$F{provisional} == false]]></printWhenExpression>
+				</reportElement>
 				<textField>
 					<reportElement style="block header" x="0" y="0" width="170" height="13" uuid="8e5e4903-eb2c-4ca6-bd96-030cc5bd8df6"/>
 					<textElement markup="styled"/>
@@ -713,7 +716,9 @@
 				</componentElement>
 			</frame>
 			<frame>
-				<reportElement positionType="Float" mode="Transparent" x="385" y="36" width="170" height="80" backcolor="#FFFF33" uuid="2261a94c-5493-40ea-9f3a-b21167bb1ca1"/>
+				<reportElement positionType="Float" mode="Transparent" x="385" y="36" width="170" height="80" backcolor="#FFFF33" uuid="2261a94c-5493-40ea-9f3a-b21167bb1ca1">
+					<printWhenExpression><![CDATA[$F{provisional} == false]]></printWhenExpression>
+				</reportElement>
 				<box rightPadding="0">
 					<pen lineWidth="0.25" lineColor="#00CCCC"/>
 					<topPen lineWidth="0.0" lineColor="#00CCCC"/>
@@ -747,7 +752,9 @@
 				</textField>
 			</frame>
 			<frame>
-				<reportElement positionType="Float" x="385" y="118" width="170" height="89" uuid="ad594a11-3e61-4f8c-820b-4879f36773e3"/>
+				<reportElement positionType="Float" x="385" y="118" width="170" height="89" uuid="ad594a11-3e61-4f8c-820b-4879f36773e3">
+					<printWhenExpression><![CDATA[$F{provisional} == false]]></printWhenExpression>
+				</reportElement>
 				<box>
 					<pen lineWidth="0.25" lineColor="#00CCCC"/>
 					<topPen lineWidth="0.0" lineColor="#00CCCC"/>
@@ -829,7 +836,9 @@
 				</textField>
 			</frame>
 			<frame>
-				<reportElement positionType="Float" mode="Transparent" x="385" y="263" width="170" height="50" backcolor="#9999FF" uuid="e7d90b40-4626-4b14-a6d2-0d8090d748ff"/>
+				<reportElement positionType="Float" mode="Transparent" x="385" y="263" width="170" height="50" backcolor="#9999FF" uuid="e7d90b40-4626-4b14-a6d2-0d8090d748ff">
+					<printWhenExpression><![CDATA[$F{provisional} == false]]></printWhenExpression>
+				</reportElement>
 				<textField>
 					<reportElement style="block header" x="0" y="0" width="170" height="13" uuid="a40151f4-3bf6-472c-9b3a-f8b8ae12a681"/>
 					<textElement markup="styled"/>

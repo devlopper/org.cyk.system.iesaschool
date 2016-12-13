@@ -371,7 +371,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	Collection<MetricCollectionIdentifiableGlobalIdentifier> metricCollectionIdentifiableGlobalIdentifiers = new ArrayList<>(); 
     	
     	Long gradeIndex = 0l;
-    	/*
+    	
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes
     			,metricCollectionIdentifiableGlobalIdentifiers,academicSession
     			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.PK,"Pre-Kindergarten",levelGroupKindergarten,commonNodeInformationsPkg,gradeIndex++) 
@@ -419,7 +419,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes
     			,metricCollectionIdentifiableGlobalIdentifiers,academicSession
     			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.K3,"Kindergarten 3",levelGroupKindergarten,commonNodeInformationsKg2Kg3,gradeIndex++) 
-    			, null,null,null,null,new String[]{SchoolConstant.Code.MetricCollection.ATTENDANCE_KINDERGARTEN_STUDENT
+    			, null,null,null,new String[]{"A","B"},new String[]{SchoolConstant.Code.MetricCollection.ATTENDANCE_KINDERGARTEN_STUDENT
     					,SchoolConstant.Code.MetricCollection.BEHAVIOUR_KINDERGARTEN_K2_STUDENT_READING_READINESS
     					,SchoolConstant.Code.MetricCollection.BEHAVIOUR_KINDERGARTEN_K2_STUDENT_READING
     					,SchoolConstant.Code.MetricCollection.BEHAVIOUR_KINDERGARTEN_K2_STUDENT_WRITING
@@ -432,7 +432,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     					,SchoolConstant.Code.MetricCollection.BEHAVIOUR_KINDERGARTEN_K2_STUDENT_PHYSICAL_EDUCATION
     					,SchoolConstant.Code.MetricCollection.BEHAVIOUR_KINDERGARTEN_K2_STUDENT_WORK_BEHAVIOUR_HABITS
     					,SchoolConstant.Code.MetricCollection.COMMUNICATION_KINDERGARTEN_STUDENT},Boolean.FALSE,Boolean.FALSE);
-    	*/
+    	
     	EvaluationType evaluationTypeTest1=inject(EvaluationTypeDao.class).read(SchoolConstant.Code.EvaluationType.TEST1)
     			,evaluationTypeTest2=inject(EvaluationTypeDao.class).read(SchoolConstant.Code.EvaluationType.TEST2)
     			,evaluationTypeExam=inject(EvaluationTypeDao.class).read(SchoolConstant.Code.EvaluationType.EXAM);
@@ -441,10 +441,10 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     			,metricCollectionIdentifiableGlobalIdentifiers,academicSession
     			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G1,"Grade 1",levelGroupPrimaryLower,commonNodeInformationsG1G3,gradeIndex++),null 
     			,new Object[][]{{evaluationTypeTest1,"0.15","100"},{evaluationTypeTest2,"0.15","100"},{evaluationTypeExam,"0.7","100"}}, subjectsG1G3
-    			,new String[]{"A"/*,"B"*/},new String[]{SchoolConstant.Code.MetricCollection.BEHAVIOUR_PRIMARY_STUDENT
+    			,new String[]{"A","B"},new String[]{SchoolConstant.Code.MetricCollection.BEHAVIOUR_PRIMARY_STUDENT
     					,SchoolConstant.Code.MetricCollection.ATTENDANCE_STUDENT
     					,SchoolConstant.Code.MetricCollection.COMMUNICATION_STUDENT},Boolean.TRUE,Boolean.TRUE);    	
-    	/*
+    	
     	schoolDataProducerHelper.instanciateOneClassroomSession(classroomSessions,classroomSessionDivisions,classroomSessionDivisionSubjects,subjectEvaluationTypes
     			,metricCollectionIdentifiableGlobalIdentifiers,academicSession
     			, schoolDataProducerHelper.createLevelTimeDivision(SchoolConstant.Code.LevelName.G2,"Grade 2",levelGroupPrimaryLower,commonNodeInformationsG1G3,gradeIndex++),null 
@@ -532,7 +532,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
     			,null,new String[]{SchoolConstant.Code.MetricCollection.BEHAVIOUR_SECONDARY_STUDENT
     					,SchoolConstant.Code.MetricCollection.ATTENDANCE_STUDENT
     					,SchoolConstant.Code.MetricCollection.COMMUNICATION_STUDENT},Boolean.TRUE,Boolean.FALSE);
-    	*/
+    	
     	long t = System.currentTimeMillis();
     	System.out.println("Creating "+classroomSessions.size());
     	inject(GenericBusiness.class).createIdentifiables(classroomSessions,Boolean.FALSE);

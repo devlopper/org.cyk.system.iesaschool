@@ -15,7 +15,7 @@ public class SystemMenuBuilder extends org.cyk.system.school.ui.web.primefaces.a
 	
 	public static SystemMenuBuilder getInstance(){
 		if(INSTANCE==null)
-			INSTANCE = new SystemMenuBuilder();
+			SystemMenuBuilder.DEFAULT = INSTANCE = new SystemMenuBuilder();
 		return INSTANCE;
 	}
 

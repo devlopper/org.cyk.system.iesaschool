@@ -59,7 +59,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 			,studentsPhotoDirectory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\20162017\\photo");
 		
     	try {
-			processTeachersSheet(excelWorkbookFile,teachersSignatureDirectory);
+			//processTeachersSheet(excelWorkbookFile,teachersSignatureDirectory);
 			processCoordinatorsSheet(excelWorkbookFile);
 			processClassroomSessionDivisionSubjectTeachersSheet(excelWorkbookFile);
 			
@@ -95,8 +95,31 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 			*/
 			//processPreviousDatabases(previousDatabasesFile);
 			//processPreviousDatabasesStudentEvaluations(previousDatabasesFile);
+			/*
+			processStudentsSheet(SchoolConstant.Code.LevelName.PK,null,excelWorkbookFile,studentsPhotoDirectory,null);
+			processStudentsSheet(SchoolConstant.Code.LevelName.K1,null,excelWorkbookFile,studentsPhotoDirectory,null);
+			processStudentsSheet(SchoolConstant.Code.LevelName.K2,null,excelWorkbookFile,studentsPhotoDirectory,null);
+			processStudentsSheet(SchoolConstant.Code.LevelName.K3,"A",excelWorkbookFile,studentsPhotoDirectory,null);
+			processStudentsSheet(SchoolConstant.Code.LevelName.K3,"B",excelWorkbookFile,studentsPhotoDirectory,null);
 			
 			processStudentsSheet(SchoolConstant.Code.LevelName.G1,"A",excelWorkbookFile,studentsPhotoDirectory,null);
+			processStudentsSheet(SchoolConstant.Code.LevelName.G1,"B",excelWorkbookFile,studentsPhotoDirectory,null);
+			processStudentsSheet(SchoolConstant.Code.LevelName.G2,"A",excelWorkbookFile,studentsPhotoDirectory,null);
+			processStudentsSheet(SchoolConstant.Code.LevelName.G2,"B",excelWorkbookFile,studentsPhotoDirectory,null);
+			processStudentsSheet(SchoolConstant.Code.LevelName.G3,"A",excelWorkbookFile,studentsPhotoDirectory,null);
+			processStudentsSheet(SchoolConstant.Code.LevelName.G3,"B",excelWorkbookFile,studentsPhotoDirectory,null);
+			processStudentsSheet(SchoolConstant.Code.LevelName.G4,"A",excelWorkbookFile,studentsPhotoDirectory,null);
+			processStudentsSheet(SchoolConstant.Code.LevelName.G4,"B",excelWorkbookFile,studentsPhotoDirectory,null);
+			processStudentsSheet(SchoolConstant.Code.LevelName.G5,"A",excelWorkbookFile,studentsPhotoDirectory,null);
+			processStudentsSheet(SchoolConstant.Code.LevelName.G5,"B",excelWorkbookFile,studentsPhotoDirectory,null);
+			processStudentsSheet(SchoolConstant.Code.LevelName.G6,null,excelWorkbookFile,studentsPhotoDirectory,null);
+			processStudentsSheet(SchoolConstant.Code.LevelName.G7,null,excelWorkbookFile,studentsPhotoDirectory,null);
+			processStudentsSheet(SchoolConstant.Code.LevelName.G8,null,excelWorkbookFile,studentsPhotoDirectory,null);
+			processStudentsSheet(SchoolConstant.Code.LevelName.G9,null,excelWorkbookFile,studentsPhotoDirectory,null);
+			processStudentsSheet(SchoolConstant.Code.LevelName.G10,null,excelWorkbookFile,studentsPhotoDirectory,null);
+			processStudentsSheet(SchoolConstant.Code.LevelName.G11,null,excelWorkbookFile,studentsPhotoDirectory,null);
+			processStudentsSheet(SchoolConstant.Code.LevelName.G12,null,excelWorkbookFile,studentsPhotoDirectory,null);
+			*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -143,6 +166,9 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     			teacher.getPerson().getExtendedInformations().getTitle().setCode(getPersonTitleCode(teacher.getPerson().getExtendedInformations().getTitle().getCode()));
     			*/
 				File signatureFile = new File(signatureDirectory,new BigDecimal(values[0]).intValue()+".png");
+				if(!signatureFile.exists())
+					signatureFile = new File(signatureDirectory,new BigDecimal(values[0]).intValue()+".jpg");
+				
 				if(signatureFile.exists())
 					try {
 						teacher.getPerson().getExtendedInformations().setSignatureSpecimen(inject(FileBusiness.class)
@@ -151,7 +177,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 						e.printStackTrace();
 					}
 				else
-					System.out.println("Signature file not found for "+teacher.getCode()+" : "+signatureFile);
+					System.out.println("Signature file not found for "+teacher.getCode()+" : "+signatureFile.getName());
 			}
 		});
     
@@ -326,14 +352,17 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     			if(StringUtils.isNotBlank(values[17]))
     				inject(ElectronicMailBusiness.class).setAddress(student.getPerson(), PersonRelationshipType.FAMILY_MOTHER, values[17]);
     			File photoFile = new File(imageDirectory,new BigDecimal(values[0]).intValue()+".jpg");
-				if(photoFile.exists())
+				if(!photoFile.exists())
+					photoFile = new File(imageDirectory,new BigDecimal(values[0]).intValue()+".png");
+				
+    			if(photoFile.exists())
 					try {
 						student.setImage(inject(FileBusiness.class).process(IOUtils.toByteArray(new FileInputStream(photoFile)), student.getCode()+" photo.jpeg"));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				else
-					System.out.println("Photo not found : "+photoFile);
+					System.out.println("Photo not found for "+student.getCode()+" : "+photoFile.getName());
 				
 				if(classroomSession!=null && !ArrayUtils.contains(new String[]{"g9","g10","g11","g12"}, values[7].toLowerCase()));
 					student.setStudentClassroomSession(new StudentClassroomSession(student, classroomSession));
@@ -489,6 +518,8 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     }
     
     private Boolean isLevel(String levelNameCode,String classroomSessionSuffix,String value){
+    	if(StringUtils.startsWith(value, "KG"))
+    		value = "K"+value.substring(2);
     	String c = (levelNameCode+StringUtils.defaultString(classroomSessionSuffix));
     	return StringUtils.equalsIgnoreCase(c, value);
     }

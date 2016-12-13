@@ -23,7 +23,6 @@ import org.cyk.system.school.business.api.actor.StudentBusiness;
 import org.cyk.system.school.business.api.actor.TeacherBusiness;
 import org.cyk.system.school.business.api.session.ClassroomSessionBusiness;
 import org.cyk.system.school.business.api.session.StudentClassroomSessionDivisionBusiness;
-import org.cyk.system.school.business.api.subject.SubjectBusiness;
 import org.cyk.system.school.model.SchoolConstant;
 import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.actor.Teacher;
@@ -42,13 +41,10 @@ import org.cyk.utility.common.Constant;
 public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessIT {
 
     private static final long serialVersionUID = -6691092648665798471L;
-    
-    private Collection<Subject> subjects;
-    
+     
     @Override
     protected void businesses() {
-    	subjects = inject(SubjectBusiness.class).findAll();
-    	
+   
     	if(Boolean.TRUE.equals(noData())){
     		System.exit(0);
     		return;
@@ -59,43 +55,10 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 			,studentsPhotoDirectory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\data\\20162017\\photo");
 		
     	try {
-			//processTeachersSheet(excelWorkbookFile,teachersSignatureDirectory);
+			processTeachersSheet(excelWorkbookFile,teachersSignatureDirectory);
 			processCoordinatorsSheet(excelWorkbookFile);
 			processClassroomSessionDivisionSubjectTeachersSheet(excelWorkbookFile);
 			
-    		//for(ClassroomSession classroomSession : inject(ClassroomSessionDao.class).readAll())
-    		
-    		// inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(SchoolConstant.Code.LevelName.PK, null)
-    		
-    		/*processStudentsSheet(pkg,excelWorkbookFile,studentsPhotoDirectory,0,412,18);
-			processStudentsSheet(kg1,excelWorkbookFile,studentsPhotoDirectory,0,294,42);
-			processStudentsSheet(kg2,excelWorkbookFile,studentsPhotoDirectory,0,336,34);
-			processStudentsSheet(kg3,excelWorkbookFile,studentsPhotoDirectory,0,370,42);
-			*/
-	
-			//processStudentsSheet(g1A,excelWorkbookFile,studentsPhotoDirectory,0,45,21);
-			/*processStudentsSheet(g1B,excelWorkbookFile,studentsPhotoDirectory,2,24,18);
-			//processStudentsSheet(g2A,excelWorkbookFile,studentsPhotoDirectory,2,43,25);
-			//processStudentsSheet(g2B,excelWorkbookFile,studentsPhotoDirectory,2,43,25);
-			processStudentsSheet(g3A,excelWorkbookFile,studentsPhotoDirectory,2,69,14);
-			processStudentsSheet(g3B,excelWorkbookFile,studentsPhotoDirectory,2,85,14);
-			
-			processStudentsSheet(g4A,excelWorkbookFile,studentsPhotoDirectory,0,153,21);
-			processStudentsSheet(g4B,excelWorkbookFile,studentsPhotoDirectory,3,23,13);//0 
-			processStudentsSheet(g5A,excelWorkbookFile,studentsPhotoDirectory,3,38,12);
-			processStudentsSheet(g5B,excelWorkbookFile,studentsPhotoDirectory,3,52,9);
-			processStudentsSheet(g6,excelWorkbookFile,studentsPhotoDirectory,3,63,18);
-			
-			processStudentsSheet(g7,excelWorkbookFile,studentsPhotoDirectory,0,240,19);
-			processStudentsSheet(g8,excelWorkbookFile,studentsPhotoDirectory,4,20,22);
-			processStudentsSheet(g9,excelWorkbookFile,studentsPhotoDirectory,4,44,23);
-			processStudentsSheet(g10,excelWorkbookFile,studentsPhotoDirectory,4,69,13);
-			processStudentsSheet(g11,excelWorkbookFile,studentsPhotoDirectory,4,84,9);
-			processStudentsSheet(g12,excelWorkbookFile,studentsPhotoDirectory,4,95,1);
-			*/
-			//processPreviousDatabases(previousDatabasesFile);
-			//processPreviousDatabasesStudentEvaluations(previousDatabasesFile);
-			/*
 			processStudentsSheet(SchoolConstant.Code.LevelName.PK,null,excelWorkbookFile,studentsPhotoDirectory,null);
 			processStudentsSheet(SchoolConstant.Code.LevelName.K1,null,excelWorkbookFile,studentsPhotoDirectory,null);
 			processStudentsSheet(SchoolConstant.Code.LevelName.K2,null,excelWorkbookFile,studentsPhotoDirectory,null);
@@ -119,7 +82,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 			processStudentsSheet(SchoolConstant.Code.LevelName.G10,null,excelWorkbookFile,studentsPhotoDirectory,null);
 			processStudentsSheet(SchoolConstant.Code.LevelName.G11,null,excelWorkbookFile,studentsPhotoDirectory,null);
 			processStudentsSheet(SchoolConstant.Code.LevelName.G12,null,excelWorkbookFile,studentsPhotoDirectory,null);
-			*/
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -224,90 +187,6 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	}
 		System.out.println("Updating "+classroomSessionDivisionSubjects.size()+" class room session division subjects");
 		inject(GenericBusiness.class).update(CommonUtils.getInstance().castCollection(classroomSessionDivisionSubjects, AbstractIdentifiable.class));
-    }
-    
-    private void processStudentsSheet(final ClassroomSession classroomSession,File file,final File imageDirectory,Integer sheetIndex,Integer count) throws Exception{
-    	//final Collection<StudentClassroomSession> studentClassroomSessions = new ArrayList<>();
-    	final Collection<String> studentCodes = new ArrayList<>();
-    	ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
-    	readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
-    	readExcelSheetArguments.setSheetIndex(sheetIndex);
-    	readExcelSheetArguments.setFromRowIndex(1);
-    	readExcelSheetArguments.setFromColumnIndex(0);
-    	readExcelSheetArguments.setRowCount(count);
-    	
-		CompleteActorInstanciationOfManyFromValuesArguments<Student> completeActorInstanciationOfManyFromValuesArguments = new CompleteActorInstanciationOfManyFromValuesArguments<>();
-		
-		completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setRegistrationCodeIndex(1);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().getPartyInstanciationOfOneFromValuesArguments().setNameIndex(3);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setLastnameIndex(2);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().getPartyInstanciationOfOneFromValuesArguments().setBirthDateIndex(4);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setBirthLocationOtherDetailsIndex(6);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setSexCodeIndex(8);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setListener(new CompleteInstanciationOfOneFromValuesListener<Student>() {
-			@Override
-			public void beforeProcessing(Student student,String[] values) {
-				//if(!ArrayUtils.contains(new String[]{"g9","g10","g11","g12"}, values[7].toLowerCase()));
-				//	studentClassroomSessions.add(new StudentClassroomSession(student, getClassroomSession(values[7])));
-			}
-    		@Override
-			public void afterProcessing(Student student,String[] values) {
-    			studentCodes.add(values[1]);
-    			if(student.getPerson().getSex()!=null)
-    				student.getPerson().getSex().setCode(getSexCode(student.getPerson().getSex().getCode()));
-    			if(StringUtils.isNotBlank(values[12]))
-    				inject(ElectronicMailBusiness.class).setAddress(student.getPerson(), PersonRelationshipType.FAMILY_FATHER, values[12]);
-    			if(StringUtils.isNotBlank(values[17]))
-    				inject(ElectronicMailBusiness.class).setAddress(student.getPerson(), PersonRelationshipType.FAMILY_MOTHER, values[17]);
-    			/*File photoFile = new File(imageDirectory,new BigDecimal(values[0]).intValue()+".jpg");
-				if(photoFile.exists())
-					try {
-						student.setImage(inject(FileBusiness.class).process(IOUtils.toByteArray(new FileInputStream(photoFile)), "photo.jpeg"));
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				else
-					;*///System.out.println("Not found : "+photoFile);
-				
-				if(!ArrayUtils.contains(new String[]{"g9","g10","g11","g12"}, values[7].toLowerCase()));
-					student.setStudentClassroomSession(new StudentClassroomSession(student, classroomSession));
-			}
-    		
-		});
-    	System.out.print(classroomSession);
-    	System.out.print(" - Instanciating students");
-    	List<Student> students = inject(StudentBusiness.class).instanciateMany(readExcelSheetArguments, completeActorInstanciationOfManyFromValuesArguments);
-    	System.out.print(" - "+students.size());
-    	Collection<Student> existing = inject(StudentDao.class).read(studentCodes);
-    	for(int i = 0; i< students.size();){
-    		Boolean found = false;
-    		for(Student e : existing)
-    			if(students.get(i).getCode().equals(e.getCode())){
-    				students.remove(i);
-    				found = true;
-    				break;
-    			}
-    		if(!found)
-    			i++;
-    	}
-    	
-    	System.out.println(" - Creating "+students.size()+" students");
-    	inject(GenericBusiness.class).create(CommonUtils.getInstance().castCollection(students, AbstractIdentifiable.class));
-    	genericBusiness.flushEntityManager();
-    	/*if(classroomSession.getLevelTimeDivision().getOrderNumber()<=11){
-    		System.out.println(" - Creating "+studentClassroomSessions.size()+" student classroom sessions");
-    		inject(StudentClassroomSessionBusiness.class).create(studentClassroomSessions);
-    		genericBusiness.flushEntityManager();
-    	}else
-    		System.out.println();
-    	*/
-    	//System.out.println("Number of students : "+ classroomSessionDao.read(classroomSession.getIdentifier()).getNumberOfStudents());
-    	
-    	if(Boolean.TRUE.equals(isSimulated())){
-    		schoolBusinessTestHelper.createSubjectEvaluations(classroomSessionDivisionSubjectDao.readByClassroomSession(classroomSession),Boolean.FALSE);
-    		schoolBusinessTestHelper.randomValues(Boolean.TRUE, Boolean.TRUE, Boolean.TRUE);
-    		genericBusiness.flushEntityManager();
-    	}
     }
     
     private void processStudentsSheet(final String levelNameCode,final String classroomSessionSuffix,File file,final File imageDirectory,Integer count) throws Exception{

@@ -173,11 +173,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 			}
 		});
 		
-		inject(MailBusiness.class).getSmtpProperties().setHost("smtp.iesaci.com");
-		inject(MailBusiness.class).getSmtpProperties().setPort(25);
-		inject(MailBusiness.class).getSmtpProperties().setFrom("results@iesaci.com");
-		inject(MailBusiness.class).getSmtpProperties().getCredentials().setUsername("results@iesaci.com");
-		inject(MailBusiness.class).getSmtpProperties().getCredentials().setPassword("school2009");
+		inject(MailBusiness.class).setProperties("smtp.iesaci.com", 25, "results@iesaci.com", "school2009");
 		
 		CompanyBusinessLayer.Listener.COLLECTION.add(new CompanyBusinessLayer.Listener.Adapter() {
 			private static final long serialVersionUID = 5179809445850168706L;

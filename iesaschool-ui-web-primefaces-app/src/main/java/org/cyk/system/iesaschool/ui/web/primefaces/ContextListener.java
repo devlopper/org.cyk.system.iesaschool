@@ -3,6 +3,7 @@ package org.cyk.system.iesaschool.ui.web.primefaces;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.annotation.WebListener;
@@ -23,6 +24,7 @@ import org.cyk.system.root.business.impl.party.person.PersonDetails;
 import org.cyk.system.root.business.impl.party.person.PersonRelationshipDetails;
 import org.cyk.system.root.business.impl.party.person.SignatureDetails;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.language.LanguageEntry;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.school.business.impl.actor.StudentDetails;
 import org.cyk.system.school.business.impl.actor.TeacherDetails;
@@ -42,6 +44,7 @@ import org.cyk.ui.api.model.party.AbstractActorEditFormModel;
 import org.cyk.ui.api.model.party.AbstractPersonEditFormModel;
 import org.cyk.ui.web.primefaces.UserSession;
 import org.cyk.ui.web.primefaces.page.AbstractPrimefacesPage.PageInstanceManager;
+import org.cyk.utility.common.helper.StringHelper.CaseType;
 
 @WebListener
 public class ContextListener extends AbstractSchoolContextListener implements Serializable {
@@ -91,6 +94,10 @@ public class ContextListener extends AbstractSchoolContextListener implements Se
 			}
 		};
 		
+		LanguageBusinessImpl.cache(Locale.FRENCH, LanguageEntry.YES, null, CaseType.FURL, "Yes");//TODO not working on file why ???
+		LanguageBusinessImpl.cache(Locale.FRENCH, LanguageEntry.NO, null, CaseType.FURL, "No");
+		inject(MailBusiness.class).setProperties("smtp.iesaci.com", 25, "results@iesaci.com", "school2009");//TODO should not be declare here but from database
+		
 		LanguageBusinessImpl.Listener.COLLECTION.add(new LanguageBusinessImpl.Listener.Adapter.Default.EnterpriseResourcePlanning(){
 			private static final long serialVersionUID = 1L;
 
@@ -136,8 +143,6 @@ public class ContextListener extends AbstractSchoolContextListener implements Se
 				return super.afterFindFieldLabelText(object, field, findTextResult);
 			}*/
 		});
-		
-		inject(MailBusiness.class).setProperties("smtp.gmail.com", 465, "kycdev@gmail.com", "p@ssw0rd*");
 	}
 		
 	/**/

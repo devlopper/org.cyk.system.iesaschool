@@ -2,13 +2,16 @@ package org.cyk.system.iesaschool.business.impl.integration;
 
 import java.util.Arrays;
 
+import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.party.person.PersonRelationshipType;
 import org.cyk.system.school.business.api.actor.StudentBusiness;
 import org.cyk.system.school.model.SchoolConstant;
 import org.cyk.system.school.model.actor.Student;
 import org.cyk.system.school.model.session.ClassroomSession;
 import org.cyk.system.school.model.subject.EvaluationType;
+import org.cyk.utility.common.CommonUtils;
 
 public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBusinessIT {
 
@@ -67,22 +70,22 @@ public class StudentClassroomSessionDivisionReportBusinessIT extends AbstractBus
     	k3Student.setName("Aka");
     	k3Student.getPerson().setLastnames("clarisse");
     	
-    	inject(StudentBusiness.class).create(Arrays.asList(pkStudent,k1Student,k2Student,k3Student,student1));
+    	inject(GenericBusiness.class).create(CommonUtils.getInstance().castCollection(Arrays.asList(pkStudent,k1Student,k2Student,k3Student,student1),AbstractIdentifiable.class));
     	
-    	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"PK_STUD1"},pk, new Object[][]{{0},{0},{0}});
+    	/*schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"PK_STUD1"},pk, new Object[][]{{0},{0},{0}});
     	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"K1_STUD1"},k1, new Object[][]{{0},{0},{0}});
     	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"K2_STUD1"},k2, new Object[][]{{0},{0},{0}});
-    	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"K3_STUD1"},k3, new Object[][]{{0},{0},{0}});
+    	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"K3_STUD1"},k3, new Object[][]{{0},{0},{0}});*/
     	schoolBusinessTestHelper.createStudentClassroomSessions(new String[]{"G1_STUD1"},g1, new Object[][]{{15},{15},{15}});
     	
     	schoolBusinessTestHelper.getEvaluationTypes().addAll(rootDataProducerHelper.getEnumerations(EvaluationType.class));
     	
     	schoolBusinessTestHelper.generateStudentClassroomSessionDivisionReport(new Object[][]{
-        		{SchoolConstant.Code.LevelName.PK,null,1l}
+        		/*{SchoolConstant.Code.LevelName.PK,null,1l}
         		,{SchoolConstant.Code.LevelName.K1,null,1l}
         		,{SchoolConstant.Code.LevelName.K2,null,1l}
         		,{SchoolConstant.Code.LevelName.K3,null,1l}
-        		,{SchoolConstant.Code.LevelName.G1,"A",1l}
+        		,*/{SchoolConstant.Code.LevelName.G1,"A",1l}
         	}, Boolean.TRUE, Boolean.FALSE);
 
     }

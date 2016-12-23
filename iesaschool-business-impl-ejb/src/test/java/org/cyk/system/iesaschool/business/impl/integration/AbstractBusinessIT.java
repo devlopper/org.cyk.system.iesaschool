@@ -155,7 +155,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     
 	protected void finds(){}
 	
-	protected abstract void businesses();
+	protected void businesses(){}
 	
 	/* Shortcut */
     

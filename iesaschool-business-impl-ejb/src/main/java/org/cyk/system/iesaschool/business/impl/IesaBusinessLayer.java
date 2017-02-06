@@ -122,18 +122,11 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 	protected void initialisation() {
 		INSTANCE = this;
 		super.initialisation();
-		PersistDataListener.COLLECTION.add(new PersistDataListener.Adapter.Default(){
+		/*PersistDataListener.COLLECTION.add(new PersistDataListener.Adapter.Default(){
 			private static final long serialVersionUID = -950053441831528010L;
 			@SuppressWarnings("unchecked")
 			@Override
 			public <T> T processPropertyValue(Class<?> aClass,String instanceCode, String name, T value) {
-				/*if(SchoolConstant.REPORT_STUDENT_CLASSROOM_SESSION_DIVISION_SHEET.equals(instanceCode)){
-					if(PersistDataListener.BASE_PACKAGE.equals(name))
-						return (T) IesaBusinessLayer.class.getPackage();
-					if(PersistDataListener.RELATIVE_PATH.equals(name))
-						return (T) "report/studentclassroomsessiondivision/g1g12.jrxml";
-				}*/
-				
 				if(File.class.equals(aClass)){
 					if(CompanyConstant.FILE_DOCUMENT_HEADER.equals(instanceCode)){
 						if(PersistDataListener.BASE_PACKAGE.equals(name))
@@ -171,10 +164,10 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 				}
 				return super.processPropertyValue(aClass, instanceCode, name, value);
 			}
-		});
+		});*/
 		
 		inject(MailBusiness.class).setProperties("smtp.iesaci.com", 25, "results@iesaci.com", "school2009");//TODO should not be declare here but from database
-		
+		/*
 		CompanyBusinessLayer.Listener.COLLECTION.add(new CompanyBusinessLayer.Listener.Adapter() {
 			private static final long serialVersionUID = 5179809445850168706L;
 
@@ -195,11 +188,12 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 				, new String[]{"05996283","49925138","06173731"}, new String[]{"08 BP 1828 Abidjan 08"}, new String[]{"iesa@aviso.ci"}, new String[]{"http://www.iesaci.com"});
 			}
 		});
-		
+		*/
 		AbstractSchoolReportProducer.DEFAULT = new ReportProducer();
 		PersonBusiness.FindNamesArguments.FIRST_NAME_IS_FIRST = Boolean.FALSE;
-		SchoolConstant.Code.EvaluationType.COLLECTION.addAll(Arrays.asList(SchoolConstant.Code.EvaluationType.TEST1,SchoolConstant.Code.EvaluationType.TEST2
+		/*SchoolConstant.Code.EvaluationType.COLLECTION.addAll(Arrays.asList(SchoolConstant.Code.EvaluationType.TEST1,SchoolConstant.Code.EvaluationType.TEST2
 				,SchoolConstant.Code.EvaluationType.EXAM));
+		*/
 		StudentClassroomSessionDivisionBusiness.SUM_MARKS[0] = Boolean.TRUE;
 		
     	StudentBusinessImpl.Listener.COLLECTION.add(new StudentBusinessImpl.Listener.Adapter.Default.EnterpriseResourcePlanning(){

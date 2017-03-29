@@ -3,7 +3,6 @@ package org.cyk.system.iesaschool.business.impl.integration;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.school.business.impl.session.LevelBusinessImpl;
-import org.cyk.system.school.business.impl.session.LevelTimeDivisionBusinessImpl;
 import org.cyk.system.school.model.session.ClassroomSession;
 import org.cyk.system.school.model.session.Level;
 import org.cyk.system.school.model.session.LevelGroup;
@@ -15,7 +14,7 @@ public class AutoPropertySetBusinessIT extends AbstractBusinessIT {
     
     @Override
     protected void businesses() {
-    	LevelTimeDivisionBusinessImpl.PROPERTY_VALUE_TOKENS_CONCATENATE_WITH_TIMEDIVISIONTYPE = Boolean.FALSE;
+    	//LevelTimeDivisionBusinessImpl.PROPERTY_VALUE_TOKENS_CONCATENATE_WITH_TIMEDIVISIONTYPE = Boolean.FALSE;
     	LevelBusinessImpl.PROPERTY_VALUE_TOKENS_CONCATENATE_WITH_GROUP_LEVELNAME_SPECIALITY = Boolean.FALSE;
     	installApplication();
     	print(LevelGroup.class);

@@ -1,8 +1,8 @@
-package org.cyk.system.iesaschool.model;
+package org.cyk.system.iesaschool.model._sampledata;
 
 import java.io.Serializable;
 
-import org.cyk.system.school.model.IesaSampleData;
+import org.cyk.system.company.model._sampledata.IesaSampleData;
 
 public class SampleData extends IesaSampleData implements Serializable {
 

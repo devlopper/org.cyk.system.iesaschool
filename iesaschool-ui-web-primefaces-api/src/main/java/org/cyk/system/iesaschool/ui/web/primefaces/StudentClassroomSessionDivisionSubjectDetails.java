@@ -22,7 +22,7 @@ public class StudentClassroomSessionDivisionSubjectDetails extends AbstractStude
 	public StudentClassroomSessionDivisionSubjectDetails(StudentClassroomSessionDivisionSubject studentClassroomSessionDivisionSubject) {
 		super(studentClassroomSessionDivisionSubject);
 		for(StudentClassroomSessionDivisionSubjectEvaluation studentSubjectEvaluation : studentClassroomSessionDivisionSubject.getDetails()){
-			if(studentSubjectEvaluation.getStudentSubject().equals(studentClassroomSessionDivisionSubject)){
+			if(studentSubjectEvaluation.getStudentClassroomSessionDivisionSubject().equals(studentClassroomSessionDivisionSubject)){
 				if(studentSubjectEvaluation.getEvaluation().getClassroomSessionDivisionSubjectEvaluationType().getEvaluationType().getCode().equals(SchoolConstant.Code.EvaluationType.TEST1))
 					test1 = numberBusiness.format(studentSubjectEvaluation.getValue());
 				else if(studentSubjectEvaluation.getEvaluation().getClassroomSessionDivisionSubjectEvaluationType().getEvaluationType().getCode().equals(SchoolConstant.Code.EvaluationType.TEST2))

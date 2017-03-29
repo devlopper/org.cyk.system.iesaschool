@@ -16,6 +16,7 @@ import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
 import org.cyk.system.root.business.api.party.person.AbstractActorBusiness.CompleteActorInstanciationOfManyFromValuesArguments;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.party.person.PersonRelationshipType;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
@@ -37,6 +38,7 @@ import org.cyk.system.school.persistence.api.subject.SubjectDao;
 import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.file.ExcelSheetReader;
 
 public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessIT {
 
@@ -95,6 +97,13 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     }
     
     private void processTeachersSheet(File file,final File signatureDirectory) throws Exception{
+    	ExcelSheetReader excelSheetReader = null;//new ExcelSheetReader.Adapter.Default();
+    	excelSheetReader.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
+    	excelSheetReader.setIndex(1);
+    	excelSheetReader.setFromRowIndex(35);
+    	excelSheetReader.setFromColumnIndex(0);
+    	excelSheetReader.setRowCount(36);
+    	
     	ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
     	readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
     	readExcelSheetArguments.setSheetIndex(1);
@@ -145,7 +154,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 		});
     
     	System.out.print("Instanciating teachers");
-    	List<Teacher> teachers = inject(TeacherBusiness.class).instanciateMany(readExcelSheetArguments, completeActorInstanciationOfManyFromValuesArguments);
+    	List<Teacher> teachers = inject(TeacherBusiness.class).instanciateMany(excelSheetReader, completeActorInstanciationOfManyFromValuesArguments);
     	System.out.println(" - Creating "+teachers.size()+" teachers");
     	inject(GenericBusiness.class).create(CommonUtils.getInstance().castCollection(teachers, AbstractIdentifiable.class));
     }
@@ -193,6 +202,14 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	Collection<ClassroomSession> classroomSessions = inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(levelNameCode, classroomSessionSuffix);
     	final ClassroomSession classroomSession = classroomSessions.isEmpty() ? null : classroomSessions.iterator().next();
     	final Collection<String> studentCodes = new ArrayList<>();
+    	
+    	ExcelSheetReader excelSheetReader = null;//new ExcelSheetReader.Adapter.Default();
+    	excelSheetReader.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
+    	excelSheetReader.setIndex(0);
+    	excelSheetReader.setFromRowIndex(1);
+    	excelSheetReader.setFromColumnIndex(0);
+    	excelSheetReader.setRowCount(count);
+    	
     	ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
     	readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
     	readExcelSheetArguments.setSheetIndex(0);
@@ -227,9 +244,9 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     			if(student.getPerson().getSex()!=null)
     				student.getPerson().getSex().setCode(getSexCode(student.getPerson().getSex().getCode()));
     			if(StringUtils.isNotBlank(values[12]))
-    				inject(ElectronicMailBusiness.class).setAddress(student.getPerson(), PersonRelationshipType.FAMILY_FATHER, values[12]);
+    				inject(ElectronicMailBusiness.class).setAddress(student.getPerson(), RootConstant.Code.PersonRelationshipType.FAMILY_FATHER, values[12]);
     			if(StringUtils.isNotBlank(values[17]))
-    				inject(ElectronicMailBusiness.class).setAddress(student.getPerson(), PersonRelationshipType.FAMILY_MOTHER, values[17]);
+    				inject(ElectronicMailBusiness.class).setAddress(student.getPerson(), RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER, values[17]);
     			File photoFile = new File(imageDirectory,new BigDecimal(values[0]).intValue()+".jpg");
 				if(!photoFile.exists())
 					photoFile = new File(imageDirectory,new BigDecimal(values[0]).intValue()+".png");
@@ -250,7 +267,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 		});
     	System.out.print(classroomSession);
     	System.out.print(" - Instanciating students");
-    	List<Student> students = inject(StudentBusiness.class).instanciateMany(readExcelSheetArguments, completeActorInstanciationOfManyFromValuesArguments);
+    	List<Student> students = inject(StudentBusiness.class).instanciateMany(excelSheetReader, completeActorInstanciationOfManyFromValuesArguments);
     	System.out.print(" - "+students.size());
     	Collection<Student> existing = inject(StudentDao.class).read(studentCodes);
     	for(int i = 0; i< students.size();){
@@ -334,19 +351,19 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     
     private String getPersonTitleCode(String code){
     	if(code.equals("Mademoiselle"))
-			return PersonTitle.MISS;
+			return RootConstant.Code.PersonTitle.MISS;
 		else if(code.equals("Madame"))
-			return PersonTitle.MADAM;
+			return RootConstant.Code.PersonTitle.MADAM;
 		else if(code.equals("Monsieur"))
-			return PersonTitle.MISTER;
+			return RootConstant.Code.PersonTitle.MISTER;
     	return code;
     }
     
     private String getSexCode(String code){
     	if(code.equals("M"))
-			return Sex.MALE;
+			return RootConstant.Code.Sex.MALE;
 		else if(code.equals("F"))
-			return Sex.FEMALE;
+			return RootConstant.Code.Sex.FEMALE;
     	return null;
     }
     

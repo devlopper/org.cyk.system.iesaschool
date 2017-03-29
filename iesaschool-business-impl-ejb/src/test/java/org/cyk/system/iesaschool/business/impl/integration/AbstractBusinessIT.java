@@ -7,7 +7,9 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.cyk.system.company.business.impl.CompanyBusinessLayer;
+import org.cyk.system.company.model.CompanyConstant;
 import org.cyk.system.iesaschool.business.impl.IesaBusinessLayer;
 import org.cyk.system.iesaschool.business.impl.IesaBusinessTestHelper;
 import org.cyk.system.root.business.api.GenericBusiness;
@@ -15,6 +17,7 @@ import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.AbstractFakedDataProducer;
 import org.cyk.system.root.business.impl.BusinessIntegrationTestHelper;
+import org.cyk.system.root.business.impl.PersistDataListener;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.RootBusinessTestHelper;
 import org.cyk.system.root.business.impl.RootDataProducerHelper;
@@ -22,21 +25,15 @@ import org.cyk.system.root.business.impl.validation.DefaultValidator;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.business.impl.validation.ValidatorMap;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.system.root.persistence.impl.PersistenceIntegrationTestHelper;
 import org.cyk.system.school.business.impl.SchoolBusinessLayer;
-import org.cyk.system.school.business.impl.SchoolBusinessTestHelper;
-import org.cyk.system.school.business.impl.SchoolDataProducerHelper;
+import org.cyk.system.school.business.impl._dataproducer.IesaFakedDataProducer;
+import org.cyk.system.school.business.impl._test.SchoolBusinessTestHelper;
 import org.cyk.system.school.business.impl.session.LevelBusinessImpl;
-import org.cyk.system.school.business.impl.session.LevelTimeDivisionBusinessImpl;
-import org.cyk.system.school.business.impl.subject.ClassroomSessionDivisionSubjectBusinessImpl;
 import org.cyk.system.school.model.SchoolConstant;
 import org.cyk.system.school.model.session.ClassroomSession;
-import org.cyk.system.school.model.session.ClassroomSessionDivision;
 import org.cyk.system.school.model.session.LevelTimeDivision;
-import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubjectEvaluationType;
-import org.cyk.system.school.model.subject.Evaluation;
 import org.cyk.system.school.persistence.api.session.ClassroomSessionDao;
 import org.cyk.system.school.persistence.api.session.LevelTimeDivisionDao;
 import org.cyk.system.school.persistence.api.subject.ClassroomSessionDivisionSubjectDao;
@@ -46,8 +43,6 @@ import org.cyk.utility.test.Transaction;
 import org.cyk.utility.test.integration.AbstractIntegrationTestJpaBased;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeConstants;
 import org.junit.Assert;
 
 public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased {
@@ -101,16 +96,49 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     }
     
     protected void installApplication(){
+    	PersistDataListener.COLLECTION.add(new PersistDataListener.Adapter.Default(){
+			private static final long serialVersionUID = -950053441831528010L;
+			@SuppressWarnings("unchecked")
+			@Override
+			public <T> T processPropertyValue(Class<?> aClass,String instanceCode, String name, T value) {
+				/*if(ArrayUtils.contains(new String[]{CompanyConstant.Code.File.DOCUMENT_HEADER}, instanceCode)){
+					if(PersistDataListener.RELATIVE_PATH.equals(name))
+						return (T) "/report/iesa/salecashregistermovementlogo.png";
+				}*/
+				if(ArrayUtils.contains(new String[]{CompanyConstant.Code.File.DOCUMENT_HEADER}, instanceCode)){
+					if(PersistDataListener.RELATIVE_PATH.equals(name)){
+						return (T) "/report/iesa/document_header.png";
+					}else if(PersistDataListener.BASE_PACKAGE.equals(name))
+						return (T) SchoolBusinessLayer.class.getPackage();
+				}
+				if(ArrayUtils.contains(new String[]{CompanyConstant.Code.File.DOCUMENT_BACKGROUND}, instanceCode)){
+					if(PersistDataListener.RELATIVE_PATH.equals(name))
+						return (T) "/report/iesa/studentclassroomsessiondivisionreport_background.jpg";
+					else if(PersistDataListener.BASE_PACKAGE.equals(name))
+						return (T) SchoolBusinessLayer.class.getPackage();
+				}
+				if(ArrayUtils.contains(new String[]{CompanyConstant.Code.File.DOCUMENT_BACKGROUND_DRAFT}, instanceCode)){
+					if(PersistDataListener.RELATIVE_PATH.equals(name))
+						return (T) "/report/iesa/studentclassroomsessiondivisionreport_background.jpg";
+					else if(PersistDataListener.BASE_PACKAGE.equals(name))
+						return (T) SchoolBusinessLayer.class.getPackage();
+				}
+				return super.processPropertyValue(aClass, instanceCode, name, value);
+			}
+		});
+    	/*
     	SchoolConstant.Code.LevelGroup.KINDERGARTEN = "KS";
 		SchoolConstant.Code.LevelGroup.PRIMARY = "PS";
 		SchoolConstant.Code.LevelGroup.SECONDARY = "HS";
-		SchoolDataProducerHelper.Listener.COLLECTION.add(new SchoolDataProducerHelper.Listener.Adapter(){
+		*/
+		
+		/*SchoolDataProducerHelper.Listener.COLLECTION.add(new SchoolDataProducerHelper.Listener.Adapter(){
 			private static final long serialVersionUID = -5322009577688489872L;
 			@Override
-			public void classroomSessionDivisionCreated(ClassroomSessionDivision classroomSessionDivision,Long orderNumber) {
-				if(orderNumber==1){
+			public void classroomSessionDivisionCreated(ClassroomSessionDivision classroomSessionDivision) {
+				if(classroomSessionDivision.getOrderNumber()==1){
 					classroomSessionDivision.getExistencePeriod().getNumberOfMillisecond().set(63l * DateTimeConstants.MILLIS_PER_DAY);
-				}else if(orderNumber==2){
+				}else if(classroomSessionDivision.getOrderNumber()==2){
 					classroomSessionDivision.getExistencePeriod().setFromDate(new DateTime(2017, 1, 9, 0, 0).toDate());
 	    			classroomSessionDivision.getExistencePeriod().setToDate(new DateTime(2017, 3, 27, 0, 0).toDate());
 				}
@@ -125,16 +153,16 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 			}
 		});
     	ClassroomSessionDivisionSubjectBusinessImpl.Listener.COLLECTION.clear();
-    	
+    	*/
     	long t = System.currentTimeMillis();
-    	Evaluation.COEFFICIENT_APPLIED = Boolean.FALSE;
+    	SchoolConstant.Configuration.Evaluation.COEFFICIENT_APPLIED = Boolean.FALSE;
     	installApplication(Boolean.TRUE);
     	produce(getFakedDataProducer());
     	System.out.println( ((System.currentTimeMillis()-t)/1000)+" s" );
     }
 	
     protected AbstractFakedDataProducer getFakedDataProducer(){
-    	return null;
+    	return inject(IesaFakedDataProducer.class);
     }
     
     @Override
@@ -183,9 +211,14 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     @Override 
     protected void populate() {
     	LevelBusinessImpl.PROPERTY_VALUE_TOKENS_CONCATENATE_WITH_GROUP_LEVELNAME_SPECIALITY = Boolean.FALSE;
-    	LevelTimeDivisionBusinessImpl.PROPERTY_VALUE_TOKENS_CONCATENATE_WITH_TIMEDIVISIONTYPE = Boolean.FALSE;
+    	//LevelTimeDivisionBusinessImpl.PROPERTY_VALUE_TOKENS_CONCATENATE_WITH_TIMEDIVISIONTYPE = Boolean.FALSE;
     	
     	installApplication();
+    }
+    
+    @Override
+    protected Boolean populateInTransaction() {
+    	return Boolean.FALSE;
     }
     
     @Override protected void create() {}

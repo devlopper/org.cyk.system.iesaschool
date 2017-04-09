@@ -11,7 +11,6 @@ import javax.servlet.annotation.WebListener;
 import org.cyk.system.company.business.impl.structure.EmployeeDetails;
 import org.cyk.system.company.model.structure.Employee;
 import org.cyk.system.root.business.api.language.LanguageBusiness.FindTextResult;
-import org.cyk.system.root.business.api.message.MailBusiness;
 import org.cyk.system.root.business.impl.geography.ContactCollectionDetails;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 import org.cyk.system.root.business.impl.party.person.AbstractActorDetails;
@@ -96,7 +95,7 @@ public class ContextListener extends AbstractSchoolContextListener implements Se
 		
 		LanguageBusinessImpl.cache(Locale.FRENCH, LanguageEntry.YES, null, CaseType.FURL, "Yes");//TODO not working on file why ???
 		LanguageBusinessImpl.cache(Locale.FRENCH, LanguageEntry.NO, null, CaseType.FURL, "No");
-		inject(MailBusiness.class).setProperties("smtp.iesaci.com", 25, "results@iesaci.com", "school2009");//TODO should not be declare here but from database
+		//inject(MailBusiness.class).setProperties("smtp.iesaci.com", 25, "results@iesaci.com", "school2009");//TODO should not be declare here but from database
 		
 		LanguageBusinessImpl.Listener.COLLECTION.add(new LanguageBusinessImpl.Listener.Adapter.Default.EnterpriseResourcePlanning(){
 			private static final long serialVersionUID = 1L;

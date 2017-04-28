@@ -43,6 +43,7 @@ import org.cyk.ui.api.model.party.AbstractActorEditFormModel;
 import org.cyk.ui.api.model.party.AbstractPersonEditFormModel;
 import org.cyk.ui.web.primefaces.UserSession;
 import org.cyk.ui.web.primefaces.page.AbstractPrimefacesPage.PageInstanceManager;
+import org.cyk.utility.common.generator.AbstractGeneratable;
 import org.cyk.utility.common.helper.StringHelper.CaseType;
 
 @WebListener
@@ -69,6 +70,7 @@ public class ContextListener extends AbstractSchoolContextListener implements Se
 		
 		StudentClassroomSessionDivisionConsultPage.SUBJECT_DETAILS_CLASS_NAME = StudentClassroomSessionDivisionSubjectDetails.class.getName();
 		StudentClassroomSessionDivisionConsultPage.LOAD_EVALUATIONS = Boolean.TRUE;
+		AbstractGeneratable.NULL_VALUE = "NA";
 	
     	SchoolWebManager.getInstance().getListeners().add(new PrimefacesManager());
     	 		

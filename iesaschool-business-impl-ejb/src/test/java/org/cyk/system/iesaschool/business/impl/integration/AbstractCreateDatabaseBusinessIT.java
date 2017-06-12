@@ -8,37 +8,22 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
-import org.cyk.system.root.business.api.IdentifiableBusinessService.CompleteInstanciationOfOneFromValuesListener;
-import org.cyk.system.root.business.api.file.FileBusiness;
-import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
-import org.cyk.system.root.business.api.party.person.AbstractActorBusiness.CompleteActorInstanciationOfManyFromValuesArguments;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.RootConstant;
-import org.cyk.system.root.model.party.person.PersonRelationshipType;
-import org.cyk.system.root.model.party.person.PersonTitle;
-import org.cyk.system.root.model.party.person.Sex;
-import org.cyk.system.school.business.api.actor.StudentBusiness;
 import org.cyk.system.school.business.api.actor.TeacherBusiness;
 import org.cyk.system.school.business.api.session.ClassroomSessionBusiness;
 import org.cyk.system.school.business.api.session.StudentClassroomSessionDivisionBusiness;
 import org.cyk.system.school.model.SchoolConstant;
-import org.cyk.system.school.model.actor.Student;
-import org.cyk.system.school.model.actor.Teacher;
 import org.cyk.system.school.model.session.ClassroomSession;
-import org.cyk.system.school.model.session.StudentClassroomSession;
 import org.cyk.system.school.model.session.StudentClassroomSessionDivision;
 import org.cyk.system.school.model.subject.ClassroomSessionDivisionSubject;
 import org.cyk.system.school.model.subject.Subject;
-import org.cyk.system.school.persistence.api.actor.StudentDao;
-import org.cyk.system.school.persistence.api.actor.TeacherDao;
 import org.cyk.system.school.persistence.api.subject.SubjectDao;
 import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.Constant;
-import org.cyk.utility.common.file.ExcelSheetReader;
 
 public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessIT {
 
@@ -96,68 +81,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
     	return Boolean.FALSE;
     }
     
-    private void processTeachersSheet(File file,final File signatureDirectory) throws Exception{
-    	ExcelSheetReader excelSheetReader = null;//new ExcelSheetReader.Adapter.Default();
-    	excelSheetReader.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
-    	excelSheetReader.setIndex(1);
-    	excelSheetReader.setFromRowIndex(35);
-    	excelSheetReader.setFromColumnIndex(0);
-    	excelSheetReader.setRowCount(36);
-    	
-    	ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
-    	readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
-    	readExcelSheetArguments.setSheetIndex(1);
-    	readExcelSheetArguments.setFromRowIndex(35);
-    	readExcelSheetArguments.setFromColumnIndex(0);
-    	readExcelSheetArguments.setRowCount(36);
-    	readExcelSheetArguments.setListener(new ReadExcelSheetArguments.Listener.Adapter.Default(){
-			private static final long serialVersionUID = 1L;
-    		@Override
-    		public Boolean addable(String[] row) {
-    			return inject(TeacherDao.class).read(row[1])==null;
-    		}
-    	});
-    	
-		CompleteActorInstanciationOfManyFromValuesArguments<Teacher> completeActorInstanciationOfManyFromValuesArguments = new CompleteActorInstanciationOfManyFromValuesArguments<>();
-		
-		completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setRegistrationCodeIndex(1);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setTitleCodeIndex(3);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().getPartyInstanciationOfOneFromValuesArguments().setNameIndex(6);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setLastnameIndex(5);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setListener(new CompleteInstanciationOfOneFromValuesListener<Teacher>() {
-			@Override
-			public void beforeProcessing(Teacher teacher,String[] values) {
-				values[3] = getPersonTitleCode(values[3]);
-			}
-    		@Override
-			public void afterProcessing(Teacher teacher,String[] values) {
-    			/*if(teacher.getPerson().getExtendedInformations()==null)
-    				teacher.getPerson().setExtendedInformations(new PersonExtendedInformations(teacher.getPerson()));
-    			if(teacher.getPerson().getExtendedInformations()==null)
-    				teacher.getPerson().setExtendedInformations(new PersonExtendedInformations(teacher.getPerson()));
-    			teacher.getPerson().getExtendedInformations().getTitle().setCode(getPersonTitleCode(teacher.getPerson().getExtendedInformations().getTitle().getCode()));
-    			*/
-				File signatureFile = new File(signatureDirectory,new BigDecimal(values[0]).intValue()+".png");
-				if(!signatureFile.exists())
-					signatureFile = new File(signatureDirectory,new BigDecimal(values[0]).intValue()+".jpg");
-				
-				if(signatureFile.exists())
-					try {
-						teacher.getPerson().getExtendedInformations().setSignatureSpecimen(inject(FileBusiness.class)
-							.process(IOUtils.toByteArray(new FileInputStream(signatureFile)), teacher.getCode()+" signature.png"));
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				else
-					System.out.println("Signature file not found for "+teacher.getCode()+" : "+signatureFile.getName());
-			}
-		});
-    
-    	System.out.print("Instanciating teachers");
-    	List<Teacher> teachers = inject(TeacherBusiness.class).instanciateMany(excelSheetReader, completeActorInstanciationOfManyFromValuesArguments);
-    	System.out.println(" - Creating "+teachers.size()+" teachers");
-    	inject(GenericBusiness.class).create(CommonUtils.getInstance().castCollection(teachers, AbstractIdentifiable.class));
-    }
+    private void processTeachersSheet(File file,final File signatureDirectory) throws Exception{}
     
     private void processCoordinatorsSheet(File file) throws Exception{
     	ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
@@ -198,108 +122,7 @@ public abstract class AbstractCreateDatabaseBusinessIT extends AbstractBusinessI
 		inject(GenericBusiness.class).update(CommonUtils.getInstance().castCollection(classroomSessionDivisionSubjects, AbstractIdentifiable.class));
     }
     
-    private void processStudentsSheet(final String levelNameCode,final String classroomSessionSuffix,File file,final File imageDirectory,Integer count) throws Exception{
-    	Collection<ClassroomSession> classroomSessions = inject(ClassroomSessionBusiness.class).findByLevelNameBySuffix(levelNameCode, classroomSessionSuffix);
-    	final ClassroomSession classroomSession = classroomSessions.isEmpty() ? null : classroomSessions.iterator().next();
-    	final Collection<String> studentCodes = new ArrayList<>();
-    	
-    	ExcelSheetReader excelSheetReader = null;//new ExcelSheetReader.Adapter.Default();
-    	excelSheetReader.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
-    	excelSheetReader.setIndex(0);
-    	excelSheetReader.setFromRowIndex(1);
-    	excelSheetReader.setFromColumnIndex(0);
-    	excelSheetReader.setRowCount(count);
-    	
-    	ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
-    	readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
-    	readExcelSheetArguments.setSheetIndex(0);
-    	readExcelSheetArguments.setFromRowIndex(1);
-    	readExcelSheetArguments.setFromColumnIndex(0);
-    	readExcelSheetArguments.setRowCount(count);
-    	
-    	readExcelSheetArguments.setListener(new ReadExcelSheetArguments.Listener.Adapter.Default(){
-			private static final long serialVersionUID = 1L;
-    		@Override
-    		public Boolean addable(String[] row) {
-    			return inject(StudentDao.class).read(row[1])==null && isLevel(levelNameCode, classroomSessionSuffix, row[7]);
-    		}
-    	});
-    	
-		CompleteActorInstanciationOfManyFromValuesArguments<Student> completeActorInstanciationOfManyFromValuesArguments = new CompleteActorInstanciationOfManyFromValuesArguments<>();
-		
-		completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setRegistrationCodeIndex(1);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().getPartyInstanciationOfOneFromValuesArguments().setNameIndex(3);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setLastnameIndex(2);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().getPartyInstanciationOfOneFromValuesArguments().setBirthDateIndex(4);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setBirthLocationOtherDetailsIndex(6);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPersonInstanciationOfOneFromValuesArguments().setSexCodeIndex(8);
-    	completeActorInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setListener(new CompleteInstanciationOfOneFromValuesListener<Student>() {
-			@Override
-			public void beforeProcessing(Student student,String[] values) {
-				//if(!ArrayUtils.contains(new String[]{"g9","g10","g11","g12"}, values[7].toLowerCase()));
-				//	studentClassroomSessions.add(new StudentClassroomSession(student, getClassroomSession(values[7])));
-			}
-    		@Override
-			public void afterProcessing(Student student,String[] values) {
-    			if(student.getPerson().getSex()!=null)
-    				student.getPerson().getSex().setCode(getSexCode(student.getPerson().getSex().getCode()));
-    			if(StringUtils.isNotBlank(values[12]))
-    				inject(ElectronicMailBusiness.class).setAddress(student.getPerson(), RootConstant.Code.PersonRelationshipType.FAMILY_FATHER, values[12]);
-    			if(StringUtils.isNotBlank(values[17]))
-    				inject(ElectronicMailBusiness.class).setAddress(student.getPerson(), RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER, values[17]);
-    			File photoFile = new File(imageDirectory,new BigDecimal(values[0]).intValue()+".jpg");
-				if(!photoFile.exists())
-					photoFile = new File(imageDirectory,new BigDecimal(values[0]).intValue()+".png");
-				
-    			if(photoFile.exists())
-					try {
-						student.setImage(inject(FileBusiness.class).process(IOUtils.toByteArray(new FileInputStream(photoFile)), student.getCode()+" photo.jpeg"));
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				else
-					System.out.println("Photo not found for "+student.getCode()+" : "+photoFile.getName());
-				
-				if(classroomSession!=null && !ArrayUtils.contains(new String[]{"g9","g10","g11","g12"}, values[7].toLowerCase()));
-					student.setStudentClassroomSession(new StudentClassroomSession(student, classroomSession));
-			}
-    		
-		});
-    	System.out.print(classroomSession);
-    	System.out.print(" - Instanciating students");
-    	List<Student> students = inject(StudentBusiness.class).instanciateMany(excelSheetReader, completeActorInstanciationOfManyFromValuesArguments);
-    	System.out.print(" - "+students.size());
-    	Collection<Student> existing = inject(StudentDao.class).read(studentCodes);
-    	for(int i = 0; i< students.size();){
-    		Boolean found = false;
-    		for(Student e : existing)
-    			if(students.get(i).getCode().equals(e.getCode())){
-    				students.remove(i);
-    				found = true;
-    				break;
-    			}
-    		if(!found)
-    			i++;
-    	}
-    	
-    	System.out.println(" - Creating "+students.size()+" students");
-    	inject(GenericBusiness.class).create(CommonUtils.getInstance().castCollection(students, AbstractIdentifiable.class));
-    	genericBusiness.flushEntityManager();
-    	/*if(classroomSession.getLevelTimeDivision().getOrderNumber()<=11){
-    		System.out.println(" - Creating "+studentClassroomSessions.size()+" student classroom sessions");
-    		inject(StudentClassroomSessionBusiness.class).create(studentClassroomSessions);
-    		genericBusiness.flushEntityManager();
-    	}else
-    		System.out.println();
-    	*/
-    	//System.out.println("Number of students : "+ classroomSessionDao.read(classroomSession.getIdentifier()).getNumberOfStudents());
-    	
-    	if(Boolean.TRUE.equals(isSimulated())){
-    		schoolBusinessTestHelper.createSubjectEvaluations(classroomSessionDivisionSubjectDao.readByClassroomSession(classroomSession),Boolean.FALSE);
-    		schoolBusinessTestHelper.randomValues(Boolean.TRUE, Boolean.TRUE, Boolean.TRUE);
-    		genericBusiness.flushEntityManager();
-    	}
-    }
+    private void processStudentsSheet(final String levelNameCode,final String classroomSessionSuffix,File file,final File imageDirectory,Integer count) throws Exception{}
     
     public void processPreviousDatabases(File file) throws Exception{
     	List<StudentClassroomSessionDivision> studentClassroomSessionDivisions = new ArrayList<>(inject(StudentClassroomSessionDivisionBusiness.class).findAll());

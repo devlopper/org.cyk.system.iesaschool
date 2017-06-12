@@ -7,13 +7,14 @@ import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import lombok.Getter;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.company.business.api.structure.CompanyBusiness;
 import org.cyk.system.company.business.api.structure.OwnedCompanyBusiness;
 import org.cyk.system.company.business.impl.CompanyBusinessLayer;
 import org.cyk.system.company.business.impl.structure.EmployeeBusinessImpl;
 import org.cyk.system.iesaschool.model.IesaConstant;
-import org.cyk.system.root.business.api.message.MailBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessLayer;
@@ -42,8 +43,6 @@ import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.formatter.NumberFormatter;
 import org.cyk.utility.common.generator.AbstractGeneratable;
-
-import lombok.Getter;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=IesaBusinessLayer.DEPLOYMENT_ORDER) @Getter
 public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -194,7 +193,7 @@ public class IesaBusinessLayer extends AbstractBusinessLayer implements Serializ
 			private static final long serialVersionUID = -7737204312141333272L;
     		@Override
     		public void installationStarted(Installation installation) {
-    			installation.getApplication().setUniformResourceLocatorFilteringEnabled(Boolean.TRUE);
+    			installation.getApplication().setUniformResourceLocatorFiltered(Boolean.TRUE);
     			installation.getApplication().setWebContext("iesaschool");
     			installation.getApplication().setName("IESA Management System");
     			super.installationStarted(installation);
